@@ -1,7 +1,7 @@
 # PyCrash. Learning Python
 
-In this repository you can find Notebooks with exercises and notes of the progress I have made in my Python learning.<br>
-All this has been possible thanks to:<br>
+In this repository you can find Notebooks with exercises and notes of the progress I have made in my Python learning, and Python for Data Analysis.<br>
+Under *data_visualization* folder, I followed the loead of:<br>
 Matthes, E. (2023). *Python Crash Course, 3rd Edition*. No Starch Press.
 
 The book is composed of two parts, after completing the first part of more basic concepts of Python programming I wanted to focus on data and its visualization.<br>
@@ -16,3 +16,10 @@ The chapters corresponding to the second part of projects are:<br>
 
 **Working With APIs** (data_visualization/working_with_apis.ipynb): This time, instead of downloading the data files from their source, we access them directly through their API and use the data to generate visualizations.
 
+### Python for Data Analysis
+
+Further, under the Analysis folder you can find my progress with:
+McKinney, W. (2022). *Python for Data Analysis: Data Wrangling with Pandas, NumPy, and Jupyter*. O’Reilly Media.
+
+- Numpy Arrays and Vectorized Computation
+- 
