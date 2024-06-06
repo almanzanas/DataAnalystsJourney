@@ -1,4 +1,5 @@
-# PyCrash. Learning Python
+# PyCrash. 
+### Learning Python
 
 In this repository you can find Notebooks with exercises and notes of the progress I have made in my Python learning, and Python for Data Analysis.<br>
 Under *data_visualization* folder, I followed the loead of:<br>
@@ -18,8 +19,10 @@ The chapters corresponding to the second part of projects are:<br>
 
 ### Python for Data Analysis
 
-Further, under the Analysis folder you can find my progress with:
+Further, under the *data_analysis* folder you can find my progress with:
 McKinney, W. (2022). *Python for Data Analysis: Data Wrangling with Pandas, NumPy, and Jupyter*. O’Reilly Media.
 
 - Numpy Arrays and Vectorized Computation
-- 
+- Pandas
+- Working with Data Files
+- Data Cleaning and Data Preparation
