@@ -2,7 +2,7 @@
 ### Learning Python
 
 In this repository you can find Notebooks with exercises and notes of the progress I have made in my Python learning, and Python for Data Analysis.<br>
-Under *data_visualization* folder, I followed the loead of:<br>
+Under [*data_visualization*](https://github.com/almanzanas/PyCrash/tree/main/data_visualization) folder, I followed the loead of:<br>
 Matthes, E. (2023). *Python Crash Course, 3rd Edition*. No Starch Press.
 
 The book is composed of two parts, after completing the first part of more basic concepts of Python programming I wanted to focus on data and its visualization.<br>
@@ -19,10 +19,13 @@ The chapters corresponding to the second part of projects are:<br>
 
 ### Python for Data Analysis
 
-Further, under the *data_analysis* folder you can find my progress with:
+Further, under the [*python_data_analysis/basics*](https://github.com/almanzanas/PyCrash/tree/main/python_data_analysis/basics) folder you can find my progress with:
 McKinney, W. (2022). *Python for Data Analysis: Data Wrangling with Pandas, NumPy, and Jupyter*. O’Reilly Media.
 
 - Numpy Arrays and Vectorized Computation
 - Pandas
 - Working with Data Files
 - Data Cleaning and Data Preparation
+
+In the [*python_data_analysis/da_practice*](https://github.com/almanzanas/PyCrash/tree/main/python_data_analysis/da_practice) folder is the more complete exercise tracker involving all the content of the book:
+- [baby_names](https://github.com/almanzanas/PyCrash/blob/main/python_data_analysis/da_practice/notebooks/baby_names.ipynb): exploration of data related to the name given to newborns from 1880 to 2010 and how some of the names have evolved.
