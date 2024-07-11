@@ -28,6 +28,7 @@ McKinney, W. (2022). *Python for Data Analysis: Data Wrangling with Pandas, NumP
 - Data Cleaning and Data Preparation
 - Data Wrangling
 - Plotting Visualizations (matplotlib, pandas & seaborn)
+- Data Aggregation and Group Operations
 
 In the [*python_data_analysis/da_practice*](https://github.com/almanzanas/PyCrash/tree/main/python_data_analysis/da_practice) folder is the more complete exercise tracker involving all the content of the book:
 - [baby_names](https://github.com/almanzanas/PyCrash/blob/main/python_data_analysis/da_practice/notebooks/baby_names.ipynb): exploration of data related to the name given to newborns from 1880 to 2010 and how some of the names have evolved.
