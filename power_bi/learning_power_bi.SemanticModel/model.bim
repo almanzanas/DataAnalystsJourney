@@ -1,0 +1,1127 @@
+{
+  "compatibilityLevel": 1550,
+  "model": {
+    "annotations": [
+      {
+        "name": "PBI_QueryOrder",
+        "value": "[\"demographic\",\"survey\",\"AssignmentDIM\",\"grade\"]"
+      },
+      {
+        "name": "__PBI_TimeIntelligenceEnabled",
+        "value": "1"
+      },
+      {
+        "name": "PBIDesktopVersion",
+        "value": "2.131.901.0 (24.07)"
+      },
+      {
+        "name": "PBI_ProTooling",
+        "value": "[\"DevMode\"]"
+      }
+    ],
+    "culture": "es-ES",
+    "cultures": [
+      {
+        "name": "es-ES",
+        "linguisticMetadata": {
+          "content": {
+            "Language": "en-US",
+            "Version": "1.0.0"
+          },
+          "contentType": "json"
+        }
+      }
+    ],
+    "dataAccessOptions": {
+      "legacyRedirects": true,
+      "returnErrorValuesAsNull": true
+    },
+    "defaultPowerBIDataSourceVersion": "powerBI_V3",
+    "relationships": [
+      {
+        "name": "fe51cb09-8953-4607-9051-42295efd652b",
+        "fromColumn": "Term Start Date",
+        "fromTable": "demographic",
+        "joinOnDateBehavior": "datePartOnly",
+        "toColumn": "Date",
+        "toTable": "LocalDateTable_80f41cf2-5a95-4216-93aa-0e0cd71c4bf6"
+      },
+      {
+        "name": "AutoDetected_2af188dd-cdf1-44ce-990c-5294f058f4a9",
+        "crossFilteringBehavior": "bothDirections",
+        "fromCardinality": "one",
+        "fromColumn": "StudentID",
+        "fromTable": "survey",
+        "toColumn": "StudentID",
+        "toTable": "demographic"
+      },
+      {
+        "name": "AutoDetected_037c26c2-c4ff-474d-afa8-d325af8546d2",
+        "fromColumn": "ClassID",
+        "fromTable": "grade",
+        "toColumn": "ClassID",
+        "toTable": "survey"
+      },
+      {
+        "name": "AutoDetected_c4a8b870-9099-450c-b361-e8dee05fc220",
+        "fromColumn": "AssignmentID",
+        "fromTable": "grade",
+        "toColumn": "AssignmentID",
+        "toTable": "AssignmentDIM"
+      }
+    ],
+    "sourceQueryCulture": "es-ES",
+    "tables": [
+      {
+        "name": "demographic",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navegación"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "StudentID",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "cf7103c7-3d3a-44e1-9dce-ad3cd334440a",
+            "sourceColumn": "StudentID",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Term",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "7b786f32-9101-4eea-a9bd-85c1f43f5370",
+            "sourceColumn": "Term",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Term Start Date",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "Long Date",
+            "lineageTag": "31addab2-b8fb-4c01-8f4e-2f24bf7bd534",
+            "sourceColumn": "Term Start Date",
+            "summarizeBy": "none",
+            "variations": [
+              {
+                "name": "Variación",
+                "defaultHierarchy": {
+                  "hierarchy": "Jerarquía de fechas",
+                  "table": "LocalDateTable_80f41cf2-5a95-4216-93aa-0e0cd71c4bf6"
+                },
+                "isDefault": true,
+                "relationship": "fe51cb09-8953-4607-9051-42295efd652b"
+              }
+            ]
+          },
+          {
+            "name": "Course Number",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "a2547293-9a06-42b0-99de-161ede80abb7",
+            "sourceColumn": "Course Number",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "LastName",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "6380f67f-0307-4de0-972b-2af2450266fe",
+            "sourceColumn": "LastName",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "FirstName",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "cc2438b8-857f-4808-8490-4eb264fceefa",
+            "sourceColumn": "FirstName",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "E-mail",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "40a877c3-8f23-4af7-8f0b-02b11d606ffe",
+            "sourceColumn": "E-mail",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Age",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "0cf6005f-7f9d-4e21-8888-4a8859a67705",
+            "sourceColumn": "Age",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "YearsAttended",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "0572a232-e469-4b26-88f7-cc8e69cd8f55",
+            "sourceColumn": "YearsAttended",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "ResidencyState",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "47a091c8-002a-45b5-b905-5cbf8b7cebef",
+            "sourceColumn": "ResidencyState",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Race",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "5c9ca1eb-ed85-4791-a429-d4f60a133b3b",
+            "sourceColumn": "Race",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Ethnicity",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "31a1a397-53dc-4174-ad3a-9cb084a19b7b",
+            "sourceColumn": "Ethnicity",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Gender",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "baf8ac37-3e33-4346-81e8-e7cb041537ef",
+            "sourceColumn": "Gender",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "IsStudentAthlete",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "3fe619a6-1db3-4d6a-80d7-ae2efecfac04",
+            "sourceColumn": "IsStudentAthlete",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "RequiresAdditionalAccomodations",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "50c76901-e81f-4944-8654-81d2a7e33b73",
+            "sourceColumn": "RequiresAdditionalAccomodations",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "RequiredAccomodationDetail",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "bd91bd61-e889-4d80-8458-253e6bad0acc",
+            "sourceColumn": "RequiredAccomodationDetail",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "2466a187-413b-47e2-8ff7-2c8c8b8513a8",
+        "partitions": [
+          {
+            "name": "demographic",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Origen = Excel.Workbook(File.Contents(\"C:\\Users\\CursosTardes\\Downloads\\power_bi\\data\\SchoolSuppliedDataClassStart.xlsx\"), null, true),",
+                "    Sheet1_Sheet = Origen{[Item=\"Sheet1\",Kind=\"Sheet\"]}[Data],",
+                "    #\"Encabezados promovidos\" = Table.PromoteHeaders(Sheet1_Sheet, [PromoteAllScalars=true]),",
+                "    #\"Tipo cambiado\" = Table.TransformColumnTypes(#\"Encabezados promovidos\",{{\"StudentID\", Int64.Type}, {\"Term\", type text}, {\"Term Start Date\", type date}, {\"Course Number\", type text}, {\"LastName\", type text}, {\"FirstName\", type text}, {\"E-mail\", type text}, {\"Age\", Int64.Type}, {\"YearsAttended\", Int64.Type}, {\"ResidencyState\", type text}, {\"Race\", type text}, {\"Ethnicity\", type text}, {\"Gender\", type text}, {\"IsStudentAthlete\", type text}, {\"RequiresAdditionalAccomodations\", type text}, {\"RequiredAccomodationDetail\", type text}})",
+                "in",
+                "    #\"Tipo cambiado\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "DateTableTemplate_28d06685-2911-4804-b5b5-89ced9144522",
+        "annotations": [
+          {
+            "name": "__PBI_TemplateDateTable",
+            "value": "true"
+          },
+          {
+            "name": "DefaultItem",
+            "value": "DateHierarchy"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Date",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataCategory": "PaddedDateTableDates",
+            "dataType": "dateTime",
+            "formatString": "General Date",
+            "isHidden": true,
+            "isNameInferred": true,
+            "lineageTag": "df72b7f3-089d-4a01-a343-076e771d253d",
+            "sourceColumn": "[Date]",
+            "summarizeBy": "none",
+            "type": "calculatedTableColumn"
+          },
+          {
+            "name": "Año",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "TemplateId",
+                "value": "Year"
+              }
+            ],
+            "dataCategory": "Years",
+            "dataType": "int64",
+            "expression": "YEAR([Date])",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "e5aabf63-a042-4384-a89d-36eb28a648f7",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "NroMes",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "TemplateId",
+                "value": "MonthNumber"
+              }
+            ],
+            "dataCategory": "MonthOfYear",
+            "dataType": "int64",
+            "expression": "MONTH([Date])",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "8e990c36-f433-4806-817d-ec6a403b2fa2",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "Mes",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "TemplateId",
+                "value": "Month"
+              }
+            ],
+            "dataCategory": "Months",
+            "dataType": "string",
+            "expression": "FORMAT([Date], \"MMMM\")",
+            "isHidden": true,
+            "lineageTag": "1bb3aabf-3522-42e5-9fd6-bbbdf7664626",
+            "sortByColumn": "NroMes",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "NroTrimestre",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "TemplateId",
+                "value": "QuarterNumber"
+              }
+            ],
+            "dataCategory": "QuarterOfYear",
+            "dataType": "int64",
+            "expression": "INT(([NroMes] + 2) / 3)",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "9be03119-be1d-4108-8b1e-c543b0449380",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "Trimestre",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "TemplateId",
+                "value": "Quarter"
+              }
+            ],
+            "dataCategory": "Quarters",
+            "dataType": "string",
+            "expression": "\"Trim. \" & [NroTrimestre]",
+            "isHidden": true,
+            "lineageTag": "a0e3b4e3-0094-41c3-9c57-27249bcd06c9",
+            "sortByColumn": "NroTrimestre",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "Día",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "TemplateId",
+                "value": "Day"
+              }
+            ],
+            "dataCategory": "DayOfMonth",
+            "dataType": "int64",
+            "expression": "DAY([Date])",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "82e88821-2aef-44ae-a47a-70cb49dd1ec4",
+            "summarizeBy": "none",
+            "type": "calculated"
+          }
+        ],
+        "hierarchies": [
+          {
+            "name": "Jerarquía de fechas",
+            "annotations": [
+              {
+                "name": "TemplateId",
+                "value": "DateHierarchy"
+              }
+            ],
+            "levels": [
+              {
+                "name": "Año",
+                "column": "Año",
+                "lineageTag": "79e127e1-624a-4a61-bf2d-86b0e035a183",
+                "ordinal": 0
+              },
+              {
+                "name": "Trimestre",
+                "column": "Trimestre",
+                "lineageTag": "81efa349-06b1-47c3-80c0-f24252131655",
+                "ordinal": 1
+              },
+              {
+                "name": "Mes",
+                "column": "Mes",
+                "lineageTag": "2845f522-807a-41e8-ad17-b8e98e5da64d",
+                "ordinal": 2
+              },
+              {
+                "name": "Día",
+                "column": "Día",
+                "lineageTag": "6adef8f7-56ec-44c8-ae7b-b8b296993e5f",
+                "ordinal": 3
+              }
+            ],
+            "lineageTag": "442348e3-76ce-4470-989d-8c5a23267f7a"
+          }
+        ],
+        "isHidden": true,
+        "isPrivate": true,
+        "lineageTag": "37c12c72-afbc-4781-ab4b-8b1075441288",
+        "partitions": [
+          {
+            "name": "DateTableTemplate_28d06685-2911-4804-b5b5-89ced9144522",
+            "mode": "import",
+            "source": {
+              "expression": "Calendar(Date(2015,1,1), Date(2015,1,1))",
+              "type": "calculated"
+            }
+          }
+        ]
+      },
+      {
+        "name": "LocalDateTable_80f41cf2-5a95-4216-93aa-0e0cd71c4bf6",
+        "annotations": [
+          {
+            "name": "__PBI_LocalDateTable",
+            "value": "true"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Date",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataCategory": "PaddedDateTableDates",
+            "dataType": "dateTime",
+            "formatString": "General Date",
+            "isHidden": true,
+            "isNameInferred": true,
+            "lineageTag": "3180ed03-e622-451c-bdc4-11fae7d755d5",
+            "sourceColumn": "[Date]",
+            "summarizeBy": "none",
+            "type": "calculatedTableColumn"
+          },
+          {
+            "name": "Año",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "TemplateId",
+                "value": "Year"
+              }
+            ],
+            "dataCategory": "Years",
+            "dataType": "int64",
+            "expression": "YEAR([Date])",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "79a429ab-380f-43c7-8eeb-859576d9eadf",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "NroMes",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "TemplateId",
+                "value": "MonthNumber"
+              }
+            ],
+            "dataCategory": "MonthOfYear",
+            "dataType": "int64",
+            "expression": "MONTH([Date])",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "7199df7f-0b45-4a08-85b5-06a65a1d44a0",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "Mes",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "TemplateId",
+                "value": "Month"
+              }
+            ],
+            "dataCategory": "Months",
+            "dataType": "string",
+            "expression": "FORMAT([Date], \"MMMM\")",
+            "isHidden": true,
+            "lineageTag": "5add97ac-8bc8-4c16-8f4d-297b2a71928f",
+            "sortByColumn": "NroMes",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "NroTrimestre",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "TemplateId",
+                "value": "QuarterNumber"
+              }
+            ],
+            "dataCategory": "QuarterOfYear",
+            "dataType": "int64",
+            "expression": "INT(([NroMes] + 2) / 3)",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "df0393a0-c26b-48ec-bc47-d3a36f817b44",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "Trimestre",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "TemplateId",
+                "value": "Quarter"
+              }
+            ],
+            "dataCategory": "Quarters",
+            "dataType": "string",
+            "expression": "\"Trim. \" & [NroTrimestre]",
+            "isHidden": true,
+            "lineageTag": "b38ecfc8-e2ce-4522-bf99-b2dfa915ad20",
+            "sortByColumn": "NroTrimestre",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "Día",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "TemplateId",
+                "value": "Day"
+              }
+            ],
+            "dataCategory": "DayOfMonth",
+            "dataType": "int64",
+            "expression": "DAY([Date])",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "cd5285aa-cdfb-4093-ac29-3dd4d3e772dc",
+            "summarizeBy": "none",
+            "type": "calculated"
+          }
+        ],
+        "hierarchies": [
+          {
+            "name": "Jerarquía de fechas",
+            "annotations": [
+              {
+                "name": "TemplateId",
+                "value": "DateHierarchy"
+              }
+            ],
+            "levels": [
+              {
+                "name": "Año",
+                "column": "Año",
+                "lineageTag": "2eece3a6-8674-45c6-b543-0147f558a5c1",
+                "ordinal": 0
+              },
+              {
+                "name": "Trimestre",
+                "column": "Trimestre",
+                "lineageTag": "09d4effe-5817-4b1b-8a85-3804126f9705",
+                "ordinal": 1
+              },
+              {
+                "name": "Mes",
+                "column": "Mes",
+                "lineageTag": "92e24d8a-e156-4624-aa25-e97c5749574c",
+                "ordinal": 2
+              },
+              {
+                "name": "Día",
+                "column": "Día",
+                "lineageTag": "adbfc578-8c8f-45c9-9097-32b365b1a856",
+                "ordinal": 3
+              }
+            ],
+            "lineageTag": "4b685029-1cba-47b3-90bd-650b5e46aeb5"
+          }
+        ],
+        "isHidden": true,
+        "lineageTag": "1e195d18-32a8-4cc7-8da0-ec3e1f26165f",
+        "partitions": [
+          {
+            "name": "LocalDateTable_80f41cf2-5a95-4216-93aa-0e0cd71c4bf6",
+            "mode": "import",
+            "source": {
+              "expression": "Calendar(Date(Year(MIN('demographic'[Term Start Date])), 1, 1), Date(Year(MAX('demographic'[Term Start Date])), 12, 31))",
+              "type": "calculated"
+            }
+          }
+        ],
+        "showAsVariationsOnly": true
+      },
+      {
+        "name": "survey",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navegación"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "ClassID",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "a2cdb85c-ac7e-49e9-b558-2b68163fb033",
+            "sourceColumn": "ClassID",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "StudentID",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "d4ff4d8a-b21f-467c-a138-df4b628e0624",
+            "sourceColumn": "StudentID",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "LastName",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "63562fa6-cb44-410a-9c7a-27048971f645",
+            "sourceColumn": "LastName",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "FirstName",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "c9087e98-8817-40d5-bc1f-79502e5b0bf9",
+            "sourceColumn": "FirstName",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "1stCourseInDepartment?",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "edd3a957-63b2-45d3-88a1-dbd95d031008",
+            "sourceColumn": "1stCourseInDepartment?",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "UsedExcel?",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "e6cb6db1-482a-4a59-b9c7-24420ae50e81",
+            "sourceColumn": "UsedExcel?",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "UsedPowerBI?",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "e60b37b5-4335-43da-a6a0-0faee086f6bf",
+            "sourceColumn": "UsedPowerBI?",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "ExcelSelfDescribedProficiency",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "0665392c-bceb-4502-9acf-3404e34b6363",
+            "sourceColumn": "ExcelSelfDescribedProficiency",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "PowerBISelfDescribedProficiency",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "1e1524eb-c8ab-42a6-9318-648e7afbf1d9",
+            "sourceColumn": "PowerBISelfDescribedProficiency",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "StudentPreferredFirstName",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "6ce1911d-06c9-4422-8125-6821862545ff",
+            "sourceColumn": "StudentPreferredFirstName",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "StudentPreferredPronouns",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "d518c171-2150-4e6f-a0be-6b94104ffdce",
+            "sourceColumn": "StudentPreferredPronouns",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "27a68f24-ac45-4ab1-bab6-602a6b6231c1",
+        "partitions": [
+          {
+            "name": "survey",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Origen = Excel.Workbook(File.Contents(\"C:\\Users\\CursosTardes\\Downloads\\power_bi\\data\\InstructorGatheredStudentInformation.xlsx\"), null, true),",
+                "    Sheet1_Sheet = Origen{[Item=\"Sheet1\",Kind=\"Sheet\"]}[Data],",
+                "    #\"Encabezados promovidos\" = Table.PromoteHeaders(Sheet1_Sheet, [PromoteAllScalars=true]),",
+                "    #\"Tipo cambiado\" = Table.TransformColumnTypes(#\"Encabezados promovidos\",{{\"ClassID\", Int64.Type}, {\"StudentID\", Int64.Type}, {\"LastName\", type text}, {\"FirstName\", type text}, {\"1stCourseInDepartment?\", type text}, {\"UsedExcel?\", type text}, {\"UsedPowerBI?\", type text}, {\"ExcelSelfDescribedProficiency\", type text}, {\"PowerBISelfDescribedProficiency\", type text}, {\"StudentPreferredFirstName\", type text}, {\"StudentPreferredPronouns\", type text}})",
+                "in",
+                "    #\"Tipo cambiado\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "AssignmentDIM",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navegación"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "AssignmentID",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "03eea134-3aca-46f5-a3b9-1d314b8750ae",
+            "sourceColumn": "AssignmentID",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Name",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "66eb70e1-f0b2-489c-b4d6-9d6e5969568f",
+            "sourceColumn": "Name",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Category",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "9eee743f-0caa-4877-8a15-75333058978f",
+            "sourceColumn": "Category",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Type",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "2aefbf65-2035-4f80-8936-266d0664f4ed",
+            "sourceColumn": "Type",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "573392c1-14b8-48c0-8adf-a7671aefa6c3",
+        "partitions": [
+          {
+            "name": "AssignmentDIM",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Origen = Excel.Workbook(File.Contents(\"C:\\Users\\CursosTardes\\Downloads\\power_bi\\data\\GradesPowerBIVersion.xlsx\"), null, true),",
+                "    AssignmentDIM_Sheet = Origen{[Item=\"AssignmentDIM\",Kind=\"Sheet\"]}[Data],",
+                "    #\"Encabezados promovidos\" = Table.PromoteHeaders(AssignmentDIM_Sheet, [PromoteAllScalars=true]),",
+                "    #\"Tipo cambiado\" = Table.TransformColumnTypes(#\"Encabezados promovidos\",{{\"AssignmentID\", Int64.Type}, {\"Name\", type text}, {\"Category\", type text}, {\"Type\", type text}})",
+                "in",
+                "    #\"Tipo cambiado\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "grade",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navegación"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "ClassID",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "4763824f-8749-4d40-8d32-b3c13e5ee50e",
+            "sourceColumn": "ClassID",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "AssignmentID",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "c4fb9265-5e34-4b8d-aaa9-e49a465e727d",
+            "sourceColumn": "AssignmentID",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Score",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "7be1d802-31fc-4cde-9c3a-9e26930d3f7c",
+            "sourceColumn": "Score",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "OfficeHoursAttended",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "a98d3413-4a47-45cd-b227-8ae02479bb33",
+            "sourceColumn": "OfficeHoursAttended",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "MaximumPossibleScore",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "d27914d2-2b8e-4651-822f-7d97f3cd04df",
+            "sourceColumn": "MaximumPossibleScore",
+            "summarizeBy": "sum"
+          }
+        ],
+        "lineageTag": "70d00a57-1a7a-404e-84b5-fe7fd688280d",
+        "partitions": [
+          {
+            "name": "grade",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Origen = Excel.Workbook(File.Contents(\"C:\\Users\\CursosTardes\\Downloads\\power_bi\\data\\GradesPowerBIVersion.xlsx\"), null, false),",
+                "    GradeScores_sheet = Origen{[Item=\"GradeScores\",Kind=\"Sheet\"]}[Data],",
+                "    FilterNullAndWhitespace = each List.Select(_, each _ <> null and (not (_ is text) or Text.Trim(_) <> \"\")),",
+                "    #\"Otras columnas quitadas\" = Table.SelectColumns(GradeScores_sheet, List.Select(Table.ColumnNames(GradeScores_sheet), each try not List.IsEmpty(FilterNullAndWhitespace(Table.Column(GradeScores_sheet, _))) otherwise true)),",
+                "    #\"Filas en blanco eliminadas\" = Table.SelectRows(#\"Otras columnas quitadas\", each not List.IsEmpty(FilterNullAndWhitespace(Record.FieldValues(_)))),",
+                "    #\"Encabezados promovidos\" = Table.PromoteHeaders(#\"Filas en blanco eliminadas\", [PromoteAllScalars=true]),",
+                "    #\"Tipo cambiado\" = Table.TransformColumnTypes(#\"Encabezados promovidos\",{{\"ClassID\", Int64.Type}, {\"AssignmentID\", Int64.Type}, {\"Score\", Int64.Type}, {\"OfficeHoursAttended\", Int64.Type}, {\"MaximumPossibleScore\", Int64.Type}})",
+                "in",
+                "    #\"Tipo cambiado\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
