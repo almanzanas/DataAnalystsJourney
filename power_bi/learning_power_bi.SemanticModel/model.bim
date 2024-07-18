@@ -1020,7 +1020,7 @@
         "annotations": [
           {
             "name": "PBI_NavigationStepName",
-            "value": "Navegación"
+            "value": "Navigation"
           },
           {
             "name": "PBI_ResultType",
@@ -1078,7 +1078,7 @@
                 "value": "Automatic"
               }
             ],
-            "dataType": "int64",
+            "dataType": "double",
             "formatString": "0",
             "lineageTag": "a98d3413-4a47-45cd-b227-8ae02479bb33",
             "sourceColumn": "OfficeHoursAttended",
@@ -1113,9 +1113,10 @@
                 "    #\"Otras columnas quitadas\" = Table.SelectColumns(GradeScores_sheet, List.Select(Table.ColumnNames(GradeScores_sheet), each try not List.IsEmpty(FilterNullAndWhitespace(Table.Column(GradeScores_sheet, _))) otherwise true)),",
                 "    #\"Filas en blanco eliminadas\" = Table.SelectRows(#\"Otras columnas quitadas\", each not List.IsEmpty(FilterNullAndWhitespace(Record.FieldValues(_)))),",
                 "    #\"Encabezados promovidos\" = Table.PromoteHeaders(#\"Filas en blanco eliminadas\", [PromoteAllScalars=true]),",
-                "    #\"Tipo cambiado\" = Table.TransformColumnTypes(#\"Encabezados promovidos\",{{\"ClassID\", Int64.Type}, {\"AssignmentID\", Int64.Type}, {\"Score\", Int64.Type}, {\"OfficeHoursAttended\", Int64.Type}, {\"MaximumPossibleScore\", Int64.Type}})",
+                "    #\"Tipo cambiado\" = Table.TransformColumnTypes(#\"Encabezados promovidos\",{{\"ClassID\", Int64.Type}, {\"AssignmentID\", Int64.Type}, {\"Score\", Int64.Type}, {\"OfficeHoursAttended\", Int64.Type}, {\"MaximumPossibleScore\", Int64.Type}}),",
+                "    #\"Replaced Value\" = Table.ReplaceValue(#\"Tipo cambiado\",null,0,Replacer.ReplaceValue,{\"OfficeHoursAttended\"})",
                 "in",
-                "    #\"Tipo cambiado\""
+                "    #\"Replaced Value\""
               ],
               "type": "m"
             }
