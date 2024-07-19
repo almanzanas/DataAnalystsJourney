@@ -1,0 +1,357 @@
+{
+  "config": "{\"version\":\"5.55\",\"themeCollection\":{\"baseTheme\":{\"name\":\"CY24SU06\",\"version\":\"5.56\",\"type\":2}},\"activeSectionIndex\":9,\"defaultDrillFilterOtherVisuals\":true,\"slowDataSourceSettings\":{\"isCrossHighlightingDisabled\":false,\"isSlicerSelectionsButtonEnabled\":false,\"isFilterSelectionsButtonEnabled\":false,\"isFieldWellButtonEnabled\":false,\"isApplyAllButtonEnabled\":false},\"linguisticSchemaSyncVersion\":2,\"settings\":{\"useNewFilterPaneExperience\":true,\"allowChangeFilterTypes\":true,\"useStylableVisualContainerHeader\":true,\"queryLimitOption\":6,\"exportDataMode\":1,\"useDefaultAggregateDisplayName\":true,\"useEnhancedTooltips\":true},\"objects\":{\"section\":[{\"properties\":{\"verticalAlignment\":{\"expr\":{\"Literal\":{\"Value\":\"'Top'\"}}}}}],\"outspacePane\":[{\"properties\":{\"expanded\":{\"expr\":{\"Literal\":{\"Value\":\"false\"}}}}}]}}",
+  "layoutOptimization": 0,
+  "resourcePackages": [
+    {
+      "resourcePackage": {
+        "disabled": false,
+        "items": [
+          {
+            "name": "CY24SU06",
+            "path": "BaseThemes/CY24SU06.json",
+            "type": 202
+          }
+        ],
+        "name": "SharedResources",
+        "type": 2
+      }
+    }
+  ],
+  "sections": [
+    {
+      "config": "{}",
+      "displayName": "Page 3",
+      "displayOption": 1,
+      "filters": "[]",
+      "height": 720.00,
+      "name": "07ab6c6036a0e15e36e1",
+      "ordinal": 3,
+      "visualContainers": [
+        {
+          "config": "{\"name\":\"fadbc78bb40e4cb8d39a\",\"layouts\":[{\"id\":0,\"position\":{\"x\":0,\"y\":0,\"z\":0,\"width\":1280,\"height\":720,\"tabOrder\":0}}],\"singleVisual\":{\"visualType\":\"funnel\",\"projections\":{\"Y\":[{\"queryRef\":\"Sum(grade.Score)\"}],\"Category\":[{\"queryRef\":\"demographic.LastName\",\"active\":true}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"g\",\"Entity\":\"grade\",\"Type\":0},{\"Name\":\"d\",\"Entity\":\"demographic\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score\"}},\"Function\":1},\"Name\":\"Sum(grade.Score)\",\"NativeReferenceName\":\"Average of Score\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"d\"}},\"Property\":\"LastName\"},\"Name\":\"demographic.LastName\",\"NativeReferenceName\":\"LastName\"}],\"OrderBy\":[{\"Direction\":2,\"Expression\":{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score\"}},\"Function\":1}}}]},\"drillFilterOtherVisuals\":true,\"hasDefaultSort\":true}}",
+          "filters": "[]",
+          "height": 720.00,
+          "width": 1280.00,
+          "x": 0.00,
+          "y": 0.00,
+          "z": 0.00
+        }
+      ],
+      "width": 1280.00
+    },
+    {
+      "config": "{}",
+      "displayName": "Page 1",
+      "displayOption": 3,
+      "filters": "[]",
+      "height": 720.00,
+      "name": "1a25bb562b1571c06004",
+      "ordinal": 1,
+      "visualContainers": [
+        {
+          "config": "{\"name\":\"40367c67b2c77d738a79\",\"layouts\":[{\"id\":0,\"position\":{\"x\":0,\"y\":360,\"z\":1000,\"width\":640,\"height\":360,\"tabOrder\":1000}}],\"singleVisual\":{\"visualType\":\"lineChart\",\"projections\":{\"Category\":[{\"queryRef\":\"grade.AssignmentID\",\"active\":true}],\"Y\":[{\"queryRef\":\"Avg(grade.Score)\"}],\"Y2\":[{\"queryRef\":\"CountNonNull(demographic.StudentID)\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"g\",\"Entity\":\"grade\",\"Type\":0},{\"Name\":\"d\",\"Entity\":\"demographic\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"AssignmentID\"},\"Name\":\"grade.AssignmentID\",\"NativeReferenceName\":\"AssignmentID\"},{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score\"}},\"Function\":1},\"Name\":\"Avg(grade.Score)\",\"NativeReferenceName\":\"Average of Score\"},{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"d\"}},\"Property\":\"StudentID\"}},\"Function\":5},\"Name\":\"CountNonNull(demographic.StudentID)\",\"NativeReferenceName\":\"Count of StudentID\"}],\"OrderBy\":[{\"Direction\":2,\"Expression\":{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score\"}},\"Function\":1}}}]},\"drillFilterOtherVisuals\":true,\"hasDefaultSort\":true}}",
+          "filters": "[]",
+          "height": 360.00,
+          "width": 640.00,
+          "x": 0.00,
+          "y": 360.00,
+          "z": 1000.00
+        },
+        {
+          "config": "{\"name\":\"761621c265c3622208bc\",\"layouts\":[{\"id\":0,\"position\":{\"x\":640,\"y\":0,\"z\":2000,\"width\":640,\"height\":360,\"tabOrder\":2000}}],\"singleVisual\":{\"visualType\":\"areaChart\",\"projections\":{\"Y\":[{\"queryRef\":\"Sum(grade.Score)\"}],\"Category\":[{\"queryRef\":\"grade.AssignmentID\",\"active\":true}],\"Y2\":[{\"queryRef\":\"Sum(grade.OfficeHoursAttended)\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"g\",\"Entity\":\"grade\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score\"}},\"Function\":1},\"Name\":\"Sum(grade.Score)\",\"NativeReferenceName\":\"Average of Score\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"AssignmentID\"},\"Name\":\"grade.AssignmentID\",\"NativeReferenceName\":\"AssignmentID\"},{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"OfficeHoursAttended\"}},\"Function\":0},\"Name\":\"Sum(grade.OfficeHoursAttended)\",\"NativeReferenceName\":\"Sum of OfficeHoursAttended\"}],\"OrderBy\":[{\"Direction\":2,\"Expression\":{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score\"}},\"Function\":1}}}]},\"drillFilterOtherVisuals\":true,\"hasDefaultSort\":true}}",
+          "filters": "[]",
+          "height": 360.00,
+          "width": 640.00,
+          "x": 640.00,
+          "y": 0.00,
+          "z": 2000.00
+        },
+        {
+          "config": "{\"name\":\"a2f4fc028aeb7eeb5c4b\",\"layouts\":[{\"id\":0,\"position\":{\"x\":0,\"y\":0,\"z\":0,\"width\":640,\"height\":360,\"tabOrder\":0}}],\"singleVisual\":{\"visualType\":\"waterfallChart\",\"projections\":{\"Category\":[{\"queryRef\":\"grade.AssignmentID\",\"active\":true}],\"Y\":[{\"queryRef\":\"Sum(grade.OfficeHoursAttended)\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"g\",\"Entity\":\"grade\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"AssignmentID\"},\"Name\":\"grade.AssignmentID\",\"NativeReferenceName\":\"AssignmentID\"},{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"OfficeHoursAttended\"}},\"Function\":0},\"Name\":\"Sum(grade.OfficeHoursAttended)\",\"NativeReferenceName\":\"Sum of OfficeHoursAttended\"}],\"OrderBy\":[{\"Direction\":1,\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"AssignmentID\"}}}]},\"drillFilterOtherVisuals\":true,\"objects\":{}}}",
+          "filters": "[]",
+          "height": 360.00,
+          "width": 640.00,
+          "x": 0.00,
+          "y": 0.00,
+          "z": 0.00
+        },
+        {
+          "config": "{\"name\":\"f1bb3f07b040b35a00d2\",\"layouts\":[{\"id\":0,\"position\":{\"x\":640,\"y\":360,\"width\":640,\"height\":360,\"z\":3000,\"tabOrder\":3000}}],\"singleVisual\":{\"visualType\":\"stackedAreaChart\",\"projections\":{\"Y\":[{\"queryRef\":\"Sum(grade.Score)\"}],\"Category\":[{\"queryRef\":\"grade.AssignmentID\",\"active\":true}],\"Series\":[{\"queryRef\":\"demographic.YearsAttended\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"g\",\"Entity\":\"grade\",\"Type\":0},{\"Name\":\"d\",\"Entity\":\"demographic\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score\"}},\"Function\":1},\"Name\":\"Sum(grade.Score)\",\"NativeReferenceName\":\"Average of Score\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"AssignmentID\"},\"Name\":\"grade.AssignmentID\",\"NativeReferenceName\":\"AssignmentID\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"d\"}},\"Property\":\"YearsAttended\"},\"Name\":\"demographic.YearsAttended\",\"NativeReferenceName\":\"Sum of YearsAttended\"}],\"OrderBy\":[{\"Direction\":2,\"Expression\":{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score\"}},\"Function\":1}}}]},\"drillFilterOtherVisuals\":true,\"hasDefaultSort\":true}}",
+          "filters": "[]",
+          "height": 360.00,
+          "width": 640.00,
+          "x": 640.00,
+          "y": 360.00,
+          "z": 3000.00
+        }
+      ],
+      "width": 1280.00
+    },
+    {
+      "config": "{}",
+      "displayName": "Page 6",
+      "displayOption": 1,
+      "filters": "[]",
+      "height": 720.00,
+      "name": "22ead7e690dee0c92048",
+      "ordinal": 6,
+      "visualContainers": [
+        {
+          "config": "{\"name\":\"3b9a2693635c1e00348e\",\"layouts\":[{\"id\":0,\"position\":{\"x\":10.423452768729643,\"y\":0,\"z\":0,\"width\":1269.5765472312703,\"height\":719.2182410423453,\"tabOrder\":0}}],\"singleVisual\":{\"visualType\":\"treemap\",\"projections\":{\"Values\":[{\"queryRef\":\"Sum(grade.OfficeHoursAttended)\"}],\"Group\":[{\"queryRef\":\"demographic.Gender\",\"active\":true}],\"Details\":[{\"queryRef\":\"demographic.Ethnicity\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"g\",\"Entity\":\"grade\",\"Type\":0},{\"Name\":\"d\",\"Entity\":\"demographic\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"OfficeHoursAttended\"}},\"Function\":0},\"Name\":\"Sum(grade.OfficeHoursAttended)\",\"NativeReferenceName\":\"Sum of OfficeHoursAttended\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"d\"}},\"Property\":\"Gender\"},\"Name\":\"demographic.Gender\",\"NativeReferenceName\":\"Gender\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"d\"}},\"Property\":\"Ethnicity\"},\"Name\":\"demographic.Ethnicity\",\"NativeReferenceName\":\"Ethnicity\"}]},\"drillFilterOtherVisuals\":true}}",
+          "filters": "[]",
+          "height": 719.22,
+          "width": 1269.58,
+          "x": 10.42,
+          "y": 0.00,
+          "z": 0.00
+        }
+      ],
+      "width": 1280.00
+    },
+    {
+      "config": "{}",
+      "displayName": "Page 7",
+      "displayOption": 1,
+      "filters": "[]",
+      "height": 720.00,
+      "name": "3815d9911918abac8d33",
+      "ordinal": 7,
+      "visualContainers": [
+        {
+          "config": "{\"name\":\"8788b6a09382de241911\",\"layouts\":[{\"id\":0,\"position\":{\"x\":10.423452768729643,\"y\":0,\"z\":0,\"width\":629.5765472312704,\"height\":360.6514657980456,\"tabOrder\":0}}],\"singleVisual\":{\"visualType\":\"gauge\",\"projections\":{\"Y\":[{\"queryRef\":\"Sum(grade.Score)\"}],\"MinValue\":[{\"queryRef\":\"Sum(grade.Score)1\"}],\"MaxValue\":[{\"queryRef\":\"Sum(grade.Score)2\"}],\"TargetValue\":[{\"queryRef\":\"Median(grade.Score)\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"g\",\"Entity\":\"grade\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score\"}},\"Function\":1},\"Name\":\"Sum(grade.Score)\",\"NativeReferenceName\":\"Average of Score1\"},{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score\"}},\"Function\":3},\"Name\":\"Sum(grade.Score)1\",\"NativeReferenceName\":\"Min of Score\"},{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score\"}},\"Function\":4},\"Name\":\"Sum(grade.Score)2\",\"NativeReferenceName\":\"Max of Score\"},{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score\"}},\"Function\":6},\"Name\":\"Median(grade.Score)\",\"NativeReferenceName\":\"Median of Score\"}],\"OrderBy\":[{\"Direction\":2,\"Expression\":{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score\"}},\"Function\":1}}}]},\"drillFilterOtherVisuals\":true,\"hasDefaultSort\":true}}",
+          "filters": "[]",
+          "height": 360.65,
+          "width": 629.58,
+          "x": 10.42,
+          "y": 0.00,
+          "z": 0.00
+        },
+        {
+          "config": "{\"name\":\"9ca65a1d0dc77404134b\",\"layouts\":[{\"id\":0,\"position\":{\"x\":650.4234527687297,\"y\":0,\"z\":2,\"width\":629.5765472312704,\"height\":719.2182410423453,\"tabOrder\":2}}],\"singleVisual\":{\"visualType\":\"multiRowCard\",\"projections\":{\"Values\":[{\"queryRef\":\"Sum(grade.Score)\"},{\"queryRef\":\"Sum(grade.Score)1\"},{\"queryRef\":\"Sum(grade.OfficeHoursAttended)\"},{\"queryRef\":\"survey.StudentID\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"g\",\"Entity\":\"grade\",\"Type\":0},{\"Name\":\"s\",\"Entity\":\"survey\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score\"}},\"Function\":1},\"Name\":\"Sum(grade.Score)\",\"NativeReferenceName\":\"Average of Score\"},{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score\"}},\"Function\":6},\"Name\":\"Sum(grade.Score)1\",\"NativeReferenceName\":\"Median of Score\"},{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"OfficeHoursAttended\"}},\"Function\":0},\"Name\":\"Sum(grade.OfficeHoursAttended)\",\"NativeReferenceName\":\"Sum of OfficeHoursAttended\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"StudentID\"},\"Name\":\"survey.StudentID\",\"NativeReferenceName\":\"StudentID\"}],\"OrderBy\":[{\"Direction\":2,\"Expression\":{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score\"}},\"Function\":1}}}]},\"drillFilterOtherVisuals\":true,\"hasDefaultSort\":true}}",
+          "filters": "[]",
+          "height": 719.22,
+          "width": 629.58,
+          "x": 650.42,
+          "y": 0.00,
+          "z": 2.00
+        },
+        {
+          "config": "{\"name\":\"c66c3c900906a53e9a1d\",\"layouts\":[{\"id\":0,\"position\":{\"x\":0,\"y\":360.6514657980456,\"z\":1,\"width\":629.5765472312704,\"height\":358.56677524429966,\"tabOrder\":1}}],\"singleVisual\":{\"visualType\":\"card\",\"projections\":{\"Values\":[{\"queryRef\":\"Sum(grade.Score)\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"g\",\"Entity\":\"grade\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score\"}},\"Function\":1},\"Name\":\"Sum(grade.Score)\",\"NativeReferenceName\":\"Average of Score\"}],\"OrderBy\":[{\"Direction\":2,\"Expression\":{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score\"}},\"Function\":1}}}]},\"drillFilterOtherVisuals\":true,\"hasDefaultSort\":true}}",
+          "filters": "[]",
+          "height": 358.57,
+          "width": 629.58,
+          "x": 0.00,
+          "y": 360.65,
+          "z": 1.00
+        }
+      ],
+      "width": 1280.00
+    },
+    {
+      "config": "{}",
+      "displayName": "Page 4",
+      "displayOption": 1,
+      "filters": "[]",
+      "height": 720.00,
+      "name": "9787955444600a996dbb",
+      "ordinal": 4,
+      "visualContainers": [
+        {
+          "config": "{\"name\":\"1f6f538e3db55d13d8b7\",\"layouts\":[{\"id\":0,\"position\":{\"x\":0,\"y\":0,\"z\":0,\"width\":1280,\"height\":719.2182410423453,\"tabOrder\":0}}],\"singleVisual\":{\"visualType\":\"scatterChart\",\"projections\":{\"X\":[{\"queryRef\":\"grade.Score\",\"active\":true}],\"Size\":[{\"queryRef\":\"CountNonNull(demographic.IsStudentAthlete)\"}],\"Play\":[{\"queryRef\":\"grade.AssignmentID\"}],\"Category\":[{\"queryRef\":\"demographic.IsStudentAthlete\",\"active\":true}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"g\",\"Entity\":\"grade\",\"Type\":0},{\"Name\":\"d\",\"Entity\":\"demographic\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score\"}},\"Function\":1},\"Name\":\"grade.Score\",\"NativeReferenceName\":\"Average of Score\"},{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"d\"}},\"Property\":\"IsStudentAthlete\"}},\"Function\":5},\"Name\":\"CountNonNull(demographic.IsStudentAthlete)\",\"NativeReferenceName\":\"IsStudentAthlete\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"AssignmentID\"},\"Name\":\"grade.AssignmentID\",\"NativeReferenceName\":\"AssignmentID\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"d\"}},\"Property\":\"IsStudentAthlete\"},\"Name\":\"demographic.IsStudentAthlete\",\"NativeReferenceName\":\"IsStudentAthlete1\"}]},\"drillFilterOtherVisuals\":true}}",
+          "filters": "[]",
+          "height": 719.22,
+          "width": 1280.00,
+          "x": 0.00,
+          "y": 0.00,
+          "z": 0.00
+        }
+      ],
+      "width": 1280.00
+    },
+    {
+      "config": "{}",
+      "displayName": "Page 9",
+      "displayOption": 1,
+      "filters": "[]",
+      "height": 720.00,
+      "name": "a3c8adc8b9ac7ce6a35c",
+      "ordinal": 9,
+      "visualContainers": [
+        {
+          "config": "{\"name\":\"41e70c0943be4d689802\",\"layouts\":[{\"id\":0,\"position\":{\"x\":1109.055374592834,\"y\":0,\"z\":1,\"width\":170.94462540716611,\"height\":719.2182410423453,\"tabOrder\":1}}],\"singleVisual\":{\"visualType\":\"slicer\",\"projections\":{\"Values\":[{\"queryRef\":\"grade.AssignmentID\",\"active\":true}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"g\",\"Entity\":\"grade\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"AssignmentID\"},\"Name\":\"grade.AssignmentID\",\"NativeReferenceName\":\"AssignmentID\"}]},\"drillFilterOtherVisuals\":true,\"objects\":{\"data\":[{\"properties\":{\"mode\":{\"expr\":{\"Literal\":{\"Value\":\"'Basic'\"}}}}}],\"general\":[{\"properties\":{}}]}}}",
+          "filters": "[]",
+          "height": 719.22,
+          "width": 170.94,
+          "x": 1109.06,
+          "y": 0.00,
+          "z": 1.00
+        },
+        {
+          "config": "{\"name\":\"47e54e4204b358011b09\",\"layouts\":[{\"id\":0,\"position\":{\"x\":750.4885993485342,\"y\":0,\"z\":4,\"width\":358.56677524429966,\"height\":444.03908794788276,\"tabOrder\":4}}],\"singleVisual\":{\"visualType\":\"lineStackedColumnComboChart\",\"projections\":{\"Category\":[{\"queryRef\":\"demographic.Race\",\"active\":true}],\"Y2\":[{\"queryRef\":\"Sum(grade.Score)\"}],\"Tooltips\":[{\"queryRef\":\"Sum(grade.Score)\"}],\"Y\":[{\"queryRef\":\"Sum(grade.Score)1\"}],\"Series\":[{\"queryRef\":\"demographic.YearsAttended\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"d\",\"Entity\":\"demographic\",\"Type\":0},{\"Name\":\"g\",\"Entity\":\"grade\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"d\"}},\"Property\":\"Race\"},\"Name\":\"demographic.Race\",\"NativeReferenceName\":\"Race\"},{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score\"}},\"Function\":1},\"Name\":\"Sum(grade.Score)\",\"NativeReferenceName\":\"Average of Score1\"},{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score\"}},\"Function\":0},\"Name\":\"Sum(grade.Score)1\",\"NativeReferenceName\":\"Sum of Score\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"d\"}},\"Property\":\"YearsAttended\"},\"Name\":\"demographic.YearsAttended\",\"NativeReferenceName\":\"YearsAttended\"}],\"OrderBy\":[{\"Direction\":2,\"Expression\":{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score\"}},\"Function\":0}}}]},\"drillFilterOtherVisuals\":true,\"hasDefaultSort\":true}}",
+          "filters": "[]",
+          "height": 444.04,
+          "width": 358.57,
+          "x": 750.49,
+          "y": 0.00,
+          "z": 4.00
+        },
+        {
+          "config": "{\"name\":\"65646c80106a68528dec\",\"layouts\":[{\"id\":0,\"position\":{\"x\":354.3973941368078,\"y\":444.03908794788276,\"z\":3,\"width\":539.9348534201955,\"height\":275.17915309446255,\"tabOrder\":3}}],\"singleVisual\":{\"visualType\":\"gauge\",\"projections\":{\"Y\":[{\"queryRef\":\"Sum(grade.Score)\"}],\"MinValue\":[{\"queryRef\":\"Sum(grade.Score)1\"}],\"MaxValue\":[{\"queryRef\":\"Sum(grade.Score)2\"}],\"TargetValue\":[{\"queryRef\":\"Median(grade.Score)\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"g\",\"Entity\":\"grade\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score\"}},\"Function\":1},\"Name\":\"Sum(grade.Score)\",\"NativeReferenceName\":\"Average of Score1\"},{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score\"}},\"Function\":3},\"Name\":\"Sum(grade.Score)1\",\"NativeReferenceName\":\"Min of Score\"},{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score\"}},\"Function\":4},\"Name\":\"Sum(grade.Score)2\",\"NativeReferenceName\":\"Max of Score\"},{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score\"}},\"Function\":6},\"Name\":\"Median(grade.Score)\",\"NativeReferenceName\":\"Median of Score\"}],\"OrderBy\":[{\"Direction\":2,\"Expression\":{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score\"}},\"Function\":1}}}]},\"drillFilterOtherVisuals\":true,\"hasDefaultSort\":true}}",
+          "filters": "[]",
+          "height": 275.18,
+          "width": 539.93,
+          "x": 354.40,
+          "y": 444.04,
+          "z": 3.00
+        },
+        {
+          "config": "{\"name\":\"a068422bce5c5a543098\",\"layouts\":[{\"id\":0,\"position\":{\"x\":10.423452768729643,\"y\":0,\"z\":0,\"width\":343.97394136807816,\"height\":719.2182410423453,\"tabOrder\":0}}],\"singleVisual\":{\"visualType\":\"tableEx\",\"projections\":{\"Values\":[{\"queryRef\":\"survey.StudentID\"},{\"queryRef\":\"Avg(grade.Score)\"},{\"queryRef\":\"Sum(demographic.YearsAttended)\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"survey\",\"Type\":0},{\"Name\":\"g\",\"Entity\":\"grade\",\"Type\":0},{\"Name\":\"d\",\"Entity\":\"demographic\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"StudentID\"},\"Name\":\"survey.StudentID\",\"NativeReferenceName\":\"StudentID\"},{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score\"}},\"Function\":1},\"Name\":\"Avg(grade.Score)\",\"NativeReferenceName\":\"Average of Score\"},{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"d\"}},\"Property\":\"YearsAttended\"}},\"Function\":0},\"Name\":\"Sum(demographic.YearsAttended)\",\"NativeReferenceName\":\"Sum of YearsAttended\"}]},\"drillFilterOtherVisuals\":true}}",
+          "filters": "[]",
+          "height": 719.22,
+          "width": 343.97,
+          "x": 10.42,
+          "y": 0.00,
+          "z": 0.00
+        },
+        {
+          "config": "{\"name\":\"dfd00bf528aacd18bd23\",\"layouts\":[{\"id\":0,\"position\":{\"x\":354.3973941368078,\"y\":0,\"z\":2,\"width\":396.0912052117264,\"height\":189.70684039087948,\"tabOrder\":2}}],\"singleVisual\":{\"visualType\":\"kpi\",\"projections\":{\"Indicator\":[{\"queryRef\":\"Sum(grade.Score)\"}],\"TrendLine\":[{\"queryRef\":\"grade.AssignmentID\"}],\"Goal\":[{\"queryRef\":\"Sum(grade.GoalGradeAverage)\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"g\",\"Entity\":\"grade\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score\"}},\"Function\":1},\"Name\":\"Sum(grade.Score)\",\"NativeReferenceName\":\"Average of Score\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"AssignmentID\"},\"Name\":\"grade.AssignmentID\",\"NativeReferenceName\":\"AssignmentID\"},{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"GoalGradeAverage\"}},\"Function\":1},\"Name\":\"Sum(grade.GoalGradeAverage)\",\"NativeReferenceName\":\"Average of GoalGradeAverage\"}]},\"drillFilterOtherVisuals\":true}}",
+          "filters": "[{\"expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Entity\":\"grade\"}},\"Property\":\"AssignmentID\"}},\"filter\":{\"Version\":2,\"From\":[{\"Name\":\"g\",\"Entity\":\"grade\",\"Type\":0}],\"Where\":[{\"Condition\":{\"Not\":{\"Expression\":{\"Comparison\":{\"ComparisonKind\":0,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"AssignmentID\"}},\"Right\":{\"Literal\":{\"Value\":\"14L\"}}}}}}}]},\"type\":\"Advanced\",\"howCreated\":0,\"isHiddenInViewMode\":false},{\"expression\":{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Entity\":\"grade\"}},\"Property\":\"GoalGradeAverage\"}},\"Function\":1}},\"filter\":{\"Version\":2,\"From\":[{\"Name\":\"g\",\"Entity\":\"grade\",\"Type\":0}],\"Where\":[{\"Condition\":{\"Comparison\":{\"ComparisonKind\":0,\"Left\":{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"GoalGradeAverage\"}},\"Function\":1}},\"Right\":{\"Literal\":{\"Value\":\"75L\"}}}}}]},\"type\":\"Advanced\",\"howCreated\":0,\"isHiddenInViewMode\":false}]",
+          "height": 189.71,
+          "width": 396.09,
+          "x": 354.40,
+          "y": 0.00,
+          "z": 2.00
+        }
+      ],
+      "width": 1280.00
+    },
+    {
+      "config": "{}",
+      "displayName": "Bar Chars",
+      "displayOption": 1,
+      "filters": "[]",
+      "height": 720.00,
+      "name": "b1af41d72b404740b4a6",
+      "visualContainers": [
+        {
+          "config": "{\"name\":\"48d3bc37a2bae0161355\",\"layouts\":[{\"id\":0,\"position\":{\"x\":640,\"y\":0,\"z\":3000,\"width\":640,\"height\":343.75,\"tabOrder\":3000}}],\"singleVisual\":{\"visualType\":\"columnChart\",\"projections\":{\"Rows\":[{\"queryRef\":\"demographic.Gender\"},{\"queryRef\":\"demographic.IsStudentAthlete\"}],\"Tooltips\":[{\"queryRef\":\"Sum(demographic.Age)\"}],\"Y\":[{\"queryRef\":\"Sum(grade.Score)\"},{\"queryRef\":\"Sum(grade.OfficeHoursAttended)\"}],\"Category\":[{\"queryRef\":\"survey.1stCourseInDepartment?\",\"active\":true}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"d\",\"Entity\":\"demographic\",\"Type\":0},{\"Name\":\"g\",\"Entity\":\"grade\",\"Type\":0},{\"Name\":\"s\",\"Entity\":\"survey\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"d\"}},\"Property\":\"Gender\"},\"Name\":\"demographic.Gender\",\"NativeReferenceName\":\"Gender\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"d\"}},\"Property\":\"IsStudentAthlete\"},\"Name\":\"demographic.IsStudentAthlete\",\"NativeReferenceName\":\"IsStudentAthlete\"},{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"d\"}},\"Property\":\"Age\"}},\"Function\":1},\"Name\":\"Sum(demographic.Age)\",\"NativeReferenceName\":\"Average of Age\"},{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score\"}},\"Function\":1},\"Name\":\"Sum(grade.Score)\",\"NativeReferenceName\":\"Average of Score\"},{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"OfficeHoursAttended\"}},\"Function\":0},\"Name\":\"Sum(grade.OfficeHoursAttended)\",\"NativeReferenceName\":\"Sum of OfficeHoursAttended\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"1stCourseInDepartment?\"},\"Name\":\"survey.1stCourseInDepartment?\",\"NativeReferenceName\":\"1stCourseInDepartment?\"}]},\"drillFilterOtherVisuals\":true}}",
+          "filters": "[]",
+          "height": 343.75,
+          "width": 640.00,
+          "x": 640.00,
+          "y": 0.00,
+          "z": 3000.00
+        },
+        {
+          "config": "{\"name\":\"7b840a24d24c2d839abb\",\"layouts\":[{\"id\":0,\"position\":{\"x\":0,\"y\":360,\"z\":1000,\"width\":640,\"height\":360,\"tabOrder\":1000}}],\"singleVisual\":{\"visualType\":\"clusteredBarChart\",\"projections\":{\"Category\":[{\"queryRef\":\"demographic.Ethnicity\",\"active\":true}],\"Y\":[{\"queryRef\":\"Avg(demographic.Age)\"},{\"queryRef\":\"Avg(grade.Score)\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"d\",\"Entity\":\"demographic\",\"Type\":0},{\"Name\":\"g\",\"Entity\":\"grade\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"d\"}},\"Property\":\"Ethnicity\"},\"Name\":\"demographic.Ethnicity\",\"NativeReferenceName\":\"Ethnicity\"},{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"d\"}},\"Property\":\"Age\"}},\"Function\":1},\"Name\":\"Avg(demographic.Age)\",\"NativeReferenceName\":\"Average of Age\"},{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score\"}},\"Function\":1},\"Name\":\"Avg(grade.Score)\",\"NativeReferenceName\":\"Average of Score\"}],\"OrderBy\":[{\"Direction\":2,\"Expression\":{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"d\"}},\"Property\":\"Age\"}},\"Function\":1}}}]},\"drillFilterOtherVisuals\":true,\"hasDefaultSort\":true}}",
+          "filters": "[]",
+          "height": 360.00,
+          "width": 640.00,
+          "x": 0.00,
+          "y": 360.00,
+          "z": 1000.00
+        },
+        {
+          "config": "{\"name\":\"b24aba22b2e674ea4176\",\"layouts\":[{\"id\":0,\"position\":{\"x\":640,\"y\":376.25,\"z\":2000,\"width\":640,\"height\":343.75,\"tabOrder\":2000}}],\"singleVisual\":{\"visualType\":\"hundredPercentStackedBarChart\",\"projections\":{\"Y\":[{\"queryRef\":\"Sum(grade.OfficeHoursAttended)\"}],\"Category\":[{\"queryRef\":\"demographic.IsStudentAthlete\",\"active\":true}],\"Series\":[{\"queryRef\":\"AssignmentDIM.AssignmentID\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"g\",\"Entity\":\"grade\",\"Type\":0},{\"Name\":\"d\",\"Entity\":\"demographic\",\"Type\":0},{\"Name\":\"a\",\"Entity\":\"AssignmentDIM\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"OfficeHoursAttended\"}},\"Function\":0},\"Name\":\"Sum(grade.OfficeHoursAttended)\",\"NativeReferenceName\":\"Sum of OfficeHoursAttended\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"d\"}},\"Property\":\"IsStudentAthlete\"},\"Name\":\"demographic.IsStudentAthlete\",\"NativeReferenceName\":\"IsStudentAthlete\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"a\"}},\"Property\":\"AssignmentID\"},\"Name\":\"AssignmentDIM.AssignmentID\",\"NativeReferenceName\":\"AssignmentID\"}],\"OrderBy\":[{\"Direction\":2,\"Expression\":{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"OfficeHoursAttended\"}},\"Function\":0}}}]},\"drillFilterOtherVisuals\":true,\"hasDefaultSort\":true}}",
+          "filters": "[]",
+          "height": 343.75,
+          "width": 640.00,
+          "x": 640.00,
+          "y": 376.25,
+          "z": 2000.00
+        },
+        {
+          "config": "{\"name\":\"d49bffbd69e5305e32d9\",\"layouts\":[{\"id\":0,\"position\":{\"x\":10,\"y\":0,\"z\":0,\"width\":630,\"height\":344,\"tabOrder\":0}}],\"singleVisual\":{\"visualType\":\"barChart\",\"projections\":{\"Y\":[{\"queryRef\":\"Avg(grade.Score)\"},{\"queryRef\":\"Sum(grade.OfficeHoursAttended)\"}],\"Category\":[{\"queryRef\":\"survey.1stCourseInDepartment?\",\"active\":true}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"g\",\"Entity\":\"grade\",\"Type\":0},{\"Name\":\"s\",\"Entity\":\"survey\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score\"}},\"Function\":1},\"Name\":\"Avg(grade.Score)\",\"NativeReferenceName\":\"Average of Score\"},{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"OfficeHoursAttended\"}},\"Function\":0},\"Name\":\"Sum(grade.OfficeHoursAttended)\",\"NativeReferenceName\":\"Sum of OfficeHoursAttended\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"1stCourseInDepartment?\"},\"Name\":\"survey.1stCourseInDepartment?\",\"NativeReferenceName\":\"1stCourseInDepartment?\"}],\"OrderBy\":[{\"Direction\":2,\"Expression\":{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score\"}},\"Function\":1}}}]},\"drillFilterOtherVisuals\":true,\"hasDefaultSort\":true,\"objects\":{}}}",
+          "filters": "[]",
+          "height": 344.00,
+          "width": 630.00,
+          "x": 10.00,
+          "y": 0.00,
+          "z": 0.00
+        }
+      ],
+      "width": 1280.00
+    },
+    {
+      "config": "{}",
+      "displayName": "Page 5",
+      "displayOption": 1,
+      "filters": "[]",
+      "height": 720.00,
+      "name": "c56c03db9aa5e8068ab7",
+      "ordinal": 5,
+      "visualContainers": [
+        {
+          "config": "{\"name\":\"bc6f802730209203d043\",\"layouts\":[{\"id\":0,\"position\":{\"x\":0,\"y\":0,\"z\":0,\"width\":631.1520737327189,\"height\":719.63133640553,\"tabOrder\":0}}],\"singleVisual\":{\"visualType\":\"donutChart\",\"projections\":{\"Y\":[{\"queryRef\":\"Sum(grade.Score)\"}],\"Category\":[{\"queryRef\":\"demographic.Gender\",\"active\":true}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"g\",\"Entity\":\"grade\",\"Type\":0},{\"Name\":\"d\",\"Entity\":\"demographic\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score\"}},\"Function\":1},\"Name\":\"Sum(grade.Score)\",\"NativeReferenceName\":\"Average of Score\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"d\"}},\"Property\":\"Gender\"},\"Name\":\"demographic.Gender\",\"NativeReferenceName\":\"Gender\"}],\"OrderBy\":[{\"Direction\":2,\"Expression\":{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score\"}},\"Function\":1}}}]},\"drillFilterOtherVisuals\":true,\"hasDefaultSort\":true}}",
+          "filters": "[]",
+          "height": 719.63,
+          "width": 631.15,
+          "x": 0.00,
+          "y": 0.00,
+          "z": 0.00
+        },
+        {
+          "config": "{\"name\":\"feb46e30396673bae3a1\",\"layouts\":[{\"id\":0,\"position\":{\"x\":641,\"y\":0,\"width\":631,\"height\":720,\"z\":1,\"tabOrder\":1}}],\"singleVisual\":{\"visualType\":\"pieChart\",\"projections\":{\"Y\":[{\"queryRef\":\"Sum(grade.Score)\"}],\"Category\":[{\"queryRef\":\"demographic.YearsAttended\",\"active\":true}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"g\",\"Entity\":\"grade\",\"Type\":0},{\"Name\":\"d\",\"Entity\":\"demographic\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score\"}},\"Function\":1},\"Name\":\"Sum(grade.Score)\",\"NativeReferenceName\":\"Average of Score\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"d\"}},\"Property\":\"YearsAttended\"},\"Name\":\"demographic.YearsAttended\",\"NativeReferenceName\":\"YearsAttended\"}],\"OrderBy\":[{\"Direction\":2,\"Expression\":{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score\"}},\"Function\":1}}}]},\"drillFilterOtherVisuals\":true,\"hasDefaultSort\":true}}",
+          "filters": "[]",
+          "height": 720.00,
+          "width": 631.00,
+          "x": 641.00,
+          "y": 0.00,
+          "z": 1.00
+        }
+      ],
+      "width": 1280.00
+    },
+    {
+      "config": "{}",
+      "displayName": "Page 2",
+      "displayOption": 1,
+      "filters": "[]",
+      "height": 720.00,
+      "name": "db6e81f600ba1e176e31",
+      "ordinal": 2,
+      "visualContainers": [
+        {
+          "config": "{\"name\":\"13c2ef9a3e12d0b22006\",\"layouts\":[{\"id\":0,\"position\":{\"x\":592.5,\"y\":0,\"z\":1000,\"width\":687.5,\"height\":720,\"tabOrder\":1000}}],\"singleVisual\":{\"visualType\":\"ribbonChart\",\"projections\":{\"Category\":[{\"queryRef\":\"grade.AssignmentID\",\"active\":true}],\"Y\":[{\"queryRef\":\"Sum(grade.Score)\"}],\"Series\":[{\"queryRef\":\"grade.OfficeHoursAttended\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"g\",\"Entity\":\"grade\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"AssignmentID\"},\"Name\":\"grade.AssignmentID\",\"NativeReferenceName\":\"AssignmentID\"},{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score\"}},\"Function\":1},\"Name\":\"Sum(grade.Score)\",\"NativeReferenceName\":\"Average of Score\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"OfficeHoursAttended\"},\"Name\":\"grade.OfficeHoursAttended\",\"NativeReferenceName\":\"OfficeHoursAttended\"}],\"OrderBy\":[{\"Direction\":2,\"Expression\":{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score\"}},\"Function\":1}}}]},\"drillFilterOtherVisuals\":true,\"hasDefaultSort\":true}}",
+          "filters": "[]",
+          "height": 720.00,
+          "width": 687.50,
+          "x": 592.50,
+          "y": 0.00,
+          "z": 1000.00
+        },
+        {
+          "config": "{\"name\":\"51d97915764a99232d81\",\"layouts\":[{\"id\":0,\"position\":{\"x\":10,\"y\":0,\"z\":0,\"width\":571.25,\"height\":720,\"tabOrder\":0}}],\"singleVisual\":{\"visualType\":\"lineStackedColumnComboChart\",\"projections\":{\"Category\":[{\"queryRef\":\"demographic.Race\",\"active\":true}],\"Y2\":[{\"queryRef\":\"Sum(grade.Score)\"}],\"Tooltips\":[{\"queryRef\":\"Sum(grade.Score)\"}],\"Y\":[{\"queryRef\":\"Sum(grade.Score)1\"}],\"Series\":[{\"queryRef\":\"demographic.YearsAttended\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"d\",\"Entity\":\"demographic\",\"Type\":0},{\"Name\":\"g\",\"Entity\":\"grade\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"d\"}},\"Property\":\"Race\"},\"Name\":\"demographic.Race\",\"NativeReferenceName\":\"Race\"},{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score\"}},\"Function\":1},\"Name\":\"Sum(grade.Score)\",\"NativeReferenceName\":\"Average of Score1\"},{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score\"}},\"Function\":0},\"Name\":\"Sum(grade.Score)1\",\"NativeReferenceName\":\"Sum of Score\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"d\"}},\"Property\":\"YearsAttended\"},\"Name\":\"demographic.YearsAttended\",\"NativeReferenceName\":\"YearsAttended\"}],\"OrderBy\":[{\"Direction\":2,\"Expression\":{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score\"}},\"Function\":0}}}]},\"drillFilterOtherVisuals\":true,\"hasDefaultSort\":true}}",
+          "filters": "[]",
+          "height": 720.00,
+          "width": 571.25,
+          "x": 10.00,
+          "y": 0.00,
+          "z": 0.00
+        }
+      ],
+      "width": 1280.00
+    },
+    {
+      "config": "{}",
+      "displayName": "Page 8",
+      "displayOption": 1,
+      "filters": "[]",
+      "height": 720.00,
+      "name": "dd8428f19bd337a870a5",
+      "ordinal": 8,
+      "visualContainers": [
+        {
+          "config": "{\"name\":\"03a1d605638a4b3c6e14\",\"layouts\":[{\"id\":0,\"position\":{\"x\":10.423452768729643,\"y\":0,\"z\":0,\"width\":1269.5765472312703,\"height\":719.2182410423453,\"tabOrder\":0}}],\"singleVisual\":{\"visualType\":\"kpi\",\"projections\":{\"Indicator\":[{\"queryRef\":\"Sum(grade.Score)\"}],\"TrendLine\":[{\"queryRef\":\"grade.AssignmentID\"}],\"Goal\":[{\"queryRef\":\"Sum(grade.GoalGradeAverage)\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"g\",\"Entity\":\"grade\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score\"}},\"Function\":1},\"Name\":\"Sum(grade.Score)\",\"NativeReferenceName\":\"Average of Score\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"AssignmentID\"},\"Name\":\"grade.AssignmentID\",\"NativeReferenceName\":\"AssignmentID\"},{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"GoalGradeAverage\"}},\"Function\":1},\"Name\":\"Sum(grade.GoalGradeAverage)\",\"NativeReferenceName\":\"Average of GoalGradeAverage\"}]},\"drillFilterOtherVisuals\":true}}",
+          "filters": "[{\"expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Entity\":\"grade\"}},\"Property\":\"AssignmentID\"}},\"filter\":{\"Version\":2,\"From\":[{\"Name\":\"g\",\"Entity\":\"grade\",\"Type\":0}],\"Where\":[{\"Condition\":{\"Not\":{\"Expression\":{\"Comparison\":{\"ComparisonKind\":0,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"AssignmentID\"}},\"Right\":{\"Literal\":{\"Value\":\"14L\"}}}}}}}]},\"type\":\"Advanced\",\"howCreated\":0,\"isHiddenInViewMode\":false},{\"expression\":{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Entity\":\"grade\"}},\"Property\":\"GoalGradeAverage\"}},\"Function\":1}},\"filter\":{\"Version\":2,\"From\":[{\"Name\":\"g\",\"Entity\":\"grade\",\"Type\":0}],\"Where\":[{\"Condition\":{\"Comparison\":{\"ComparisonKind\":0,\"Left\":{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"GoalGradeAverage\"}},\"Function\":1}},\"Right\":{\"Literal\":{\"Value\":\"75L\"}}}}}]},\"type\":\"Advanced\",\"howCreated\":0,\"isHiddenInViewMode\":false}]",
+          "height": 719.22,
+          "width": 1269.58,
+          "x": 10.42,
+          "y": 0.00,
+          "z": 0.00
+        }
+      ],
+      "width": 1280.00
+    }
+  ]
+}
