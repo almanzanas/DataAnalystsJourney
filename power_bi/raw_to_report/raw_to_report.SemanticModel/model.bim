@@ -131,27 +131,25 @@
         "toTable": "LocalDateTable_aab16f1a-0173-4ac2-b19c-c616118b8e1a"
       },
       {
-        "name": "AutoDetected_5a66c54a-8d9a-4dde-91a4-b72dffac7125",
-        "fromColumn": "TrueClassStudentID",
-        "fromTable": "GradeScores",
-        "toColumn": "TrueClassStudentID",
-        "toTable": "StudentSurveyData"
-      },
-      {
-        "name": "AutoDetected_a99e507a-aa9f-4485-acd4-ba118251418e",
-        "crossFilteringBehavior": "bothDirections",
-        "fromCardinality": "one",
-        "fromColumn": "StudentID",
-        "fromTable": "UniversitySuppliedData",
-        "toColumn": "StudentID",
-        "toTable": "StudentSurveyData"
-      },
-      {
-        "name": "AutoDetected_dc4f6c82-6956-43c4-bc07-c2c35faf0da0",
+        "name": "3138d7a0-035d-56e3-a3af-c73ef206b855",
         "fromColumn": "AssignmentID",
         "fromTable": "GradeScores",
         "toColumn": "AssignmentID",
         "toTable": "AssignmentDIM"
+      },
+      {
+        "name": "a1c66f5e-452d-284e-5e45-96e41dab8cf0",
+        "fromColumn": "StudentID",
+        "fromTable": "GradeScores",
+        "toColumn": "StudentID",
+        "toTable": "StudentSurveyData"
+      },
+      {
+        "name": "01f5c995-a66f-2d81-8433-151acaafaeec",
+        "fromColumn": "StudentID",
+        "fromTable": "GradeScores",
+        "toColumn": "StudentID",
+        "toTable": "UniversitySuppliedData"
       }
     ],
     "sourceQueryCulture": "es-ES",
@@ -1241,7 +1239,7 @@
             "formatString": "0",
             "lineageTag": "222edc9b-a0bb-45d0-8d32-22389d152587",
             "sourceColumn": "StudentID",
-            "summarizeBy": "count"
+            "summarizeBy": "none"
           },
           {
             "name": "TrueClassID",

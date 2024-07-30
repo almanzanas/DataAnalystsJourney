@@ -10,59 +10,59 @@
       "nodes": [
         {
           "location": {
-            "x": 10,
-            "y": 264.1188456666867
+            "x": 0,
+            "y": 691.26170280954386
           },
           "nodeIndex": "AssignmentDIM",
           "nodeLineageTag": "0355750e-8ca6-4105-ac7f-68b2730ae0de",
           "size": {
-            "height": 176,
+            "height": 221.71428571428578,
             "width": 234
           },
-          "zIndex": 0
+          "zIndex": 1
         },
         {
           "location": {
-            "x": 294.202255104609,
-            "y": 139.88668757846878
+            "x": 268.48796939032326,
+            "y": 285.60097329275453
           },
           "nodeIndex": "GradeScores",
           "nodeLineageTag": "5c0f2e77-283a-42b9-b219-c46010769b0d",
           "size": {
-            "height": 272,
+            "height": 459.14285714285722,
             "width": 234
           },
-          "zIndex": 0
+          "zIndex": 4
         },
         {
           "location": {
-            "x": 578.41040181545577,
-            "y": 48.378697769063564
+            "x": 685.55325895831277,
+            "y": 614.09298348334937
           },
           "nodeIndex": "StudentSurveyData",
           "nodeLineageTag": "5be28232-b7a0-4224-a725-9e87914d057b",
           "size": {
-            "height": 300,
+            "height": 452.85714285714289,
             "width": 234
           },
-          "zIndex": 0
+          "zIndex": 2
         },
         {
           "location": {
-            "x": 862.62216291713685,
-            "y": -10
+            "x": 685.47930577427951,
+            "y": 12.857142857142833
           },
           "nodeIndex": "UniversitySuppliedData",
           "nodeLineageTag": "dda85270-ed05-461d-9af7-fe43c4df7cd2",
           "size": {
-            "height": 300,
+            "height": 508.57142857142856,
             "width": 234
           },
-          "zIndex": 0
+          "zIndex": 3
         }
       ],
       "name": "All tables",
-      "zoomValue": 100,
+      "zoomValue": 70,
       "pinKeyFieldsToTop": false,
       "showExtraHeaderInfo": false,
       "hideKeyFieldsWhenCollapsed": false,
