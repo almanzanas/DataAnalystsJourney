@@ -1,5 +1,5 @@
 {
-  "config": "{\"version\":\"5.55\",\"themeCollection\":{\"baseTheme\":{\"name\":\"CY24SU06\",\"version\":\"5.56\",\"type\":2}},\"activeSectionIndex\":0,\"defaultDrillFilterOtherVisuals\":true,\"linguisticSchemaSyncVersion\":2,\"settings\":{\"useNewFilterPaneExperience\":true,\"allowChangeFilterTypes\":true,\"useStylableVisualContainerHeader\":true,\"queryLimitOption\":6,\"exportDataMode\":1,\"useDefaultAggregateDisplayName\":true,\"useEnhancedTooltips\":true},\"objects\":{\"section\":[{\"properties\":{\"verticalAlignment\":{\"expr\":{\"Literal\":{\"Value\":\"'Top'\"}}}}}],\"outspacePane\":[{\"properties\":{\"expanded\":{\"expr\":{\"Literal\":{\"Value\":\"false\"}}}}}]}}",
+  "config": "{\"version\":\"5.55\",\"themeCollection\":{\"baseTheme\":{\"name\":\"CY24SU06\",\"version\":\"5.56\",\"type\":2}},\"activeSectionIndex\":0,\"defaultDrillFilterOtherVisuals\":true,\"slowDataSourceSettings\":{\"isCrossHighlightingDisabled\":false,\"isSlicerSelectionsButtonEnabled\":false,\"isFilterSelectionsButtonEnabled\":false,\"isFieldWellButtonEnabled\":false,\"isApplyAllButtonEnabled\":false},\"linguisticSchemaSyncVersion\":2,\"settings\":{\"useNewFilterPaneExperience\":true,\"allowChangeFilterTypes\":true,\"useStylableVisualContainerHeader\":true,\"queryLimitOption\":6,\"exportDataMode\":1,\"useDefaultAggregateDisplayName\":true,\"useEnhancedTooltips\":true},\"objects\":{\"section\":[{\"properties\":{\"verticalAlignment\":{\"expr\":{\"Literal\":{\"Value\":\"'Top'\"}}}}}],\"outspacePane\":[{\"properties\":{\"expanded\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]}}",
   "layoutOptimization": 0,
   "resourcePackages": [
     {
@@ -27,6 +27,15 @@
       "name": "b0e41ffa4db566e349b0",
       "visualContainers": [
         {
+          "config": "{\"name\":\"1e326c143e7b16be8dc8\",\"layouts\":[{\"id\":0,\"position\":{\"x\":0,\"y\":63.84236453201971,\"z\":1,\"width\":277.53694581280786,\"height\":117.93103448275862,\"tabOrder\":1}}],\"singleVisual\":{\"visualType\":\"card\",\"projections\":{\"Values\":[{\"queryRef\":\"Min(StudentSurveyData.1stCourseInDepartment?)\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"StudentSurveyData\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"1stCourseInDepartment?\"}},\"Function\":5},\"Name\":\"Min(StudentSurveyData.1stCourseInDepartment?)\",\"NativeReferenceName\":\"1st Course in Department Count\"}],\"OrderBy\":[{\"Direction\":2,\"Expression\":{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"1stCourseInDepartment?\"}},\"Function\":5}}}]},\"columnProperties\":{\"Min(StudentSurveyData.1stCourseInDepartment?)\":{\"displayName\":\"1st Course in Department Count\"}},\"drillFilterOtherVisuals\":true,\"hasDefaultSort\":true}}",
+          "filters": "[{\"name\":\"Filter78ed79d2790d2856086b\",\"expression\":{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Entity\":\"StudentSurveyData\"}},\"Property\":\"1stCourseInDepartment?\"}},\"Function\":5}},\"type\":\"Advanced\",\"howCreated\":0,\"isHiddenInViewMode\":true,\"displayName\":\"1st Course in Department Count\"},{\"name\":\"Filter7beaff9534db857d62a2\",\"expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Entity\":\"StudentSurveyData\"}},\"Property\":\"1stCourseInDepartment?\"}},\"filter\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"StudentSurveyData\",\"Type\":0}],\"Where\":[{\"Condition\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"1stCourseInDepartment?\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Y'\"}}]]}}}]},\"type\":\"Categorical\",\"howCreated\":1,\"objects\":{},\"displayName\":\"1st Course in Department Count\"}]",
+          "height": 117.93,
+          "width": 277.54,
+          "x": 0.00,
+          "y": 63.84,
+          "z": 1.00
+        },
+        {
           "config": "{\"name\":\"a0018d2f0b6c89128b97\",\"layouts\":[{\"id\":0,\"position\":{\"x\":9.501590668080594,\"y\":0,\"z\":0,\"width\":1270.4984093319194,\"height\":63.79639448568399,\"tabOrder\":0}}],\"singleVisual\":{\"visualType\":\"textbox\",\"drillFilterOtherVisuals\":true,\"objects\":{\"general\":[{\"properties\":{\"paragraphs\":[{\"textRuns\":[{\"value\":\"ISOM 210 Grade History Report\",\"textStyle\":{\"fontWeight\":\"bold\",\"fontFamily\":\"Calibri\",\"fontStyle\":\"italic\",\"fontSize\":\"32pt\"}}],\"horizontalTextAlignment\":\"center\"}]}}]}}}",
           "filters": "[]",
           "height": 63.80,
@@ -34,6 +43,24 @@
           "x": 9.50,
           "y": 0.00,
           "z": 0.00
+        },
+        {
+          "config": "{\"name\":\"b2146e9c815fb57ae119\",\"layouts\":[{\"id\":0,\"position\":{\"x\":0,\"y\":359.4611398963731,\"z\":3,\"width\":278.5492227979275,\"height\":151.21243523316062,\"tabOrder\":3}}],\"singleVisual\":{\"visualType\":\"card\",\"projections\":{\"Values\":[{\"queryRef\":\"GradeScores.Score divided by MaximumPossibleScore\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"g\",\"Entity\":\"GradeScores\",\"Type\":0}],\"Select\":[{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score divided by MaximumPossibleScore\"},\"Name\":\"GradeScores.Score divided by MaximumPossibleScore\",\"NativeReferenceName\":\"Score divided by MaximumPossibleScore\"}],\"OrderBy\":[{\"Direction\":2,\"Expression\":{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"Score divided by MaximumPossibleScore\"}}}]},\"drillFilterOtherVisuals\":true,\"hasDefaultSort\":true}}",
+          "filters": "[]",
+          "height": 151.21,
+          "width": 278.55,
+          "x": 0.00,
+          "y": 359.46,
+          "z": 3.00
+        },
+        {
+          "config": "{\"name\":\"c02cc3753fe1efc4cd1d\",\"layouts\":[{\"id\":0,\"position\":{\"x\":0,\"y\":209.11854103343467,\"z\":2,\"width\":278.17629179331306,\"height\":150.7598784194529,\"tabOrder\":2}}],\"singleVisual\":{\"visualType\":\"card\",\"projections\":{\"Values\":[{\"queryRef\":\"Sum(GradeScores.OfficeHoursAttended)\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"g\",\"Entity\":\"GradeScores\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"OfficeHoursAttended\"}},\"Function\":0},\"Name\":\"Sum(GradeScores.OfficeHoursAttended)\",\"NativeReferenceName\":\"Office Hours Attended\"}],\"OrderBy\":[{\"Direction\":2,\"Expression\":{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g\"}},\"Property\":\"OfficeHoursAttended\"}},\"Function\":0}}}]},\"columnProperties\":{\"Sum(GradeScores.OfficeHoursAttended)\":{\"displayName\":\"Office Hours Attended\"}},\"drillFilterOtherVisuals\":true,\"hasDefaultSort\":true}}",
+          "filters": "[]",
+          "height": 150.76,
+          "width": 278.18,
+          "x": 0.00,
+          "y": 209.12,
+          "z": 2.00
         }
       ],
       "width": 1280.00
