@@ -1,5 +1,5 @@
 {
-  "compatibilityLevel": 1550,
+  "compatibilityLevel": 1567,
   "model": {
     "annotations": [
       {
@@ -8,7 +8,7 @@
       },
       {
         "name": "PBIDesktopVersion",
-        "value": "2.131.901.0 (24.07)"
+        "value": "2.131.1203.0 (24.07)"
       },
       {
         "name": "PBI_QueryOrder",
@@ -52,7 +52,7 @@
         ],
         "expression": [
           "let",
-          "    Source = Excel.Workbook(File.Contents(\"C:\\Users\\CursosTardes\\Downloads\\power_bi\\raw_to_report\\data\\SchoolSuppliedDataClassStartChapter6Addition.xlsx\"), null, true),",
+          "    Source = Excel.Workbook(File.Contents(\"U:\\GitHub\\Projects\\DataAnalystsJourney\\power_bi\\raw_to_report\\data\\SchoolSuppliedDataClassStartChapter6Addition.xlsx\"), null, true),",
           "    Sheet1_Sheet = Source{[Item=\"Sheet1\",Kind=\"Sheet\"]}[Data],",
           "    #\"Promoted Headers\" = Table.PromoteHeaders(Sheet1_Sheet, [PromoteAllScalars=true]),",
           "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"StudentID\", Int64.Type}, {\"Term\", type text}, {\"Term Start Date\", type date}, {\"Course Number\", type text}, {\"LastName\", type text}, {\"FirstName\", type text}, {\"E-mail\", type text}, {\"Age\", Int64.Type}, {\"YearsAttended\", Int64.Type}, {\"ResidencyState\", type text}, {\"Race\", type text}, {\"Ethnicity\", type text}, {\"Gender\", type text}, {\"IsStudentAthlete\", type text}, {\"RequiresAdditionalAccomodations\", type text}, {\"RequiredAccomodationDetail\", type text}})",
@@ -76,7 +76,7 @@
         ],
         "expression": [
           "let",
-          "    Source = Excel.Workbook(File.Contents(\"C:\\Users\\CursosTardes\\Downloads\\power_bi\\raw_to_report\\data\\GradesPowerBIVersionChapter6Addition.xlsx\"), null, true),",
+          "    Source = Excel.Workbook(File.Contents(\"U:\\GitHub\\Projects\\DataAnalystsJourney\\power_bi\\raw_to_report\\data\\GradesPowerBIVersionChapter6Addition.xlsx\"), null, true),",
           "    GradeScores_Sheet = Source{[Item=\"GradeScores\",Kind=\"Sheet\"]}[Data],",
           "    #\"Promoted Headers\" = Table.PromoteHeaders(GradeScores_Sheet, [PromoteAllScalars=true]),",
           "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"ClassID\", Int64.Type}, {\"AssignmentID\", Int64.Type}, {\"Score\", Int64.Type}, {\"OfficeHoursAttended\", Int64.Type}, {\"MaximumPossibleScore\", Int64.Type}}),",
@@ -110,7 +110,7 @@
         ],
         "expression": [
           "let",
-          "    Source = Excel.Workbook(File.Contents(\"C:\\Users\\CursosTardes\\Downloads\\power_bi\\raw_to_report\\data\\InstructorGatheredStudentInformationChapter6Addition.xlsx\"), null, true),",
+          "    Source = Excel.Workbook(File.Contents(\"U:\\GitHub\\Projects\\DataAnalystsJourney\\power_bi\\raw_to_report\\data\\InstructorGatheredStudentInformationChapter6Addition.xlsx\"), null, true),",
           "    Sheet1_Sheet = Source{[Item=\"Sheet1\",Kind=\"Sheet\"]}[Data],",
           "    #\"Promoted Headers\" = Table.PromoteHeaders(Sheet1_Sheet, [PromoteAllScalars=true]),",
           "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"ClassID\", Int64.Type}, {\"StudentID\", Int64.Type}, {\"LastName\", type text}, {\"FirstName\", type text}, {\"1stCourseInDepartment?\", type text}, {\"UsedExcel?\", type text}, {\"UsedPowerBI?\", type text}, {\"ExcelSelfDescribedProficiency\", type text}, {\"PowerBISelfDescribedProficiency\", type text}, {\"StudentPreferredFirstName\", type text}, {\"StudentPreferredPronouns\", type text}})",
@@ -348,7 +348,7 @@
             "source": {
               "expression": [
                 "let",
-                "    Source = Excel.Workbook(File.Contents(\"C:\\Users\\CursosTardes\\Downloads\\power_bi\\raw_to_report\\data\\InstructorGatheredStudentInformation.xlsx\"), null, true),",
+                "    Source = Excel.Workbook(File.Contents(\"U:\\GitHub\\Projects\\DataAnalystsJourney\\power_bi\\raw_to_report\\data\\InstructorGatheredStudentInformation.xlsx\"), null, true),",
                 "    Sheet1_Sheet = Source{[Item=\"Sheet1\",Kind=\"Sheet\"]}[Data],",
                 "    #\"Promoted Headers\" = Table.PromoteHeaders(Sheet1_Sheet, [PromoteAllScalars=true]),",
                 "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"ClassID\", Int64.Type}, {\"StudentID\", Int64.Type}, {\"LastName\", type text}, {\"FirstName\", type text}, {\"1stCourseInDepartment?\", type text}, {\"UsedExcel?\", type text}, {\"UsedPowerBI?\", type text}, {\"ExcelSelfDescribedProficiency\", type text}, {\"PowerBISelfDescribedProficiency\", type text}, {\"StudentPreferredFirstName\", type text}, {\"StudentPreferredPronouns\", type text}}),",
@@ -389,7 +389,6 @@
             ],
             "dataCategory": "PaddedDateTableDates",
             "dataType": "dateTime",
-            "formatString": "General Date",
             "isHidden": true,
             "isNameInferred": true,
             "lineageTag": "263d145c-5feb-44aa-8a99-919e0f6af8f4",
@@ -412,7 +411,6 @@
             "dataCategory": "Years",
             "dataType": "int64",
             "expression": "YEAR([Date])",
-            "formatString": "0",
             "isHidden": true,
             "lineageTag": "247f5271-9799-41e4-a899-345dfee8f1e5",
             "summarizeBy": "none",
@@ -433,7 +431,6 @@
             "dataCategory": "MonthOfYear",
             "dataType": "int64",
             "expression": "MONTH([Date])",
-            "formatString": "0",
             "isHidden": true,
             "lineageTag": "c227c90c-49bd-4e05-a596-a0829b7992c8",
             "summarizeBy": "none",
@@ -475,7 +472,6 @@
             "dataCategory": "QuarterOfYear",
             "dataType": "int64",
             "expression": "INT(([MonthNo] + 2) / 3)",
-            "formatString": "0",
             "isHidden": true,
             "lineageTag": "5fe1bc10-acd2-4fb1-be79-b680f3b7716c",
             "summarizeBy": "none",
@@ -517,7 +513,6 @@
             "dataCategory": "DayOfMonth",
             "dataType": "int64",
             "expression": "DAY([Date])",
-            "formatString": "0",
             "isHidden": true,
             "lineageTag": "837a3970-6182-4fb7-ac27-e3485e59b640",
             "summarizeBy": "none",
@@ -825,7 +820,7 @@
             "source": {
               "expression": [
                 "let",
-                "    Source = Excel.Workbook(File.Contents(\"C:\\Users\\CursosTardes\\Downloads\\power_bi\\raw_to_report\\data\\SchoolSuppliedDataClassStart.xlsx\"), null, true),",
+                "    Source = Excel.Workbook(File.Contents(\"U:\\GitHub\\Projects\\DataAnalystsJourney\\power_bi\\raw_to_report\\data\\SchoolSuppliedDataClassStart.xlsx\"), null, true),",
                 "    Sheet1_Sheet = Source{[Item=\"Sheet1\",Kind=\"Sheet\"]}[Data],",
                 "    #\"Promoted Headers\" = Table.PromoteHeaders(Sheet1_Sheet, [PromoteAllScalars=true]),",
                 "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"StudentID\", Int64.Type}, {\"Term\", type text}, {\"Term Start Date\", type date}, {\"Course Number\", type text}, {\"LastName\", type text}, {\"FirstName\", type text}, {\"E-mail\", type text}, {\"Age\", Int64.Type}, {\"YearsAttended\", Int64.Type}, {\"ResidencyState\", type text}, {\"Race\", type text}, {\"Ethnicity\", type text}, {\"Gender\", type text}, {\"IsStudentAthlete\", type text}, {\"RequiresAdditionalAccomodations\", type text}, {\"RequiredAccomodationDetail\", type text}}),",
@@ -857,7 +852,6 @@
             ],
             "dataCategory": "PaddedDateTableDates",
             "dataType": "dateTime",
-            "formatString": "General Date",
             "isHidden": true,
             "isNameInferred": true,
             "lineageTag": "98aff053-0a38-4cd2-9e4b-328894bf6188",
@@ -880,7 +874,6 @@
             "dataCategory": "Years",
             "dataType": "int64",
             "expression": "YEAR([Date])",
-            "formatString": "0",
             "isHidden": true,
             "lineageTag": "8e91388e-0a61-4c58-80ea-6c201f6bdd7c",
             "summarizeBy": "none",
@@ -901,7 +894,6 @@
             "dataCategory": "MonthOfYear",
             "dataType": "int64",
             "expression": "MONTH([Date])",
-            "formatString": "0",
             "isHidden": true,
             "lineageTag": "9a419c03-2fc7-49c6-b26b-b689f879a663",
             "summarizeBy": "none",
@@ -943,7 +935,6 @@
             "dataCategory": "QuarterOfYear",
             "dataType": "int64",
             "expression": "INT(([MonthNo] + 2) / 3)",
-            "formatString": "0",
             "isHidden": true,
             "lineageTag": "eebd4fd1-6f0d-4d21-9d4c-7fd26871c468",
             "summarizeBy": "none",
@@ -985,7 +976,6 @@
             "dataCategory": "DayOfMonth",
             "dataType": "int64",
             "expression": "DAY([Date])",
-            "formatString": "0",
             "isHidden": true,
             "lineageTag": "8f1d297a-881d-42b3-9730-7d13ebf3409d",
             "summarizeBy": "none",
@@ -1119,7 +1109,7 @@
             "source": {
               "expression": [
                 "let",
-                "    Source = Excel.Workbook(File.Contents(\"C:\\Users\\CursosTardes\\Downloads\\power_bi\\raw_to_report\\data\\GradesPowerBIVersion.xlsx\"), null, true),",
+                "    Source = Excel.Workbook(File.Contents(\"U:\\GitHub\\Projects\\DataAnalystsJourney\\power_bi\\raw_to_report\\data\\GradesPowerBIVersion.xlsx\"), null, true),",
                 "    AssignmentDIM_Sheet = Source{[Item=\"AssignmentDIM\",Kind=\"Sheet\"]}[Data],",
                 "    #\"Promoted Headers\" = Table.PromoteHeaders(AssignmentDIM_Sheet, [PromoteAllScalars=true]),",
                 "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"AssignmentID\", Int64.Type}, {\"Name\", type text}, {\"Category\", type text}, {\"Type\", type text}})",
@@ -1257,6 +1247,63 @@
           }
         ],
         "lineageTag": "5c0f2e77-283a-42b9-b219-c46010769b0d",
+        "measures": [
+          {
+            "name": "Score divided by Max of MaximumPossibleScore",
+            "changedProperties": [
+              {
+                "property": "FormatString"
+              }
+            ],
+            "expression": [
+              "",
+              "DIVIDE(",
+              "\tSUM('GradeScores'[Score]),",
+              "\tMAX('GradeScores'[MaximumPossibleScore])",
+              ")"
+            ],
+            "extendedProperties": [
+              {
+                "name": "MeasureTemplate",
+                "type": "json",
+                "value": {
+                  "daxTemplateName": "MathematicalDivision",
+                  "version": 0
+                }
+              }
+            ],
+            "formatString": "0",
+            "lineageTag": "c31d2fad-8039-4ff6-8f3a-061ea61c8001"
+          },
+          {
+            "name": "Score divided by MaximumPossibleScore",
+            "changedProperties": [
+              {
+                "property": "FormatString"
+              }
+            ],
+            "expression": [
+              "",
+              "DIVIDE(",
+              "\tSUM('GradeScores'[Score]),",
+              "\tSUM('GradeScores'[MaximumPossibleScore]),",
+              "    \"Extra Credit\"",
+              ")"
+            ],
+            "extendedProperties": [
+              {
+                "name": "MeasureTemplate",
+                "type": "json",
+                "value": {
+                  "daxTemplateName": "MathematicalDivision",
+                  "version": 0
+                }
+              }
+            ],
+            "formatString": "0\\ %;-0\\ %;0\\ %",
+            "lineageTag": "15b9a8ca-0972-4527-b49b-40003d4988ba"
+          }
+        ],
         "partitions": [
           {
             "name": "GradeScores",
@@ -1264,7 +1311,7 @@
             "source": {
               "expression": [
                 "let",
-                "    Source = Excel.Workbook(File.Contents(\"C:\\Users\\CursosTardes\\Downloads\\power_bi\\raw_to_report\\data\\GradesPowerBIVersion.xlsx\"), null, false),",
+                "    Source = Excel.Workbook(File.Contents(\"U:\\GitHub\\Projects\\DataAnalystsJourney\\power_bi\\raw_to_report\\data\\GradesPowerBIVersion.xlsx\"), null, false),",
                 "    GradeScores_sheet = Source{[Item=\"GradeScores\",Kind=\"Sheet\"]}[Data],",
                 "    FilterNullAndWhitespace = each List.Select(_, each _ <> null and (not (_ is text) or Text.Trim(_) <> \"\")),",
                 "    #\"Removed Other Columns\" = Table.SelectColumns(GradeScores_sheet, List.Select(Table.ColumnNames(GradeScores_sheet), each try not List.IsEmpty(FilterNullAndWhitespace(Table.Column(GradeScores_sheet, _))) otherwise true)),",
