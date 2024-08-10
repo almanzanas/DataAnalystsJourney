@@ -3104,6 +3104,27 @@
                   }
                 ]
               },
+              "totalgrademodifier.parameter": {
+                "Definition": {
+                  "Binding": {
+                    "ConceptualEntity": "TotalGradeModifier",
+                    "ConceptualProperty": "Parameter"
+                  }
+                },
+                "State": "Generated",
+                "Terms": [
+                  {
+                    "TotalGradeModifier": {
+                      "Source": {
+                        "Agent": "PowerBI.VisualColumnRename",
+                        "Type": "External"
+                      },
+                      "State": "Suggested",
+                      "Weight": 0.9
+                    }
+                  }
+                ]
+              },
               "university_supplied_data": {
                 "Definition": {
                   "Binding": {
@@ -4306,7 +4327,9 @@
                       "Weight": 0.99
                     }
                   },
-                  {},
+                  {
+                    "": {}
+                  },
                   {
                     "residency location": {
                       "Source": {
@@ -8622,6 +8645,12 @@
         "measures": [
           {
             "name": "TotalGrade",
+            "annotations": [
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
             "changedProperties": [
               {
                 "property": "FormatString"
@@ -8645,7 +8674,6 @@
                 }
               }
             ],
-            "formatString": "0\\ %;-0\\ %;0\\ %",
             "lineageTag": "15b9a8ca-0972-4527-b49b-40003d4988ba"
           },
           {
@@ -8687,6 +8715,19 @@
             "expression": "75",
             "formatString": "0",
             "lineageTag": "70ae8283-0aed-4dc1-8c2b-8e66a0042188"
+          },
+          {
+            "name": "TotalGradeParam",
+            "expression": [
+              "",
+              "DIVIDE(",
+              "\tSUM('GradeScores'[Score]) + [Parameter Value],",
+              "\tSUM('GradeScores'[MaximumPossibleScore]),",
+              "    \"Extra Credit\"",
+              ")"
+            ],
+            "formatString": "0.00\\ %;-0.00\\ %;0.00\\ %",
+            "lineageTag": "6049c4f8-373e-4b0e-b811-27143efba75c"
           }
         ],
         "partitions": [
@@ -8714,6 +8755,62 @@
                 "    #\"Renamed Columns1\""
               ],
               "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "TotalGradeModifier",
+        "annotations": [
+          {
+            "name": "PBI_Id",
+            "value": "6da92d59204f42a1894b57303180f6b4"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Parameter",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "int64",
+            "extendedProperties": [
+              {
+                "name": "ParameterMetadata",
+                "type": "json",
+                "value": {
+                  "version": 0
+                }
+              }
+            ],
+            "formatString": "0",
+            "isDataTypeInferred": true,
+            "isNameInferred": false,
+            "lineageTag": "872d52ec-a4a3-4263-8fe6-1e81a0b2209c",
+            "sourceColumn": "[Value]",
+            "summarizeBy": "none",
+            "type": "calculatedTableColumn"
+          }
+        ],
+        "lineageTag": "72b48880-2372-4d94-90bf-b9f2d3426f09",
+        "measures": [
+          {
+            "name": "Parameter Value",
+            "expression": "SELECTEDVALUE('TotalGradeModifier'[Parameter], 0)",
+            "formatString": "0",
+            "lineageTag": "e2559991-a25c-4cc9-bd09-7a99a74f5b32"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "TotalGradeModifier",
+            "mode": "import",
+            "source": {
+              "expression": "GENERATESERIES(-200, 200, 10)",
+              "type": "calculated"
             }
           }
         ]
