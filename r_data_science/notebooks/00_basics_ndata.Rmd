@@ -1,0 +1,171 @@
+---
+title: "R Notebook"
+output: 
+    html_notebook:
+        toc: true
+        toc_depth: 3
+---
+
+# The very basics
+
+## Getting Help
+
+At the command line we can look for help through the commands:
+
+-   `help()`: gets information on a particular R function, e.g. `help(matrix)`
+
+-   `?`: works the same as the previous one, e.g. `?"matrix"`
+
+-   `help.search()`: It's useful if we know the subject rather than the name.
+
+-   `apropos()`: returns a vector of names of objects containing that string, e.g. `apropos("matrix")` returns every object with 'matrix' in its name.
+
+-   `args()`: displays the set of arguments expected by a given function.
+
+```{r}
+args(matrix)
+```
+
+# R Data: Vectors
+
+A vector is the basic unit of computation in R. The atomic clases which we can see with `help(vector)` are::
+
+-   logical: TRUE or FALSE (T or F as synonyms)
+-   integer
+-   numeric or double
+-   character: is the text
+-   raw: can hold binary data
+-   complex
+
+To combines items into a vector we use `c()` function. Cal also be used to combine vector, as long as all the vectors are of the same sort.
+
+```{r}
+c(2, 25)
+```
+
+```{r}
+# R has formatted the numbers in a consistent way
+c(-2, pi, 25)
+```
+
+```{r}
+c(c(2, 3), c(pi, 16.7, 5), c(-12, -16))
+```
+
+To set consecutive integers:
+
+```{r}
+1:7
+```
+
+```{r}
+# Sequence in reverse
+9:-2
+```
+
+```{r}
+# It's 3 plus the sequence
+3 + 2:5
+```
+
+Using `help(Syntax)` It can be seen a list of operators and their precedences, and precedence can always be over-ridden with parentheses.
+
+Also with `seq()` we can create sequences, with better control of starting points, ending points, lengths, and step sizes. With help we can see:
+
+``` r
+seq(...)
+
+## Default S3 method:
+seq(from = 1, to = 1, by = ((to - from)/(length.out - 1)),
+    length.out = NULL, along.with = NULL, ...)
+
+# Examples:
+seq(17)
+seq(0, 1, length.out = 11)
+seq(1, 9, by = 2)
+```
+
+Logical vectors ofen are constructed by R in response to an operation:
+
+```{r}
+35:41 >= 37
+```
+
+To calculate the number or proportions of elements in a vector we use `sum()` for count and `mean()` for proportions:
+
+```{r}
+# like we saw, five out of seven elements in this vector are greater or equal to 37
+sum(35:41 >= 37)
+```
+
+```{r}
+# 5 out of 7 are aprox. 71.4%
+mean(35:41 >= 37)
+```
+
+## Vector Operations
+
+Arithmetic operations on vectors produce vectors.
+
+```{r}
+5:10
+```
+
+```{r}
+(5:10)^2
+```
+
+There are functions which returns a single number (that is also a vector), such as: `length(), sum(), mean(), sd(), min(), max()`. The function `range()` returns the smallest and largest values, and `summary()` returns a vector of summary statistics.
+
+```{r}
+# An assigment with parentheses case print this assigment
+(th1 <- c(20, 15, 10, 5, 0)^2)
+```
+
+```{r}
+th2 <- 105:101
+th2 + th1
+```
+
+```{r}
+th2 / th1
+```
+
+It's Computed element by element, that's why print 'Inf', because 101/0 refer to an infinite value.
+
+```{r}
+# Print the larger value anywhere
+max(th1, th2)
+```
+
+```{r}
+# 'Parallel maximum' print the larger of each pair
+pmax(th2, th1)
+```
+
+Loginac vectors can also be combined. The operator `|` for 'or' return TRUE if either element is TRUE; the `&` operator for 'and' return TRUE only if both elements are TRUE. This single version evaluate the condition for every pair of elements from both vectors, the double version ( `|| , &&`) evaluate multiple TRUE/FALSE conditions from left to right, stopping as soon as possible (are useful in `if()` statements).
+
+Recycling
+
+When a vector does not match with other vector to be operated, the shorter one starts again, recycling it's elements.
+
+```{r}
+# Two vector with the same length, 6
+5:10 + c(0, 10, 100, 1000, 10000, 100000)
+# The sum is element by element
+```
+
+```{r}
+# Two vectors, 6 and 3 elements
+5:10 + c(1, 10, 100)
+```
+
+```{r}
+# 6-vector and 5 vector. The second recycle it's first element (10 + 3)
+5:10 + c(3, 4, 5, 6, 7)
+
+```
+
+Recycling a vector of length 1 (`(5:10) + 4`) is very common, but the other lengths ir rarer. If we see the last warning, It's better to treat that as an error and try to resolve it.
+
+## Handling character vectors
