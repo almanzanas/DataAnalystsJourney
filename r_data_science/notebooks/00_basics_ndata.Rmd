@@ -169,3 +169,625 @@ When a vector does not match with other vector to be operated, the shorter one s
 Recycling a vector of length 1 (`(5:10) + 4`) is very common, but the other lengths ir rarer. If we see the last warning, It's better to treat that as an error and try to resolve it.
 
 ## Handling character vectors
+
+We can add names to a vector to identify individual entries. R accept letters, numbers, dots, and underscores:
+
+```{r}
+vec <- c(201, 202, 203)
+names(vec)
+```
+
+```{r}
+# It is a bad practice to have a vector's name invalid:
+names(vec) <- c("a", "b", "with space")
+names(vec)
+```
+
+```{r}
+# Also, we can assign names directly
+vec <- c(a = 201, b = 202, with.space = 203)
+vec
+```
+
+## Data Types
+
+The most common data types are numeric, logical and character. These are some less-common data types:
+
+-   integers: values between -(2^31^ -1) and 2^31^ -1. Values outside this range may be displayed as integers but will be stored as doubles. To regard an item as an integer you can add `L` on its end ( `246L` ), this only makes sense whether really is an integer.
+-   raw: refers to data kept in binary (hexadecimal) form. Is data from images, sound and video, R will stored as raw. It can be converted into character data with `rawToChar()` function. Reading raw data could be useful to handle the case of unexpected characters.
+-   complex number: R can manipulate complex numbers but almost never arise in data cleaning.
+
+We can see what data type is a vector with `typeof()` which differentiates between integer and double. Other function called `mode()` calls them both numeric. The `str()` function return the data type and the first few entries. And `class()` is more general operator for complex types.
+
+The functions: `is.logical(), is.integer(), is.numeric(), is.character()` returns a single logical value whether is TRUE or FALSE. A particularly useful function for more complicated or user-defined clases is `is()` which lets you specify the class as an argument: `is(pi, "numeric")`.
+
+```{r}
+typeof(vec)
+```
+
+```{r}
+mode(vec)
+```
+
+### Data Type conversion
+
+R modifies the entire vector to be of the more complicated type. If you create a numeric vector but you adds a character, the entire vector will be converted to character:
+
+```{r}
+vec <- c(1, 2, 3, 4, 5, 6, "7")
+vec
+```
+
+Types: logical \< raw \< numeric \< complex \< character.
+
+Other group of functios are `as.` to convert vectors:
+
+-   `as.numeric`: a character will be converted to a numeric if it has the syuntax of a number.
+
+    ```{r}
+    # The element which no fit as numeric will be NA values by coercion
+    as.numeric( c("123.4", "-1234e-2", "4,567", "45. 67", "$12", "45%"))
+    ```
+
+-   `as.logical`: Numeric values that are zero become FALSE, otherwise become TRUE. Sometimes numbers that you expect to be zero aren't because of floating-point error.
+
+    ```{r}
+    # The third is FALSE because it is outside the range of double precision.
+    # The last element 'should' be zero but aren't because floating-point error.
+    as.logical( c(123, 5-5, -1e-34, 1e-500, 1- 1/49 * 49) )
+    ```
+
+Numeric, non-missing values never produce NA when converted to logical.
+
+## Subsets of Vectors
+
+*subsetting* or *extracting* is to pull out a piece of a vector.
+
+### subscript: numeric
+
+```{r}
+# 5-vector
+(a <- 101:105)
+# extract element number 3
+a[3]
+```
+
+We can use a numeric expression to compute a subscript but only if we are sure that expression is an integer.
+
+```{r}
+# extract the fourth and second element
+a[c(4, 2)]
+# extract the element corresponding to 3+2 
+a[3+2]
+```
+
+Negative numbers omit this elements, but you cannot mix negative and positive numbers. Zeros are permited but they are ignored by R.
+
+```{r}
+a[-2]
+# Omit the first and second element
+a[- (1:2) ]
+# mix of positive and negative, result an error
+a[c(-1, 2)]
+```
+
+### Subscript: logical
+
+A logical subscript is a logical vector of the same length as the thing being extracted from. TRUE are returned, FALSE are not.
+
+```{r}
+# numeric vector with ages
+age <- c(21, 32, 43, 54, 65, 76)
+age > 60
+```
+
+We can use the last logical vector to extract elements of age, or combining it with other vectors.
+
+```{r}
+# Which ages are greater than 60
+age[age > 60]
+
+```
+
+```{r}
+people <- c("Yoshua", "Mery", "Alex", "John", "Lee", "Cindy")
+# To which people corresponds their age greater than 60
+people[age > 60]
+
+# Creating a new variable with the previous subscript
+age.gt.60 <- age > 60
+people[age.gt.60]
+```
+
+Errors to avoid:
+
+```{r}
+# R convert the logical subscript to numeric
+# the extraction produces the first element of the vector two times
+people[0 + age.gt.60]
+
+# With the negative sign, R convert again into numeric values
+# The extraction drops the first value and rest are returned
+people[-age.gt.60]
+
+# This is, probably, the intended form:
+# The operator ! to print which values are not greater than 60
+people[ !age.gt.60 ]
+```
+
+The `which()` function can be used to convert a logical vector into a numeric. It returns the indices of the element that are TRUE.
+
+To find the location of every minimum value in the variable 'y' we can use `which(y == min(y)`. The alternative are `which.min()` and `which.max()` but only select the first index with the minimum or maximum value.
+
+### subscript: names
+
+A name subscript will need to be a character.
+
+```{r}
+(vec <- c(a = 201, b = 202, with.space = 203) )
+
+vec["b"]
+
+# Names of 'vec' distinct to 'a'
+vec[names(vec) != "a"]
+```
+
+### Vector length 0
+
+This usually happens when all of the elements of a logical subscript are FALSE.
+
+```{r}
+a
+b <- a[a < 99]
+b
+```
+
+If a zero-length vector is used as the condition in an `if()` statement, an error results:
+
+```{r}
+# the sum of a numeric or logical vector of length 0 is itself zero
+sum( b + 12345)
+
+if (b < 2) cat("yes\n")
+```
+
+### Replacing elements of a vector
+
+If we extract elements, we can use the extraction operation on the left side of an assigment for replacing.
+
+```{r}
+a
+a[3] <- 203
+a
+a[a > 104] <- -999
+a
+```
+
+```{r}
+# Replacing using names
+names(vec) <- c("a", "b", "c")
+vec
+
+cat("\n")
+
+vec["b"] <- 302
+vec
+```
+
+It is possible too combine two vectors (if the vectors are different types, R convert them) and also assign elements of a vector out past its end.
+
+```{r}
+(a <- 101:103)
+(b <- -5:-1)
+cat("\n")
+
+a[4:8] <- b
+a
+cat("\n")
+
+# b[6] does not exists, will be filled with NA to add b[7]
+b[7] <- 3
+b
+```
+
+## Missing Data NA
+
+When we try to extract an item that was never present in a vector appears missing values. NA values rule: any computation with an NA itself becomes an NA. With mathematical computations we can use `na.rm = TRUE` argument to compute the result after omitting missing values.
+
+We can use `anyNA()` function to determine whether any of the values are missing (TRUE or FALSE). Also, `is.na()` fuction return TRUE or FALSE for every element in the vector. We can use `where(is.na(vector))`to find the numeric indices of the missing elements.
+
+```{r}
+# Creating a vector with missing values
+nax <- 101:106
+nax[ c(3, 5) ] <- NA
+nax
+cat("\n")
+
+is.na(nax)
+cat("\n")
+
+which(is.na(nax) )
+
+cat("\nMean 'nax' vector: ")
+mean(nax)
+mean(nax, na.rm=TRUE)
+
+```
+
+We can remove missing values with `vec[!is.na(vec)]` which return non-missing entries, but `na.omit()` function deletes the missing values but also keeps track of where in the vector they used to be. This information is stored in vector's 'attributes':
+
+```{r}
+# To return non-missing values:
+nax[!is.na(nax)]
+cat("\n")
+
+# Storing non missing values in a variable and keeping track of deleted ones
+(nay <- na.omit(nax))
+attr(nay, "na.action")
+attr(nay, "class")
+```
+
+We can have a vector 'b' with data and a vector 'a' as index which contain NA values. If we use 'a' as filter, it returns every coincident value and missing value, this behaviour can be changed with `b[!is.na(a) & a == 2]`
+
+```{r}
+(b <- 101:104)
+(a <- c(1, 2, NA, 4))
+cat("\n")
+
+b[a == 2]
+cat("\n")
+
+b[!is.na(a) & a == 2]
+
+```
+
+-   `NaN` : Special value, means "Not a Number". It si the result of specific computations such as 0/0. NaN is considered a missing value.
+-   `Inf` : Appears when a positive number is accidentally divided by zero. Inf values are not missing.
+
+Inf + NA = NA\
+NaN + NA = NaN
+
+We generally wanto to identify any of these values: the function `is.finite()` produces TRUE for numbers that are neither NA nor NaN nor Inf. It serves as a check on valid values. The command `all(is.finite(vector) )` is to see a numeric vector elements which are not special values.
+
+-   `NULL` : is an object with zero length, no contents, no class. It often arise trying to access an element which does not exist. The function `is.null()` is for testing NULL values. If you index using a NULL value the result will be a vector of length 0.
+
+## The `Table( )` function
+
+`Table()` produce a table returning for each unique value the number of times that value appears.
+
+```{r}
+vec <- rep ( c("red", "blue", NA, "green"), c(4, 2, 1, 3) )
+vec
+cat("\n")
+
+table(vec)
+```
+
+`table()` arguments:
+
+-   `useNA =`
+
+    -   `"no"` : default option. Exclude NA values.
+    -   `"ifany"` : show an entry for NA if there are any.
+    -   `"always"` : show an entry for NA whether there are any NA values or not.
+
+-   `exclude =`
+
+    -   `c(NA, NaN)` : default option.
+
+    -   We can add a value of the vector to exclude, also we can pass `NULL`.
+
+```{r}
+table(vec, useNA = "always")
+cat("\n")
+
+table(vec, exclude="green")
+```
+
+Also, we can pass to `table()` function two vectors to create a two-way table (cross-tabulation). in R a two-way table is treated the same as a matrix.
+
+```{r}
+vec2 <- rep ( c("north", "south", "east", "west"), c(2, 3, 2, 3) )
+table(vec,vec2, useNA="ifany")
+```
+
+A three and higher-way tables are produced when you pass three or more equal-length vectors.
+
+For very large vectors, the `data.table()` functino in the `data.table` package may prove more efficient than `table()`.
+
+The `xtabs()` function is useful for creating more complex tables.
+
+### Operating on tables
+
+-   `prop.table()` : passing a variable with table assigned produces the proportions of the total counts in the table by cell (or row, or column). The second argument references 1 to rows, or 2 to columns.
+
+```{r}
+year <- rep (2015:2017, each=5)
+market <- c("a", "a", "b", "a", "b", "b", "b", "a", "b", 
+            "b", "a", "b", "a", "b", "a")
+cost <- c(64, 87, 71, 79, 79, 91, 86, 92, NA,
+          55, 37, 41, 60, 66, 82)
+
+# assign a table with the vectors we want to 'tab'
+tab <- table(market, year)
+tab
+cat("\n")
+
+# proportions along rows
+prop.table(tab)
+cat("\n")
+
+# proportions throwout columns
+prop.table(tab, 2)
+
+```
+
+-   `margin.table()` : produce the marginals totals from a table.
+
+-   `addmargins()` : to a given table incorporates those totals producing a new row and column by default. Passing as second argument 1 or 2, you can specified if only wants rows or columns.
+
+```{r}
+cat("margin.table function for columns:\n")
+margin.table(tab, 2)
+
+cat("\naddmargins function in the table: \n")
+addmargins(tab)
+```
+
+-   `tapply()` : the arguments are, first the vector where perform the computation, second the vector with the index to group, and then the function to apply. To group with more than one vector (index) we can use a `list()`.
+
+```{r}
+cat("There are NA in cost? ")
+anyNA(cost)
+cat("\n")
+
+tapply (cost, year, min, na.rm=TRUE)
+cat("\n")
+
+tapply (cost, list(market, year), mean, na.rm = TRUE)
+```
+
+It is posible to use with tapply() custom fuctions, as an example, for (x) return the sum of the squares of each entry of x:
+
+```{r}
+tapply (cost, list(market, year),
+        function (x) sum (x^2, na.rm = TRUE))
+```
+
+## Other Actions on Vectors
+
+### Rounding
+
+-   `round()` : to round a number with specific amount of decimals. Passing a negative number as second argument will round the nearest power of 10.
+
+-   `signif()` : retain a specific number of digits.
+
+-   `trunc()` : discards the decimal part returning an integer.
+
+-   `floor()` ; `ceiling()` : round to the next lower or higher integer respectively.
+
+```{r}
+(dec <- 123.4567)
+
+cat("\nRound function to 3 decimals: \n")
+round(dec, 3)
+
+cat("\nRound function (-1) to nearest power of 10: \n")
+round(dec, -1)
+
+cat("\nSignif function to 4 numbers: \n")
+signif(dec, 4)
+
+cat("\nTrunc function: \n")
+trunc(dec)
+
+cat("\nFloor function to round to the lower integer: \n")
+floor(dec)
+
+cat("\nRound function to round to the higher integer: \n")
+ceiling(dec)
+```
+
+### Sorting and Ordering
+
+-   `sort()` : sorting from smallest to largest. It will drop NA and NaN values by default.
+
+    -   `decreasing=TRUE` will reverse the order.
+    -   `na.last` will add NA values, TRUE at the end and FALSE at the beginning.
+
+-   `order()` : returns the indices which can be used to sort a vector.
+
+    -   `na.last` as TRUE by default. TRUE at the end and FALSE at the beginning.
+
+```{r}
+people
+(scores <- c(123, 456, 789, 456, 654, 987))
+
+cat("\nSorting 'people' by their scores (descending): \n")
+people[order(scores, decreasing=TRUE)]
+
+cat("\nOrdering people by their scores, and in case 
+    of a tie using their names alphabetically.: \n")
+people[order(scores, people[1:6])]
+```
+
+### Vector as Sets
+
+To find values that overlap between two vectors we can use `%in%` function. For example, we can use a command `a %in% b` which will return a vector the same length as 'a' with a logical indicator whether each element is foundin 'b'. Witch `table(a %in% b)` we get the number of element in 'a' that were not found in 'b'.
+
+```{r}
+# Looking for which letter is in 'letters':
+c("g", "5", "b", "J", "!") %in% letters
+cat("\n")
+
+table (c("g", "5", "b", "J", "!") %in% letters)
+cat("\n")
+
+which(c("g", "5", "b", "J", "!") %in% letters)
+```
+
+-   `union()` : returns the elements in either passed vectors
+-   `intersect()` : returns the elements which are in both passed vectors
+-   `setdiff()` : returns the elements of 'a' not present in 'b'
+
+```{r}
+cat("Union 'a' and 'b':\n")
+union (c("g", "5", "b", "J", "!"), letters)
+cat("\n")
+
+cat("Intersect 'a' with 'b':\n")
+intersect (c("g", "5", "b", "J", "!"), letters) 
+cat("\n")
+
+cat("Defferent elemenets of 'a' in 'b':\n")
+setdiff (c("g", "5", "b", "J", "!"), letters) 
+```
+
+## Duplicates
+
+-   `anyDuplicated()` : returns the duplicated values in a vector
+
+-   `unique()` : returns the distinct values, including NA and NaN.
+
+-   `duplicated(`) : returns a logical vector with TRUE per duplicated value (not the first value).
+
+    -   `fromLast=TRUE` reads from the end to the beginning. Using union() you can combine `fromLast=TRUE` and `fromLast=FALSE` to identify all duplicates.
+
+```{r}
+let <- c(letters, c("j", "j", "x"))
+
+cat("Duplicates?\n")
+let[duplicated(let)]
+
+cat("\n")
+(tab <- table (let))
+
+cat("\n")
+tab[which (tab != 1)]
+
+cat("\n")
+names (tab)[tab != 1]
+
+cat("\n")
+table (table (let))
+```
+
+Matching is identify where in a vector we can find the values in another vector. The function `match()` is a more powerful version of `%in%`.
+
+-   `match()` : given two vectors returns where the element from 'a' is in 'b'. By default returns NA for no matches, we can change this with `nomatch=0` argument.
+
+```{r}
+names1 <- c("Jensen", "Chang", "Johnson", "Lopez", "McNamara", "Reese")
+names2 <- c("Lopez", "Ruth", "Nakagawa", "Jensen", "Mays")
+
+match(names1, names2)
+
+cat("\n")
+names2[match(names1, names2, nomatch=0)]
+```
+
+The 'Run length enconding' function is rle() which returns the number of repetitions and length.
+
+```{r}
+rle( c("a", "b", "b", "a", "c", "c", "c", "a", "a"))
+```
+
+The previous output show, with length 1 value 'a' followerd by 'b' with length 2, again 'a' length 1 and then 'c' with length 3, to finish with 'a' twice.
+
+## Summary
+
+### Conversions
+
+-   Converting character to numeric produces NA for things that aren’t numbers, like the character strings "TRUE" or "\$199.99".
+-   Converting character to logical produces NA for any string that isn’t "TRUE", "True", "true", "T", "FALSE", "False", "false" or "F".
+-   Converting numeric to logical produces FALSE for a zero and TRUE for any non-zero entry (and watch out for floating-point error here).
+
+### Subscripts
+
+-   A logical subscript returns the values that match up with its TRUE entries.
+-   A numeric subscript returns the values specified in the subscript.
+-   character subscript will extract, from a named vector, elements whose names are present in the subscript.
+
+# R Data: Other Structures
+
+## Matrices
+
+Essentially is a vector two-dimensional like a rectangle. Every element of a matrix needs to be of the same type (numeric, logical or character).
+
+A matrix is filled column by column.
+
+Using `length()` we get the total number of elements in the matrix, and using `dim()` we get the dimension as number of rows and columns.
+
+-   cbind() : combines a set of vectors into a matrix column by column.
+
+-   rbind() : combines a set of vectors into a matrix row by row.
+
+If the vectors to combine have unequal length, R will recycle.
+
+With matrix in the same way as vectors we can do arithmetic operations, that will be element by element. Also, `t(A)` transposes a matrix, and `solve()` inverts a matrix.
+
+To extract and assign new values to elements the process is similar to a vector but now we have to pass two coordinates:
+
+```{r}
+a <- matrix(101:115, nrow=5, ncol=3)
+a
+cat("\n")
+
+a[1,2]
+
+cat("\n")
+a[-2,]
+
+cat("\nObtaining row 4 and 2, and cols 3 and 1, in that order: \n")
+a[c(4,2), c(3,1)]
+```
+
+To create a vector from a matrix we can use `c()`, it will use the first column, then the second and so on. To extract data row by row, we can use `t()` to transpose the matrix first like `c(t(a))`.
+
+```{r}
+c(a)
+cat("\n")
+
+t(a)
+
+cat("\n")
+c(t(a))
+```
+
+If we ask to a matrix for one column we'll get a vector, because dimensions of length 1 are usually dropped by default. We can use drop=FALSE argument to prevent that.
+
+```{r}
+a[,2]
+
+cat("\n")
+a[,2, drop=FALSE]
+```
+
+### Row and Column Names
+
+With `dimnames()` we get rows and columns names. `rownames()` and `colnames()` to get rows and columns names respectively. As well as with `names()` and vectors, we can asign names to columns and rows with these functions.
+
+```{r}
+year <- rep (2015:2017, each = 5)
+market <- c(2, 2, 3, 2, 3, 3, 3, 2, 3, 3, 2, 3, 2, 3, 2)
+
+(tbl <- table (market, year))
+
+cat("\nCollaing to colnames(): \n")
+colnames(tbl)
+
+cat("\nAssigning new names to columns: \n")
+colnames(tbl) <- c("Y15", "Y16", "Y17")
+tbl
+```
+
+Just like before, we can call for the column name or row identifier to get them:
+
+```{r}
+tbl[,"Y15"]
+
+cat("\n")
+tbl["3",]
+```
+
+### Applying Functions
