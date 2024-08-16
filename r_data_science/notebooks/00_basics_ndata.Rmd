@@ -718,9 +718,9 @@ A matrix is filled column by column.
 
 Using `length()` we get the total number of elements in the matrix, and using `dim()` we get the dimension as number of rows and columns.
 
--   cbind() : combines a set of vectors into a matrix column by column.
+-   `cbind()` : combines a set of vectors into a matrix column by column.
 
--   rbind() : combines a set of vectors into a matrix row by row.
+-   `rbind()` : combines a set of vectors into a matrix row by row.
 
 If the vectors to combine have unequal length, R will recycle.
 
@@ -791,3 +791,347 @@ tbl["3",]
 ```
 
 ### Applying Functions
+
+Built in functions which works across columns or rows: `colSums(), rowSums(), colMeans(), rowMeans()`.
+
+-   `apply()` : Useful to apply a custom function.
+
+    -   first argument, the matrix to which apply the function.
+
+    -   The direction, 1 for across rows, 2 for down columns.
+
+    -   The function to be applied.
+
+```{r}
+a
+
+cat("\n")
+rowSums(a)
+
+cat("\n")
+apply(a, 1, sum, na.rm=TRUE)
+
+cat("\n")
+apply(a, 1, function (x) sum (x))
+```
+
+We can guet a matrix result for the `apply()` function. If we compute across rows, sometimes will change the shape, we can use `t()` to prevent that.
+
+```{r}
+apply(a, 2, range)
+
+cat("\n")
+t( apply(a, 1, range) )
+```
+
+When we are looking for specific values we can get vectors with different lengths, in that case R returns a list.
+
+```{r}
+cat("Getting elements location where the value is greater than 109:\n")
+apply(a, 2, function (x) which (x > 109))
+```
+
+### Missing Values
+
+The function apply() is very useful to count the number of missing values. Next, let's create a matrix using a semicolon to pass multiple commands in one line, also the multiple assigment operation to assign several things at once:
+
+```{r}
+a <- matrix(101:115, 5, 3); a[5, 3] <- a[3, 1] <- NA
+a
+
+cat("\nSum of NA in each column: \n")
+apply(a, 2, function (x) sum (is.na(x)))
+```
+
+Tracking NA values with `which()` to identify the position on the vector will return a number of the position for each NA. However, using `arr.ind=TRUE` argument we'll obtain the coordinates:
+
+```{r}
+which(is.na(a))
+
+cat("\n")
+which(is.na(a), arr.ind=TRUE)
+```
+
+### Matrix Subscripts
+
+With `which()` as a subscript we have the possibility to extract specific elements.
+
+```{r}
+b <- matrix (1:20, nrow=4, byrow=T)
+b <- cbind(b, c(3, 2, 0, 5))
+colnames(b) <- c("P1", "P2", "P3", "P4", "P5", "Use")
+rownames(b) <- c("Spring", "Summer", "Fall", "Winter")
+b
+```
+
+Given the previous matrix, the Use column specify which element of the row we want get. To generate this coordinates, we are going to generate a matrix, the first column will be the number of rows and the second column 'Use'. Then we can pass that matrix as a subscript to 'b' and extract the elements.
+
+```{r}
+(filt <- cbind(1:nrow(b), b[, "Use"]) )
+
+cat("\n")
+b[filt]
+
+```
+
+### Higher-way Arrays
+
+A matrix with three or more ways is called Array in R. We can encounter this while constructing a higher way `table()`:
+
+```{r}
+who <- rep( c("Mery", "Kelly"), c(2, 6))
+when <- rep( c("AM", "PM"), 4)
+worked <- c(T, T, F, T, F, T, F, T)
+sch <- table(who, when, worked)
+sch
+```
+
+The function `aperm()` is like `t()` but for higher-way arrays. Also we can use `c()` to produce a vector, and `apply()` or `prop.table()` works too.
+
+## Lists
+
+A list can have vector or diferent types and sizes, also might include matrices, lists or other R objects. Usually a list is returned by a modeling function in R but we can create a list with `list()`:
+
+```{r}
+ali <- list( alpha = 1:4, beta = "yes", delta = log, 69)
+ali
+```
+
+-   `split()` : divides a vector into pieces according to the value of another vector. Returns a list. Missing values in the second vector passed will be dropped.
+
+```{r}
+age <- c(31, 33, 42, 54, 65, 74, 24)
+gender <- c("F", "M", "F", "M", "M", "F", "F")
+
+cat("Split age by gender:\n")
+split(age, gender)
+
+cat("\nSplit ages when age is greater than 60\n")
+split(age, age > 60)
+```
+
+We can see with `length()` function the number of elements inside a list, and with `lengths()` function the length of each element.
+
+```{r}
+length( split(age, gender) )
+
+cat("\nLengths: \n")
+lengths( split(age, gender) )
+```
+
+The `str()` command gives a description of every element on the list:
+
+```{r}
+str(ali)
+
+cat("\n")
+class(ali)
+```
+
+### Excracting from list
+
+Working with a list, the rule says *single backets produce a list, while double backets and dollar signs extract contents.*
+
+```{r}
+cat("Extracting the content of element 4 as a vector: \n")
+ali[[4]]
+
+cat("\nExtracting the element 1 as a list: \n")
+ali[1]
+
+cat("\nExtracting inside alpha the elements 2 and 4: \n")
+ali$alpha[c(F, T, F, T)] 
+
+
+```
+
+The function `names()` also works with lists returning the names of each element and "" if the element no have name. We can assign names with it too.
+
+When we extract an element from a list with dollar sign, we do not need to know the complete name, it is enough if it's unambiguous:
+
+```{r}
+ali$a
+
+cat("\n")
+ali$de
+```
+
+To assign new values to an element we need the full name, otherwise will be creating a new ítem.
+
+```{r}
+ali$delta <- c(T, F, F, T)
+str(ali)
+```
+
+To remove an element from a list we can assign a NULL value:
+
+```{r}
+ali$beta <- NULL
+str(ali)
+```
+
+-   `unlist()` : try to turn the list into a vector:
+
+```{r}
+unlist(ali)
+```
+
+Using dimnames() function we can see the names from a matrix as list format and also we can asign names:
+
+```{r}
+b
+cat("\n")
+dimnames(b)
+
+dimnames(b)[[1]][3] <- "Autumn"
+cat("\n")
+b
+
+```
+
+An important list returned from a function is the list from `options()` which contain elements describing things like number of digits to be displayed, scientific notation, the editor... With `names(options())` we can see the names of the current options.
+
+```{r}
+names(options())[3:15]
+```
+
+## Data Frames
+
+A data.frame is a list of vector with the same length which can be arrayed in a matrix-like rectangle. Each vector in the list will be the columns. To construct a data frame we use `data.frame()` function.
+
+```{r}
+df <- data.frame (
+    Who = letters[1:5],
+    Cost = c(3, 2, 11, 4, 0),
+    Paid = c(F, T, F, T, T),
+    stringsAsFactors=FALSE
+)
+row.names(df) <- as.character (row.names(df))
+df
+```
+
+A data frame must have a column and row names, if they are not assigned R will create them. Also R ensure that column names are valid and not duplicated. For columns we can use `colnames()` or `dimnames()` to assign it, or `names()` with a list. For row names we have `row.names()` or `rownames()` functions.
+
+By default the `data.frame()` function turns character vectors into factors but rarely we want it in data cleaning. We can chage this with `stringAsFactors=FALSE` argument.
+
+-   `head()` : return the first six rows of a given dataframe. Second argument is n=6 to specify a number of rows. A negative number returns the last n rows.
+
+-   `tail()` : return the last six rows of a given dataframe. Second argument is n=6 to specify a number of rows.
+
+-   `str()` : compact representation of the data frame with data type per column.
+
+-   `dim()` : returns the dimension, number of rows and columns.
+
+-   `summary()` : returns a brief description of each column.
+
+### Missing Values
+
+Because a data frame can have differnt classes (data types) in its colums, the missing values can be of different classes too. A numeric vector will have numeric NA which is different to logical NA from a logical vector.
+
+-   `is.na()` : returns a logical matrix showing which elements are missing.
+
+-   `anyNA()` : returns TRUE or FALSE to the question There are missing values?
+
+-   `na.omit()` : omit the observations (rows) of the data frame in which one or more elements is missing. Also keeps a track, we can see the deleted observations with `attr(df, "na.action") ; attr(df, "class")`.
+
+Extract and Assignment
+
+With data frames we can use both matrix and list styles of subsetting operations. In data frames when we select a row returns a data frame because can store different types of data. Selecting a column will produce a vector.
+
+Using a doble bracket or a dollar sign will produce a vector. Using the name produce a data frame.
+
+```{r}
+df[4,]
+
+f <- df$Paid
+df[f,]
+
+df[(df["Paid"] == F),]
+
+df["Cost"]
+```
+
+To extract a vector from a dataframe's column:
+
+```{r}
+df[[2]]
+
+cat("\n")
+df[["Cost"]]
+
+cat("\n")
+df[["Co", exact=FALSE]]
+```
+
+Passing `drop=FALSE` argument we avoid to extract a vector:
+
+```{r}
+df[, c("Who", "Paid")]
+
+df[, "Who"]
+
+df[, "Who", drop=FALSE]
+```
+
+To delete a column we can asign NULL to that column: `df$Paid <- NULL`
+
+In a data frame or list if we pass a subscript for unexistance row wil produce one row with NA values. Sometimes happens when we delete a row and a program or ourselfs try to access to that row by name.
+
+## Operating on Lists and Data Frames
+
+If we try to use `apply()` in a data frame, the function will convert it to a matrix, and the whole matrix is of the same data type. Also, we cannot use `apply()` to a list because does not have dimensions.
+
+-   `lapply()` : returns a list
+-   `sapply()` : runs `lapply()` and tries to make the output into a vector or a matrix. But if the return have different lengths, it will need to return a list. If it try to return items with diferent types, will convert these to a common type, then its better in these case use `lapply()`.
+
+```{r}
+sapply (df, class)
+```
+
+### Spliy, Apply, Combine
+
+First the data is split, then a function is applied to each piece, and the results recombined. The function `tapply()` do exactly that, but also we can use `split()` and `sapply()` or `lapply()`.
+
+```{r}
+df2 <- data.frame (
+    Age = c(35, 24, 42, 63, 56, 66),
+    Spouse = c(31, 36, 40, 59, 60, 60),
+    Gender = c("F", "F", "M", "F", "M", "M")
+)
+split (df2$Age, df2$Gender)
+
+cat("\nUsing sapply() to obtain the mean by gender :\n")
+sapply (split (df2$Age, df2$Gender), mean)
+```
+
+Above, `split()` divides Gender with Age values, then `sapply()` use `mean()` function to each part and returns a vector with the results (is the recombine). Let's see `tapply()` :
+
+```{r}
+round( tapply(df2$Age, df2$Gender, mean), 3 )
+```
+
+We can use `split()` on a data frame unlike `tapply()`, doing that the data frame will be divided and then we can use `sapply()` or `lapply()` to each part.
+
+```{r}
+split (df2, df2$Gender)
+
+cat("\nSummary differencing Gender: \n")
+lapply ( split (df2, df2$Gender), summary )
+```
+
+```{r}
+cat("\nLet's see what happens with sapply: \n")
+sapply ( split (df2, df2$Gender), summary )
+```
+
+The previous `sapply()` will try to construct a vector or matrix converting everything to a common type.
+
+A function to produce the same result is `by()` but without letting yyou save the list. It will prerforms the `summary()` operation on each column, broken down by gender:
+
+```{r}
+by ( df2, df2$Gender, summary )
+```
+
+Sometimes the task split, apply and combine can be performed altogether, but but other times might require separare functions. Packages like `dplyr` for data frames or `plyr` for lists and arrays. Both are intended to be fast and efficient and to permit parrallel computation.
+
+### All-Numeric Data Frames
