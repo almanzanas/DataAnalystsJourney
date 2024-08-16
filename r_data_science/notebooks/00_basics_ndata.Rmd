@@ -1,9 +1,10 @@
 ---
-title: "R Notebook"
+title: "R for Data Science #1"
 output: 
-    html_notebook:
-        toc: true
-        toc_depth: 3
+    html_notebook: 
+      toc: true
+      fig_width: 10
+      fig_height: 6
 ---
 
 # The very basics
@@ -28,7 +29,7 @@ args(matrix)
 
 # R Data: Vectors
 
-A vector is the basic unit of computation in R. The atomic clases which we can see with `help(vector)` are::
+A vector is the basic unit of computation in R. The atomic class which we can see with `help(vector)` are:
 
 -   logical: TRUE or FALSE (T or F as synonyms)
 -   integer
@@ -493,7 +494,7 @@ table(vec,vec2, useNA="ifany")
 
 A three and higher-way tables are produced when you pass three or more equal-length vectors.
 
-For very large vectors, the `data.table()` functino in the `data.table` package may prove more efficient than `table()`.
+For very large vectors, the `data.table()` function in the `data.table` package may prove more efficient than `table()`.
 
 The `xtabs()` function is useful for creating more complex tables.
 
@@ -613,7 +614,7 @@ people[order(scores, people[1:6])]
 
 ### Vector as Sets
 
-To find values that overlap between two vectors we can use `%in%` function. For example, we can use a command `a %in% b` which will return a vector the same length as 'a' with a logical indicator whether each element is foundin 'b'. Witch `table(a %in% b)` we get the number of element in 'a' that were not found in 'b'.
+To find values that overlap between two vectors we can use `%in%` function. For example, we can use a command `a %in% b` which will return a vector the same length as 'a' with a logical indicator whether each element is found in 'b'. Witch `table(a %in% b)` we get the number of element in 'a' that were not found in 'b'.
 
 ```{r}
 # Looking for which letter is in 'letters':
@@ -1126,12 +1127,239 @@ sapply ( split (df2, df2$Gender), summary )
 
 The previous `sapply()` will try to construct a vector or matrix converting everything to a common type.
 
-A function to produce the same result is `by()` but without letting yyou save the list. It will prerforms the `summary()` operation on each column, broken down by gender:
+A function to produce the same result is `by()` but without letting you save the list. It will performs the `summary()` operation on each column, broken down by gender:
 
 ```{r}
 by ( df2, df2$Gender, summary )
 ```
 
-Sometimes the task split, apply and combine can be performed altogether, but but other times might require separare functions. Packages like `dplyr` for data frames or `plyr` for lists and arrays. Both are intended to be fast and efficient and to permit parrallel computation.
+Sometimes the task split, apply and combine can be performed altogether, but but other times might require separate functions. Packages like `dplyr` for data frames or `plyr` for lists and arrays. Both are intended to be fast and efficient and to permit parallel computation.
 
 ### All-Numeric Data Frames
+
+A data frame with all of its values are logical or numeric when is converted to a matrix the numeric type is preserved.
+
+To convert vectors to another class exists as.numeric() and the other as. functions, also there are as.matrix() and as.data.frame() to convert data frames to matrices and vice versa. It is useful for all-numeric data frames and older functions that require numeric matrices.
+
+### Convenience Functions
+
+It is recommended to users to use long names for data objects and columns for increases readability. But sometimes leads to use long line expression like:
+
+`CustPayment2016$JanDebt + CustPayment2016$FebPurch - CustPayment2016$FebPmt`
+
+These can be handled with the functions:
+
+-   `with()` : to perform operations on a data frame. First argument is the data frame, then the expression to be performed. Cannot be assigned to.\
+    `` with ( CustPayment2016, JanDebt `FebPurch - FebPmt ) ``
+
+-   `within()` : works in the same wey but unlike `with()`, this function can be assigned.\
+    `CustPayment2016 <- within ( CustPayment2016, FebDebt <- JanDebt + FebPurch - FebPmt )`
+
+For beginners and to use then interactively and not for programming there are functions to make the subsetting and transformation process easier ( but generally its avoided):
+
+-   `subset()` : To extract rows given a condition:
+
+    ```{r}
+    subset ( df, Paid == TRUE)
+
+    # Is the alternative to:
+    df[ df$Paid == TRUE, ]
+    ```
+
+-   `transform()` : To specify transformations to existing columns and returns the updated version.
+
+To change the way we write functions we can use a 'pipe' as `%>%` provided by `magrittr` package. The pipe allows a function's output to serve as input to another function. Not every function is suitable for piping, the pipes are particularly useful for nested functions.
+
+```{r}
+cat("Nested: \n")
+cos (log (sqrt (8 - 3) ) )
+
+library("magrittr")
+cat("\nUsing pipes: \n")
+(8 - 3) %>% sqrt %>% log %>% cos 
+
+```
+
+### Re-Ordering, De-Duplicating, Sampling
+
+We can create a vector with `order()` which contain indices sorted by the variables inside.
+
+``` r
+df
+new.order <- order( df$ID, df$Date )
+# convenient alternative:
+new.order <- with ( df, order (ID, Date) )
+
+# 'new.order' have a vector with the rows sort by increasing ID
+# To have the data frame with the new order:
+df[new.order, ]
+```
+
+For duplicated values, we can use unique() passing the data frame to get every non-duplicated row. Just the floating-point error might be a problem detecting identical rows.
+
+-   sample() : first argument is the number of total rows, the second argument is the size of the sample we want. By default the result is a random set of integers without replacement. The row number of sampled data frame will be the same that originals.
+
+    ``` r
+    # Sample of 200 rows:
+    # First, create a vector selecting the rows
+    s200 <- sample ( nrow(df), 200 ) 
+
+    # Using the sample vector to do the sampling:
+    df[s200, ]
+    ```
+
+## Date and Time Objects
+
+### Formatting Dates
+
+The class Date internally store an integer representing the number of days since a particular origin date.
+
+Dates can be represented in many shapes, american's form, rest-of-the-world form, etc. the `as.Date()` function converts text into Date class.
+
+```{r}
+# First '0' will be converted into origin date.
+dd <- as.Date ( c(0, 18252:18255), origin = "1970-01-01" )
+
+dd
+```
+
+Also can convert text based representations in Date class such as "7/4/2019". In this case we have to pass `format=` argument, and the format string had to contain the same pattern that the input text:
+
+-   `%b ; %B` : name of the month
+-   `%a ; %A` : name of the day of the week
+-   `%d` : day of the month
+-   `%m` : month in number
+-   `%y ; %Y` : for the yy or YYYY year.
+-   `%F` : Equivalent to %Y-%m-%d.
+-   `%x` : Date. Locale-specific on output, `"%y/%m/%d"` on input.
+
+```{r}
+as.Date ( c("Feb 29, 2016", "Feb 29, 2017", "September 30, 2017"), 
+          format = "%b %d, %Y" )
+
+# The second date will result NA because is not valid
+```
+
+The names of the days of the week and the months of the year are in computer's locale, to read other languages we can change locales R.
+
+```{r}
+sp.dt <- c("3 octubre 2016", "26 Marzo 2017")
+
+( dts <- as.Date (sp.dt, format = "%d %B %Y") )
+
+# Changing locales to spanish:
+Sys.setlocale ("LC_TIME", "Spanish")
+
+( dts <- as.Date (sp.dt, format = "%d %B %Y") )
+
+# Changing back:
+Sys.setlocale ("LC_TIME", "UK")
+```
+
+### Operations on Date Objects
+
+The functions `months()` and `weekdays()` returns the month name and weekday from passing Date object. It can be added the `abbreviate=TRUE` argument to abbreviate the output.
+
+To extract the numeric month, day or year it can be used the `format()` function and then using `as.numeric()` to convert the character output to numeric.
+
+```{r}
+dt1 <- as.Date ("2024/05/17")
+dt2 <- as.Date ("2024-07-03")
+
+# Extracting weekdays:
+weekdays( c(dt1, dt2) )
+cat("\n")
+# Extracting month name:
+months( c(dt1, dt2), abbreviate = T )
+cat("\n")
+# Identifying Quarters:
+quarters( c(dt1, dt2) )
+cat("\n")
+
+format ( c(dt1, dt2), "%y")
+format ( c(dt1, dt2), "%d")
+format ( c(dt1, dt2), "%A, %B %d, %Y")
+```
+
+The difference between dates is a period of time stored as `difftime` object. Functions such as `mean()` and `range()` works well but `hist()` or `summary()` fails producing the expected results.
+
+Usually we will convert `difftime` objects to numeric with `as.numeric()` function, for that will be a good habit to specify `units = "days"` argument (with the unit we want.
+
+```{r}
+cat("Date1 adding 30 days: \n")
+dt1 + 30
+
+cat("\nDifference between date1 and date2: \n")
+(dd <- dt2 - dt1)
+
+cat("\nDifference to numeric: \n")
+as.numeric (dd)
+units(dd)
+cat("\nTo numeric but in weeks: \n")
+as.numeric (dd, units="weeks")
+```
+
+### `POSIXt` Objects
+
+`POSIXlt` object is implemented as a list, meanwhile `POSIXct` object is like a number useful is will be stored in a column.
+
+```{r}
+(ready <- as.POSIXlt("2017-01-17 14:51:23"))
+
+cat("\n")
+unlist (ready)
+
+cat("\n")
+( mdayn <- as.numeric(unlist (ready)["mday"]) )
+```
+
+In this last example we can see January is month 0 then December is month 11. Weekday is 0 to 6 starting on Sunday.
+
+Here it can be used too the `weekdays()`, `months()` and `quarters()` functions, as well as `format()` function. This will be less efficient than the list-type extraction, and it is recommended use `POSIXct` objects where possible because changing time zones with `POSIXlt` can encounter unexpected behavior.
+
+When we convert a `Date` object to `POSIXt` the time will be 00:00 (midnight), and when it converted from `POSIXt` to Date, the time will be truncated.
+
+as.POSIXct() and as.POSIXlt() works like as.Date() but the date can be followed by 24-hour clock time (or 12h with AM/PM).
+
+```{r}
+( ct1 <- as.POSIXct ("Mar 30, 2017 12:26:08 am", 
+                     format = "%b %d, %Y %I:%M:%S %p") )
+cat("\n")
+(ct2 <- as.POSIXct ("2017-03-29 22:26:08", tz = "UTC"))
+
+cat("\nLooking for diferences: \n")
+as.numeric (ct1 - ct2, units = "secs")
+```
+
+All the objects in a vector of length \>1 including `weekdays()` and `months()` will be displayed with the local time zone. For a single object these functions refer to the time zone of the object:
+
+```{r}
+c(ct1, ct2)
+
+cat("\n")
+weekdays(c(ct1, ct2))
+cat("\n")
+weekdays(ct2)
+```
+
+The time zone can be converted changing `tzone` attribute: \
+`attr ( ct1, tzone = "UTC" )`
+
+The help of `Sys.timezone()` containing the names of the time zones. When a POSIXct object is converted to Date object is rendered in UTC time zone by default:
+
+```{r}
+as.Date(ct2)
+as.Date(ct1)
+```
+
+Example of `POSIXct` formatting flexibility:
+
+```{r}
+(crdt <- date() )
+cat("\n")
+
+(now <- as.POSIXct (crdt, format = "%A %B %d %H:%M:%S %Y" ) )
+
+cat("\n")
+as.Date (now)
+```
