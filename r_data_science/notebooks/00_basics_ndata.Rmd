@@ -1342,7 +1342,7 @@ cat("\n")
 weekdays(ct2)
 ```
 
-The time zone can be converted changing `tzone` attribute: \
+The time zone can be converted changing `tzone` attribute:\
 `attr ( ct1, tzone = "UTC" )`
 
 The help of `Sys.timezone()` containing the names of the time zones. When a POSIXct object is converted to Date object is rendered in UTC time zone by default:
@@ -1363,3 +1363,242 @@ cat("\n")
 cat("\n")
 as.Date (now)
 ```
+
+Math Functions
+
+Date and `POSIXt` objects are numeric, then we can use some functions such as `range(), max(), min(), mean(), median()`, which will produce vectors of date objects.
+
+`diff()` : computes differences between adjacent elements in a vector.
+
+```{r}
+diff ( range( c(ct1, ct2) ) )
+```
+
+The function `table()` works too but does not work on `POSIXlt` (list) objects.
+
+We can also create sequences with `seq()` function, it can be specified `by="day"` argument:
+
+```{r}
+seq ( as.Date("2020-03-11"), by = 3, length = 5 )
+
+cat("\n")
+pdt <- as.POSIXct( ("2020-03-11 13:05:00") )
+seq ( pdt, by = 2, length = 3)
+
+cat("\nSequence by days:\n")
+seq (pdt, by = "day", length = 3)
+
+cat("\nBy day without altering the hour: \n")
+seq (pdt, by = "DSTday", length = 3)
+```
+
+With `POSIXt` object using `by="day"` the clock moves 24 hours, but `by="DSTday"` moves 1 day preserving the clock.
+
+We have to be more careful with `POSIXt` and `difftime` objects:
+
+```{r}
+d1 <- as.POSIXct ("2017-05-01 12:00:00")
+d2 <- as.POSIXct ("2017-05-01 12:00:06")
+d3 <- as.POSIXct ("2017-05-07 12:00:00")
+cat("Are equal (d2 - d1) and (d3 - d1) ? :\n")
+(d2 - d1) == (d3 - d1)
+
+cat("\nSame operation but using as.numeric() : \n")
+as.numeric(d2 - d1) == as.numeric(d3 - d1)
+
+cat("\nSame as.numeric but with units=days:\n")
+as.numeric(d2 - d1, units="days") == as.numeric(d3 - d1, units="days")
+```
+
+### Missing Values
+
+In a vector dates of different classes should not be combined, a good practice is to use a function to force all the elements to have the same class.
+
+```{r}
+c(d1, NA)
+
+cat("\n")
+c(NA, d1)
+
+cat("\n")
+c( as.Date(NA), d1)
+
+cat("\n")
+c( as.POSIXct(NA), d1)
+```
+
+The first `c(d1, NA)` knows what to do with the `NA` value because `d1` is first, but the second one do not, then convert the vector into numeric. That not happens in the third and fourth command when we specify which class is the `NA` value.
+
+### `Apply()` on Dates
+
+Often a data set will have a series of dates in each row, like with a data frame is better to use `lapply()` and `sapply()` functions:
+
+```{r}
+dt.df <- data.frame(
+    Start = c( seq (as.Date("2020-05-03"), by="months", length = 6) )
+)
+
+# Creating a new column
+dt.df$End <- c( seq (as.Date("2021-06-02"), by="months", length = 6) )
+
+dt.df
+```
+
+```{r}
+sapply ( 1:nrow(dt.df), 
+         function (i) as.numeric (dt.df[i,2] - dt.df[i,1], 
+                                  units = "days") ) 
+```
+
+## Actions with Data Frames
+
+### Combining by Rows or Columns
+
+The function `data.frame()` can be used with two data frames inside and will be joined. Also `cbind()` function is useful. Both can incorporate vectors and matrices as well. Remember that characters will be converted into Factors unless `stringAsFactors=FALSE`.
+
+It is a good idea to check duplicated column names before combining, with `intersection()` function for example. If there are duplicated names R will use `make.names()` to generate unique alternatives (adding .1 .2 .3 ...).
+
+```{r}
+names(df)
+names(df2)
+# Forcing 'intersect' to get a column names coincidence
+df2$Paid <- c(NA,NA,NA,NA,NA,NA)
+intersect( names(df), names(df2) )
+```
+
+With `rbind()` we can combine data frames vertically (by rows). The columns in both data frames have to be the same, number and name, but not the order. Also the columns it's recommended to have the same class or R will convert to the common class. Pass `stringAsFactor=FALSE` with `rbind()` to ensure the character columns.
+
+``` r
+# Checking column names on two data frames:
+nam1 <- names (df1)
+nam2 <- names (df2)
+
+all (sort (nam1) == sort (nam2) )
+```
+
+Above we sort the names of each data frame with a comparation expecting TRUE as result.
+
+``` r
+# Checking column classes
+cs1 <- sapply (df1, class)
+cs2 <- sapply (df2, class)
+
+isTRUE (all.equal (cs1, cs2[names (cs1) ] ) )
+```
+
+And now we compare both classes.
+
+-   `all.equal()` : compares two objects and returns TRUE if the match. Also returns a report if there are differences.
+-   `isTRUE()` : returns TRUE if its argument is a single TRUE (expected for `all.equal()` ) or FALSE if there are something else.
+
+When the rows have basic numeric names R will adjust the resulting rows. But with modified row names R will try to keep them and taking care of the matches.
+
+If we have a large number of data frames, for example in a list as the result of `lapply()` function, we can use `do.call()` to combine them. The function takes the name of a function to be run and a list of arguments and run the function with those arguments:
+
+``` r
+# Result of lapply() function:
+list.of.df
+
+do.call ( "rbind", list.of.df )
+```
+
+In the command above we are assuming that data frames meet the `rbind()` criteria. Other basic example can be: `do.call("log", list(x = 32, base = 2)` where the list are the argument of `log().`
+
+### Merging Data Frames
+
+To `merge()` usually the data frames to merge have a "key" field. Then `merge()` matches up the key and produces a data frame with one row per key with the columns of both data frames.
+
+-   `merge()` arguments:
+
+    -   `(all.x=FALSE, all.y=FALSE)` : default options. One row for each key that appears in bot x and y data frames (except when there are duplicated keys). Is an `'inner join'`.
+    -   `(all.x=TRUE, all.y=FALSE)` : One row for each key in x and columns of the corresponding keys that do not appear in y are filled with NA values. Is an `'left join'`.
+    -   `(all.x=FALSE, all.y=TRUE)` : Is the complementary one, an '`right join`'.
+    -   `(all.x=TRUE, all.y=TRUE)` : This id the '`outer join`', when the result has one row for every key in either x or y.
+
+When the keys are duplicated the function `merge()` does not care, it will do it. It is best to remove rows with duplicated keys or to create a new column with a unique key, before merging.
+
+If the key match approximately (people names) the functions `adist()` and `agrep()` help find keys that match approximately.
+
+### Comparing Data Frames
+
+-   `identical()` : test for every strict equivalence. Returns `TRUE` when the two items are equal. Should not be applied to `POSIXlt` or data frames with this object.
+
+-   `all.equal()` : compares two objects but with more room for difference. Returns `TRUE` when two items are equal. By default is a match between names and attributes of two data frames. Correct way to compare: `isTRUE(all.equal(df1, df2))`
+
+    -   `tolerance=` how different two numbers need to be to be declarated different.
+
+### View and Editing Data Frames
+
+-   `View()` : shows a dear-only representation of a data frame.
+-   `edit()` : allows change to be made. Can be saved to reflect the changes
+-   `data.entry()` : the changes are saved automatically.
+
+Is strongly recommended to use commented scripts and functions because in that way all the steps in the process will be reproducible.
+
+## Handling Big Data
+
+R store the data in main memory on the machine being used.
+
+Bash include tools to provide the ability to break the data into manageable pieces:
+
+-   `split` : breaks up a data set by rows.
+-   `cut` : extracts specific columns.
+-   `shuf` : which permits the lines in a file, which helps when taking random samples.
+
+The `data.table` package advertises very fast subsetting and tabulation.
+
+There are add-in packages to maintain "pointers" to data on disk, it is slower than memory but the storage can be expected to be huge:
+
+-   `bigmemory`
+-   `ff`
+-   `tm`
+
+## Data Handling Tools
+
+To account for columns with a vector of two or more classes we can extract the classes into a variable:
+
+```{r}
+df2
+```
+
+```{r}
+( col.cls <- sapply(df2, function (x) class (x)[1] ) )
+```
+
+-   table() to tabulate the columns classes.
+
+    ```{r}
+    table(col.cls)
+    ```
+
+-   To count missing values by column, or count negative or a number equal to 99 like other 'missing' values:
+
+    ```{r}
+    sapply( df2, function(x) sum(is.na(x) ) )
+    ```
+
+    -   If there are a large number of columns we can pass `sapply()` results to `table(`)
+
+    ```{r}
+    sapply( df2, function(x) sum(is.na(x) ) ) |> table()
+    ```
+
+    ```{r}
+    sapply( df2, function(x) sum (x < 0, na.rm = TRUE) )
+    ```
+
+-   To compute the ranges of numeric columns in a search of outliers or anomalies.
+
+    ```{r}
+    sapply (df2[, col.cls %in% c("numeric", "integer") ], range, na.rm=TRUE ) 
+    ```
+
+-   To count unique values by column:
+
+    ```{r}
+    sapply(df2, function(x) length(unique(na.omit(x) ) ) )
+    ```
+
+The `apply()` function converts the data frame to a matrix first, should be used if all the columns of a data frame are of the same type. The `sapply()` function tries to return a vector or a matrix if it can, so if the return elements are of different classes they will often be converted. It is better to use `lapply()` unless we know that one of the other functions will succeed.
+
+# R Data: Text and Factors
