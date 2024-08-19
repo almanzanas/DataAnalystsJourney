@@ -5,6 +5,9 @@ output:
       toc: true
       fig_width: 10
       fig_height: 6
+      highlight: pygments
+      theme: sandstone
+      number_sections: true
 ---
 
 # The very basics
@@ -1707,3 +1710,279 @@ To capitalize the every first letter of a character string, from `help("casefold
 ## Converting numbers into text
 
 ### Formatting Numbers
+
+-   `format()` : is a way to format a set of numbers in a common way. E.g. lining up decimal points and commas.
+
+    -   `digits=` number of digits
+
+    -   `nsmall=` number of digits (minimum) in the 'small' part (the right of the decimal point).
+
+    -   `big.mark=` determine the comma in the 'big' part (the thousand mark).
+
+    -   `drop0trailing` , removes trailing zeros in the small part.
+
+    -   `zero.print=` , if TRUE, causes zeros to be printed with spaces.
+
+```{r}
+format ( c(12.23, 1234.45678, 0, 10.000) )
+format ( c(12.23, 1234.45678, 0, 10.000), big.mark="," )
+format ( c(12.23, 1234.45678, 0, 10.000),
+         digits = 6, nsmall = 2, zero.print = FALSE, width = 2)
+```
+
+Decimal part by default will be aligned. The last example shows a currency type format, which the `digits` and `nsmall` arguments have to be chosen carefully to produce two decimals.
+
+With `sprintf()` we can include text and add leading zeros. The function have a format string containing text and conversion strings, which describe how numbers and other variables should appear in that output. A conversion strings start with a percent sign and contain modifiers and then a conversion character.
+
+The conversion character `%i` or `%d` are for integer values, `%f` is for double-precision numerics, and `%s` is for character strings. This field can be formatted with two numbers separated by a period, the first one give the minimum width (total number of characters) and the second one is the number of digits to the right of the decimal points.
+
+```{r}
+# 8 characters, 2 decimals.
+sprintf ( "%9.2f", 1230.456789 )
+# 0 leading the character to fill with 0 until 8 characters.
+sprintf ( "%09.2f", 1230.456789 )
+# Like the previous one but with spaces
+sprintf ( "% 9.2f", 1230.456789 )
+# Always a simbol leading the number
+sprintf ( "%+9.2f", 1230.456789 )
+# Left Justified
+sprintf ( "%-9.2f", 1230.456789 )
+# exponential
+sprintf ( "%9.3g", 1230.456789 )
+```
+
+Also we can use `sprintf()` with more than one vectors:
+
+```{r}
+costs <- c(3, 22, 456.32, 89340.4235, 1230045605.959)
+sprintf ( "I spent $%.0f in %s", costs, month.name[2:6] )
+```
+
+In the conversion, the field width or precision can be passed as an argument if we specify an asterisk in the format:
+
+```{r}
+bigs <- max (nchar (sprintf ("%.2f", costs) ) )
+
+sprintf ("spent $%*.2f in %s",
+         bigs, costs, month.name[2:6] )
+
+```
+
+The function `sprintf()` can be very useful to generate labels:
+
+```{r}
+sprintf ("%03d", 1:15 )
+```
+
+### Scientific Notation
+
+When you represent a number by an optional sign, a number between 1 and 10 and a multiplier of a power of 10.
+
+In R we can use `options()` to change scipen option. If `scipen=999` the scientific notion will be disabled, and `scipen=-999` will force scientific notion. When you close and open R `scipen` is re-set to default values. It is a better option to use `format(x, scientific=FALSE)`.
+
+```{r}
+100000
+c( 1, 100000 )
+c( 1, 100000, 123456 )
+as.integer (1000000 + 1 )
+format ( 1000000, scientific=FALSE)
+```
+
+### Discretizing a Numeric Variable
+
+Discretizing is to construct a categorical version of a numeric vector with a few levels for exploration or modeling purposes, it is also called 'binning'.
+
+-   `cut()` : the arguments are the vector to be discretized and the breakpoints; optionally we can pass labels to be applied to the new levels. The result is a factor vector.
+
+    -   `include.lowest=` if `TRUE` will include the left endpoint to the binning. By default will not be included.
+
+    -   `right=` if `FALSE` makes intervals include their left end and exclude the right.
+
+    -   `breaks=` passing an `integer` will produce that number of bins with equal width.
+
+```{r}
+vec <- c(1, 5, 7, 2, 8, 9, 3, 4, 10)
+as.character (cut (vec, c(1, 4, 7, 10), include.lowest=TRUE, right=FALSE) )
+```
+
+```{r}
+# Generating random numbers
+set.seed(168)
+rand.vec <- rnorm(1000)
+
+# cut() with breaks=5 of equal width
+table (cut (rand.vec, breaks=5) )
+
+# Using quantile() to create bins with equal number of observations
+table (cut (rand.vec, quantile(rand.vec) ) )
+
+# quantile() with probs argument to create 5 bins instead of 2
+table (cut (rand.vec, 
+            quantile(rand.vec, probs=seq(0, 1, 0.2) ), 
+            include.lowest = TRUE ) )
+
+```
+
+## Character Strings
+
+-   `paste()` , `paste0()` : sticks together two character vectors, and if its necessary convert them into a `character` vector first. By default it will insert a space between them.
+
+    -   `sep=` to choose the separation, e.g. `sep="."` or `sep=""` .
+
+    -   `collapse=` combines all the strings of the vector into one long string. It will use the separator specified by the value of this argument. e.g. `collapse=""` or `="\t"` .
+
+```{r}
+paste("a", "b", "c")
+
+paste0( 1 == 2, 1 + 2)
+paste0("Arg", sep=".", LETTERS[3:7])
+paste(letters[1:5], LETTERS[5:1], collapse = ", ")
+```
+
+### Column Names
+
+When a data frame is constructed from data without header names, R construct names such as V1 and V2. Usually we will want to replace these names to others more meaningful.
+
+For example, we want column names for 36 months of balance data from 2021 to 2023, also 36 months of payment data for the same years.
+
+-   `outer()` : given two vectors, performs another function on each pair of elements producing a matrix.
+
+-   `expand.grid()` : given vectors of values produces a data frame containing all combinations of all the values.
+
+```{r}
+head (
+    outer (month.abb, 2021:2023, paste, sep = "." ), 5
+)
+# Creating the month sequence for each year
+monseq <- outer (month.abb, 2021:2023, paste, sep = "." )
+# Creating the column names
+newnam <- c("ID", 
+            paste0 ("Bal.", monseq), 
+            paste0 ("Pay.", monseq) )
+
+sample(newnam, 5)
+```
+
+```{r}
+# Alternative maybe more eficient but more tedious
+p1 <- rep (c("Bal", "Pay"), 12 * 3)
+# Each month 2 times for Bal and Pay, and then 3 times for the years
+p2 <- rep ( rep(month.abb, each = 2), 3 )
+# Each year two times, for Bal and Pay
+p3 <- rep (2021:2023, each = 24)
+
+newnam <- c("ID", paste(p1, p2, p3, sep=".") )
+sample(newnam, 5)
+```
+
+```{r}
+names.df <- expand.grid (c("Bal", "Pay"), 
+                         month.abb, 
+                         c(2021:2023) )
+
+newnam <- paste ( names.df[["Var1"]], 
+                  names.df[["Var2"]], 
+                  names.df[["Var3"]],
+                  sep = "." )
+
+sample(newnam, 5)
+```
+
+### Tabulating Dates
+
+To summarize vectors of dates:
+
+```{r}
+set.seed(168)
+rnd.dts <- as.Date (sample (0:730, size = 600), origin = "2021-01-01")
+
+table (quarters (rnd.dts) )
+
+# To combine year.month is also possible with substring() instead of format
+table ( paste0 (format (rnd.dts, "%Y"), ".", quarters(rnd.dts) ) )
+
+```
+
+If we want to use the month instead of the quarter, we can extract the moth name with `month()` function and use paste, or it is possible to use `format()` directly with the year and the month name.
+
+```{r}
+ym.order <- paste0 (2021:2023, ".", month.name )
+
+ym.tbl <- table (format(rnd.dts, "%Y.%B") )
+
+ym.tbl[ym.order][1:5]
+```
+
+### Unique Keys
+
+Often we need to construct a column with an unique identifier for each row. These previous methods are useful for that task. Maybe the year and month are not enough and we have to add a customer ID or something else to achieve this column with unique keys.
+
+### Files and Path names
+
+To create a vector with every file in the working directory and each one with it absolute path we can use `paste(getwd(), list.files(), sep="/")` . If we use `list.files(full.names=TRUE)` will return only the relative path.
+
+## Regular Expressions
+
+We use regular expressions to find strings that match a pattern. This patterns are case-sensitive but can be ignored. R can use POSIX regular expression and Perl-style re.
+
+For regular expresson in R there are three primary tools which are `grep()`, `regexpr()` and `sub()`, all tree with its variants.
+
+-   `grep()` : given a pattern and a vector of strings, returns a numeric vector with the indices of the string that match the pattern.
+
+    -   `value=` if `TRUE` returns the matching string themselves.
+
+    -   `ignore.case=` if `TRUE` will ignore whether letters are in upper or lower-case.
+
+    -   `invert=` if `TRUE` reverses the search, returning the elements that not match. It's not available with `grepl()`
+
+    -   `fixed=` if `TRUE` suspends the rules about patterns and simply searches for an exact text string.
+
+    -   `perl=` if `TRUE` indicate to grep() to use Perl-type regular expressions.
+
+    -   `useBytes=` if `TRUE` the matching should be done byte by byte.
+
+-   `grepl()` : returns a logical vector indicating the elements that match.
+
+Special Characters in POSIX regular expressions:
+
+![](images/clipboard-3145267093.png)
+
+It is common to see `.+` in regular expressions, that means *a sequence of one or more characters*. Also we can see `.*` for *zero or more characters*.
+
+Is is a mistake to add spaces to your pattern thinking 'it will be more readable', because the regular expression will then take the spaces literally and require that they appear.
+
+Looking in a character vector with dates:
+
+```{r}
+dt <- c(
+    "Balance due 16 Jun or earlier in 2017",
+    "26 Aug or any day in 3021",
+    "'76 Trombones' marched in a 1962 film",
+    "4 Apr 2018", "9Aug2006",
+    "99 Voters May Register in 20188"
+)
+
+```
+
+-   `.*` if we have leading text
+
+-   `[0-3]?[0-9]` matches a one digit number, the first digit is optional indicated by '?'
+
+-   `.*` again for additional text
+
+-   `(", or.mon, ")` will be the variable with the month names separated by pipes `"|"`. The parenthesis make this a single pattern. The abbreviations will match a full name.
+
+-   `.*` more additional text
+
+-   `[1-2][0-9[{3}` four digits that have to start with 1 or 2
+
+```{r}
+or.mon <- paste (month.abb, collapse = "|")
+or.mon
+re <- paste0 ( ".*[0-3]?[0-9].*(", or.mon, ").*[1-2][0-9]{3}")
+grep (re, dt, value = TRUE )
+```
+
+The line with '20188' match because the four digits with `[1-2][0-9]{3}` match. Also the '99' matches because `[0-3]` is optional and the first 9 matches in the `[0-9]` pattern and the second match with `.*` .
+
+#### Escape Sequences
