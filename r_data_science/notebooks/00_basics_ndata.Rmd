@@ -1602,3 +1602,108 @@ df2
 The `apply()` function converts the data frame to a matrix first, should be used if all the columns of a data frame are of the same type. The `sapply()` function tries to return a vector or a matrix if it can, so if the return elements are of different classes they will often be converted. It is better to use `lapply()` unless we know that one of the other functions will succeed.
 
 # R Data: Text and Factors
+
+Two ways to store test data, the vector of character strings and as a factor which is text entries as integers with character labels that match those integers.
+
+## Character Data
+
+### `length()` and `nchar()`
+
+On a vector using `length()` we extract how many elements are in it, and using `nchar()` we extract how many letters there are in each element. The argument `keepNA=FALSE` allow `nchar()` to count `NA` values returning 2 of length.
+
+```{r}
+length(writers)
+nchar(writers)
+```
+
+### Escaped characters
+
+In character strings some characters are protected, we have to use backslash `( \ )` to use them.
+
+We have to escape the double quotation marks and the backslash:
+
+*She wrote, "To enter a 'new-line,' type "\\n" ."*
+
+```{r}
+( quo <- "She wrote, \"To enter a 'new-line,' type \"\\n\" .\"" )
+nchar (quo)
+cat(quo, "\n")
+```
+
+Empty String
+
+A vector length 0 corresponds to `character(0)`. An empty string is a vector in which an element have spaces or not, indicated by `""`. It will be length 1 and nchar 0. Spreadsheets will sometimes produce this empty strings or strings of spaces:
+
+```{r}
+blanks <- c (" ", " ", "", "   ", "", "2016", "", " 2016", "2016", "   ")
+length(blanks)
+table(blanks)
+names(table(blanks))
+nzchar(blanks)
+
+# Removing white spaces located in the start or end of a element:
+noblanks <- trimws(blanks)
+table(noblanks)
+names(table(noblanks))
+```
+
+The function `nzchar()` returns TRUE for strings that have non-zero length and FALSE for empty strings. And with `trimws()` we can remove blanks at the beginning and end of each element.
+
+### Substrings
+
+Frequently in data cleaning we have to extract a piece of string, like a year or Zip code. For this task the `substring()` function takes a piece of text:
+
+-   `substring()` : given a vector extract the selected text.
+
+    -   `first=` position of the first character to extract
+
+    -   `last=` position of the last character up to 1 Million. Can be omitted to get the end of the string.
+
+Also, `substring()` can be on the left side of an assignment, then we can add some text to each element of a vector.
+
+```{r}
+dt1 <- "2017-02-03"
+# Extracting the year
+substring(dt1, 1, 4)
+# Extracting day and month (last five characters)
+substring (dt1, nchar(dt1) - 4)
+
+```
+
+To break a string into its individual characters we can do it with `strsplit()` and also with `substring()`:
+
+```{r}
+substring(dt1, 1:nchar(dt1), 1:nchar(dt1) )
+strsplit(dt1, split = NULL)
+```
+
+To change the last letters of a character element with `substring()` :
+
+```{r}
+holid <- month.name
+substring (holid[6:8], nchar(holid[6:8]) - 0 ) <- "9"
+holid[5:9]
+```
+
+### Case and Substitutions
+
+We will need sometimes to manipulate the case of characters because R is case-sensitive.
+
+`tolower(), toupper(), casefold()` functions perfrom these convertions. Using `casefold()` have to be passed the argument `upper=` being `TRUE` or `FALSE` which change to upper or lower case respectively.
+
+The function `chartr()` is a general solution for substitutions. It takes two arguments that are vectors of characters and changes each character in the first argument into the corresponding character in the second argument.
+
+To capitalize the every first letter of a character string, from `help("casefold")`:
+
+```{r}
+.simpleCap <- function(x) {
+    s <- strsplit(x, " ")[[1]]
+    paste(toupper(substring(s, 1, 1)), substring(s, 2),
+          sep = "", collapse = " ")
+}
+.simpleCap("the quick red fox jumps over the lazy brown dog")
+```
+
+## Converting numbers into text
+
+### Formatting Numbers
