@@ -1,0 +1,14 @@
+---
+title: "R for Data Science #2"
+output: 
+    html_notebook: 
+      toc: true
+      toc_float: true
+      fig_width: 10
+      fig_height: 6
+      highlight: pygments
+      theme: sandstone
+      number_sections: true
+---
+
+# Writing Functions and Scripts

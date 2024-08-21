@@ -3,6 +3,7 @@ title: "R for Data Science #1"
 output: 
     html_notebook: 
       toc: true
+      toc_float: true
       fig_width: 10
       fig_height: 6
       highlight: pygments
@@ -1986,3 +1987,279 @@ grep (re, dt, value = TRUE )
 The line with '20188' match because the four digits with `[1-2][0-9]{3}` match. Also the '99' matches because `[0-3]` is optional and the first 9 matches in the `[0-9]` pattern and the second match with `.*` .
 
 #### Escape Sequences
+
+To write some special characters like the dollar sign \$, we have to pass a backslash to escape \$ from the engine which read regular expressions. To escape a character usually we should use `\$` but in R we need to escape also the backslash because R have special characters like `\n` to create a new-line. Then we will write double backslash and the simbol `\\$`. In some case, to look for the backslash itself we have to write four backslashes, two for the escape and other two for the search: `\\\\`. Using the argument fixed=TRUE can simplify the search of this patterns.
+
+```{r}
+pain <- c("c:\\temp", "/bin/u", "$5", "\n", "2 backs: \\\\")
+grep ("$", pain)
+grep ("\\$", pain, value=TRUE)
+grep ("\\\\", pain, value=TRUE)
+grep ("\\", pain, value=TRUE, fixed=TRUE)
+# Looking for any slashes:
+grep ("\\|/", pain, value=TRUE, fixed=FALSE)
+```
+
+#### Ranges
+
+Working with ranges like `[0-9]` meaning any number between 0 and 9 we also can negate a character, for example `[^0123]` means any character other than 0, 1, 2, 3, 4.
+
+The predefined character classes set include `[:lower:], [:upper:]` for lower- and upper-case; `[:alpha:]` for any letters; `[:alnum:]` for alphanumeric; `[:digit:]` for digits; `[:punct:]` for punctuation. There are more in `help("regex")` pages. Then, `[[:digit:]]` match one digit and `[^[:digit:]]` match any character that is not a digit.
+
+To finish, a word boundary is to search a word or string with a specific composition and can be identified by `\b` or `\< ... \>`. For example using `"\\<\\d{4}\\>"` we are specifying a word that must include exactly four digits.
+
+### `regexpr()`
+
+The function `regexpr()` is more precise than `grep()`, it will return the location of the first match within the string (number of the first character of the match). This information can be useful to extract the number itself and not only identify the string.
+
+```{r}
+dt
+# looking for a word with an integer:
+(regout <- regexpr( "\\<\\d+\\>", dt ) )
+attr(,"match.legth")
+```
+
+The first '13' returned by `regexpr()` vector indicate that the 13th character is a number referencing the 16. The number -1 indicate that string no contains an integer as a word.
+
+The attributes returned also give us information. `"match.length"` is the length of the match. Then, we could extract the `"match.length"` vector and use it with `substring()` to extract the number in the strings. Other method is with `regmatches()` given the character vector and the output of `regexpr()`:
+
+```{r}
+regmatches (dt, regout)
+```
+
+To extract all integers in the character vector we will use `gregexpr()` but the return is a list because some strings can contain more than one integer word. With `regmatches()` we can extract the numbers anyway.
+
+```{r}
+gout <- gregexpr ("\\<\\d+\\>", dt)
+regmatches (dt, gout)
+
+# Creating a matrix with the return of regmatches
+matrix (as.numeric (unlist (regmatches (dt, gout) ) ), ncol=2, byrow=T )
+```
+
+Bu default the matching look for the match that are as long as possible. If in the pattern we add a '?' it will stop that. for example with `\\d.*?\\d` will produce "4 Apr 3" although there are more numbers ("4 Apr 3021").
+
+### Replacement with Regular Expressions
+
+-   `sub()` : replaces the first matching pattern.
+
+-   `gsub()` : replaces all the matching patterns.
+
+The first argument for both a the pattern to search, the second is the characters to replace for, and the third argument is the character vector where to look for. Other option is to use backreferences, if the patters is composed by two patterns between parentheses we can use \\1 \\2 in the second argument to refer the matches:
+
+```{r}
+bros <- c("Isaac Asimov", "Leon Tolstoi", "Virginia Wolf", "Brandon Sanderson")
+
+# Changing the name order with backreferences:
+sub ("([[:alpha:]]+) ([[:alpha:]]+)", "\\2, \\1", bros)
+```
+
+### Splitting with Regular Expressions
+
+-   `strsplit()` : given a vector and a pattern splits the text producing a list with one entry for each string. Also has the fixed=TRUE argument to not use regular expressions.
+
+```{r}
+keys <- c("CA-2017-04-02-66J-44", 
+          "MI-2017-07-17-41H-72", 
+          "CA-2017-08-24-Missing-378")
+
+(key.list <- strsplit (keys, "-") )
+
+matrix ( unlist (key.list), ncol = 6, byrow = TRUE )
+```
+
+### Common Data Cleaning Task Using Regular Expressions
+
+#### Removing Leading and Trailing Spaces
+
+-   `"^ *"` : any string with leading spaces
+-   `" *$"` : any string with trailing spaces
+
+```{r}
+gsub ( "^ *| *$", "", c("  Text Spaces ", "Trailing    ", 
+                        "None", "     Leading" ) )
+```
+
+#### Format Currency to Numeric
+
+Taking into account $12,345.67 or 12,345.67€ we have to remove the symbol and the comma before converting into numeric.
+
+-   `"\\$"` : dollar symbol
+-   `"\\€"` : euro symbol
+-   `"^[^0-9.]"` : non-numeric leading character
+-   `"[^[:digit:].]$"` : non-numeric trailing character
+
+```{r}
+as.numeric ( gsub ("(^[^0-9.]|,)|(,|[^[:digit:].]$)",
+                   "", c("$12,345.67", "98,765.43€") ) )
+```
+
+#### Removing HTML Tags
+
+We are looking for <b>Bold</b> and other tags like that.
+
+-   `"<.*?>"` : Everything between < >
+
+```{r}
+html <- c('
+    <!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejemplo de HTML</title>
+</head>
+<body>
+    <h1>Bienvenido a mi página web</h1>
+    <p>Este es un <strong>ejemplo</strong> de un párrafo con <em>texto en cursiva</em> y <strong>texto en negrita</strong>.</p>
+    <ul>
+        <li>Elemento de lista 1</li>
+        <li>Elemento de lista 2</li>
+        <li>Elemento de lista 3</li>
+    </ul>
+    <a href="https://www.ejemplo.com">Visita nuestro sitio web</a>
+</body>
+</html>
+')
+
+no.html <- gsub ( "<.*?>", "", html)
+gsub ("\\n", "", no.html)
+```
+
+```{r}
+cat(no.html)
+```
+
+#### Linux Paths to Windows or R Paths
+
+```{r}
+# Linux to Windows
+gsub ("/", "\\\\", "/usr/local/bin")
+
+# Windows to Linux
+gsub("\\\\", "/", "\\usr\\local\\bin")
+gsub("\\", "/", "\\usr\\local\\bin", fixed = TRUE)
+```
+
+### Recomendations
+
+Because Regular Expressions are complicated be sure to document them well. For debugging there are online aids to diagnosing problems, be sure to specify regular expression type POSIX with GNI extensions or PCRE.
+
+## UTF-8 and Other Non-ASCII Characters
+
+Leading with symbols or letters with accent in Latin alphabet, each have their ASCII hexadecimal value, then we can use that after `"\x"` to use it as a pattern in `grep()`, `gsub()` or other similar function. For example, to look for `Ê` we can introduce `\xca` as `ca` represent the hexadecimal value for `Ê`. Also, Windows and Mac use different ASCII table with different some different values.
+
+Unicode symbols are intend to describe all the symbols in in all the world, and are shown in R by preceding them with `\U` . The word China in simplified Chinese are represented `"\U4E2D"` and `"\U56FD"` . The most popular is UTF-8 encoding which a character in Unicode is represented by one or more bytes. The display of UTF-8 characters can be inconsistent between machines.
+
+R assigns an encoding to every element in a character vector and different elements in a vector may have different encodings. 
+
+-   `Encoding()` : returns the encoding of the strings in a vector
+-   `iconv()` : to convert the encodings.
+
+In R ASCII strings are unencoded; latin1 characters are encoded as latin1; non-latin unicode are encoded as UTF-8.
+
+```{r}
+yogi.utf <- "It's d\Ue9j\Ue0 vu all over again."
+Encoding (yogi.utf)
+c( regexpr ("\\xe0", yogi.utf), regexpr ("\ue0", yogi.utf), regexpr ("à", yogi.utf) )
+```
+
+```{r}
+data.frame (a = "\U4e2d\U56fd", stringsAsFactors = FALSE)
+```
+
+## Factors
+
+A Factor vector looks like text but behaves like an integer. It can be created with `as.factor()` function which often is a final step; also are created when you add character vector into a data frame with `data.frame()` or `cbind()` functions.
+
+It is recommended to turn the character vectors into factor only when all the data cleaning is finished, before modeling. 
+
+A Factor vector the `class()` is `factor`, the `mode()` is `numeric` and the `typeof()` is `integer`. R will set the levels alphabetically.
+
+-   When you change a value of a factor vector, if that new value not corresponds to a level, will be NA.
+-   When you remove the elements with a specific value from the factor vector, that value is still one of the levels.
+
+```{r}
+cols.fac <- as.factor( c("red", "green", "blue", "red", "red", "red", "blue") )
+cols.fac
+table(cols.fac[cols.fac != "red"])
+```
+
+-   `levels()` : to check the levels in a factor vector and also to assign levels. This not change the underlying integer value corresponding that level.
+
+```{r}
+levels(cols.fac)
+levels(cols.fac)[2] <- "yellow"
+levels(cols.fac)
+```
+
+The levels can be reordered calling `factor()` function, this is useful for months and other levels that we want to have a custom order.
+
+```{r}
+factor (cols.fac, levels = c("red", "blue", "yellow") )
+```
+
+**Do not try** to change the order with `levels()` function. In this case will change the levels of the elements itself, will not change 'only' the order.
+
+To convert a factor vector into character, can be used `as.character()` function, but a more efficient way is to use `levels(fac)[fac]`. Also, to convert the factor vector with levels which look like integers into number, **do not** use `as.numeric()`, first has to be converted into character. Now, if we have a gender column with F and M as levels of the factor vector, we want to convert this vector into numeric, 0 for F and 1 for M. The function `as.numeric()` will convert F to 1 and M to 2, to solve this we can use: `as.numeric(factor(gender))-1` . 
+
+Finally, to combine two factor vectors, it is recommended to convert them first into characters, and then combine it. Later, if it's necessary, convert them again into factors. A exception can arise combining with `rbind()`, but other than this case, combining factor vector will usually end badly.
+
+```{r}
+ind <- factor ( c(33, 4, 66, 3, 6, 77) )
+src <- 101:199
+# as.numeric will convert the vector elements into its assigned integers, not the levels.
+as.numeric(ind)
+```
+
+```{r}
+# Correct way, looking for that indices into 'src' vector:
+src[as.numeric (as.character (ind) )]
+# This will extract correctly the numbers
+```
+
+```{r}
+gender <- as.factor(c("F", "F", "M", "F", "M", "F", "M") )
+gender
+as.numeric(gender) - 1
+```
+
+### Missing Values
+
+Missing values in factors are represented by `<NA>`. Actually, it is possible to have a level <NA> with NA values, but it is better no avoid that, as well is clever to avoid "NA" string value. The `levels()` function does not mention to `NA` values because they do not have level. 
+
+We can use the function `addNA()` to add a level which is a NA value, but will be better to replace NA values:
+
+```{r}
+mis.fac <- as.factor(c("F", NA, "M", "F", NA, "F", "M") )
+mis.fac
+mis.fac <- as.character(mis.fac)
+mis.fac[is.na (mis.fac)] <- "missing"
+( mis.fac <- as.factor(mis.fac) )
+```
+
+## R Objects and Commands
+
+-   `get()` : accepts a character string and returns the object with that name.
+-   `exists()` : can test to see whether an object exists
+-   `get0()` : allow a value to be specified in place of the error.
+-   `ls()` : returns the names of the objects.
+-   `assing()` : given a name and a value creates a new R object. The argument `pos=1` at the command line has no effect, but inside a function it creates a variable in the Workspace.
+
+```{r}
+for (i in 1:24)
+    assign (paste0 (LETTERS[i], c(month.abb,month.abb)[i] ), i, pos = 1 )
+
+let.mon <- ls (pattern = "^[A-Z]{2}?[a-z]{2}?")
+let.mon[3:6]
+sapply (let.mon, function(i) object.size(get(i)))
+remove (list = grep ("^[A-Z]{2}?[a-z]{2}?", ls(), value = T ) )
+```
+
+-   `parse()` : to create an R 'expression' object with `text` argument.
+-   `eval()` : executes the expression
+
+`eval(parse(text = "log.11 <- log(11)"))` : will create a variable called 'log.11'. The combination of `parse()` and `eval()` lets us construct R commands and execute them (allowing us to execute sequences of commands once we have created them with `paste()` and other tools).
+
+
+
