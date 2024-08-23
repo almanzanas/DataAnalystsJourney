@@ -2660,6 +2660,116 @@ ul.task-list{list-style: none;}
 
 
 
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+.sourceCode .row {
+width: 100%;
+}
+.sourceCode {
+overflow-x: auto;
+}
+.code-folding-btn {
+margin-right: -30px;
+}
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
 
 
 <style type="text/css">
@@ -2869,10 +2979,295 @@ border-radius: 0px;
 <div id="writing-functions-and-scripts" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> Writing Functions and
 Scripts</h1>
+<p>To accomplish repetitive task in data cleaning we are use functions
+and scripts.</p>
+<div id="functions" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> Functions</h2>
+<p>A function starts with the reserved word <code>function</code>.
+Continue with a a list of arguments inside parentheses. Then the body of
+the function enclosed in braces.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3FwbHVzIDwtIGZ1bmN0aW9uICh4LCB5ID0gMikge1xuICAgICMgeSBkZWZhdWx0IHZhbHVlIGlzIDJcbiAgICAjIEFyZ3M6IHgsIG51bWVyaWM7XG4gICAgIyAgICAgICB5LCBudW1lcmljO1xuICAgIGlmICh4IDwgMCkge1xuICAgICAgICB3YXJuaW5nIChcIk5lZ2F0aXZlIG51bWJlciBjYW5ub3QgYmUgb3BlcmF0ZWRcIilcbiAgICAgICAgcmV0dXJuIChOQSlcbiAgICB9XG4gICAgcmV0dXJuIChzcXJ0ICh4KSArIHkpXG59XG4jIFRyeWluZyB0aGUgbmV3IGZ1bmN0aW9uICdzcXBsdXMnXG5zcXBsdXMgKHg9OSwgeT0zKVxuYGBgIn0= -->
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>sqplus <span class="ot">&lt;-</span> <span class="cf">function</span> (x, <span class="at">y =</span> <span class="dv">2</span>) {</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>    <span class="co"># y default value is 2</span></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>    <span class="co"># Args: x, numeric;</span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>    <span class="co">#       y, numeric;</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>    <span class="cf">if</span> (x <span class="sc">&lt;</span> <span class="dv">0</span>) {</span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>        <span class="fu">warning</span> (<span class="st">&quot;Negative number cannot be operated&quot;</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>        <span class="fu">return</span> (<span class="cn">NA</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>    }</span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>    <span class="fu">return</span> (<span class="fu">sqrt</span> (x) <span class="sc">+</span> y)</span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a>}</span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a><span class="co"># Trying the new function &#39;sqplus&#39;</span></span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a><span class="fu">sqplus</span> (<span class="at">x=</span><span class="dv">9</span>, <span class="at">y=</span><span class="dv">3</span>)</span></code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDZcbiJ9 -->
+<pre><code>[1] 6</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>The ellipsis <code>(...)</code> is a special type of argument which
+captures all of the arguments that are not matched. If the ellipsis is
+the first argument, the rest of arguments have to match by name, without
+abbreviation. The <code>missing()</code> function returns
+<code>TRUE</code> if an argument is missing. When it is used inside a
+function should be located near the beginning. For example, if ‘arg’
+gets assigned in code, then <code>missing(arg)</code> will be
+<code>FALSE.</code></p>
+<p>A <em>local variable</em> is one that exists inside the created
+function, stored in a special area of memory by R. The <em>global
+variables</em> are in the workspace. It should be avoided to use the
+created variable of the workspace into functions, because it can change,
+otherwise the built-in variables (pi or letters) it’s OK.</p>
+<p>The <em>return value</em> is the result of the computation done by
+the function. A function returns whatever is inside the first call to
+<code>return()</code>; when <code>return()</code> is missing, the
+function returns whatever the last line it executes produces. The return
+can be hidden with <code>invisible()</code> command, but if you assign
+the output, the return value will be stored.</p>
+<p>To create functions R provides with <code>fix()</code> function which
+open an editor to write that new function. If the passing function name
+with <code>fix()</code> already exists it will open the existing
+function for editing. When it saves, R checks to see if the new version
+of the function has no errors. If there is an error you can use
+<code>edit()</code> function (immediately after encountering an error)
+without argument to operate on the most recently edited function.</p>
+<p>Using the <code>dump()</code> command creates a disk file with the
+exact text of the function. The first argument for <code>dump()</code>
+is a vector of the names of the items to be dumped, and the second
+argument is the file name ( <code>dump(&quot;func1&quot;, &quot;func1.txt&quot;)</code> ).
+Once is on disk, it can be read with <code>source()</code> which also
+executes the code in your R session ( <code>source(&quot;func1.txt&quot;)</code>
+). Also, if the function already exists, it will overwrite the
+function.</p>
+<p>When we want to save complicated objects, the function
+<code>saveRDS()</code> will save on disk a binary file with that objects
+data and attributes ( <code>saveRDF(robj, &quot;robjfile&quot;)</code> ). The,
+with <code>readRDS()</code> function returns the object just as it was
+saved, it won’t replace the object, simply returns it.</p>
+<p>And finally, <code>save()</code> function operates on sets of objects
+passing the object’s names in quotation marks. The complementary
+function is <code>load()</code> and re-creates the items specified at
+the time the file was created, with their original names (R will
+over-write existing objects with that names).</p>
+</div>
+<div id="scripts" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> Scripts</h2>
+<p>A <strong>script</strong> (created under ‘File/New file/R Script’)
+contain R commands, comments, musings, invalid code for fixing… Usually,
+the script will be visible in a separate windows as interactive usage.
+The commands can be run by line with ‘Control+Enter’ where the mouse is,
+or selecting some lines.</p>
+<p>The scripts store a lot of the commands to use and often are run bit
+by bit interactively. If a line have an error, R will continue running
+all the commands. Also we can run a script all at one with the
+<code>source()</code> function and only the commands prior to the error
+are executed.</p>
+<p>A <strong>shell script</strong> is useful in a production environment
+where a specific task needs to be performed frequently. It is intended
+to be run a.l at once, not as part of an interactive session. Also can
+be run with <code>source()</code>. A script run with R, meanwhile a
+shell script run from a command line without having to open R.</p>
+<p>The program ‘Rscript’ run shell scripts which the first line specify
+<code>#!Rscript</code> . Once the run is finished, returns to the
+command line. Normally are useful for produce output files, graphics,
+informative messages. With the command <code>Rscript --help</code> will
+show options when running shell scripts.</p>
+<p>In a script a function is an entire unit but a script run line by
+line:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co"># Function that will fail</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="cf">if</span> (i <span class="sc">&gt;</span> <span class="dv">100</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>    x <span class="ot">&lt;-</span> x <span class="sc">+</span> <span class="dv">200</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="cf">else</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>    x <span class="ot">&lt;-</span> x <span class="sc">-</span> <span class="dv">200</span></span></code></pre></div>
+<p>The functions have to be ‘protected’ with brace. Here the second line
+does not end the expression because there is still an open brace:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="cf">if</span> (i <span class="sc">&gt;</span> <span class="dv">100</span>) {</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>    x <span class="ot">&lt;-</span> x <span class="sc">+</span> <span class="dv">200</span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>    x <span class="ot">&lt;-</span> x <span class="sc">-</span> <span class="dv">200</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>}</span></code></pre></div>
+<p>What to do? Well, functions use local variables and when it’s saved R
+examine the functions for errors; also it has to run all at once.
+Scripts can be run line by line and passed as text files; however they
+only create global variables, and then can over-write exiting
+objects.</p>
+</div>
+<div id="error-handling" class="section level2" number="1.3">
+<h2><span class="header-section-number">1.3</span> Error Handling</h2>
+<div id="debugging-with-cat" class="section level3" number="1.3.1">
+<h3><span class="header-section-number">1.3.1</span> Debugging with
+<code>cat()</code></h3>
+<p>Insert <code>cat()</code> statements into the code at strategic
+locations to print results. When you see an error inserting before a
+<code>cat()</code> function to check the previous results is a good
+idea, and also labeling the statements to know where they are
+placed.</p>
+<p>If you have a loop variable you can use
+<code>if(i %% 100 == 0) cat(&quot;We&#39;re on rep n &quot;, i, &quot;\n&quot;)</code> which
+will print a line every 100 iterations.</p>
+</div>
+<div id="debugging-with-traceback-browser-and-debug" class="section level3" number="1.3.2">
+<h3><span class="header-section-number">1.3.2</span> Debugging with
+<code>traceback()</code>, <code>browser()</code> and
+<code>debug()</code></h3>
+<p>When we don’t know where the error is (can be nested or whatever) a
+call to <code>traceback()</code> show the sequence of function calls
+that led to the error. For advance users, the <code>recover()</code>
+function lists the set of calls and starts a browser session in the one
+that the user selects.</p>
+<p>When a function or script encounters a call to
+<code>browser()</code>, it pauses and produce a prompt:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>Browse[<span class="dv">1</span>]<span class="sc">&gt;</span> </span></code></pre></div>
+<p>The <code>[1]</code> indicates that was called at the command line;
+<code>[2]</code> for a function called by a function; higher values for
+more nested function calls. There we can type the name of an object to
+display it, enter other function calls, create local variables… Usually
+it is used to display or modify the values of variables in the function.
+Also <code>browser()</code> has special commands:</p>
+<ul>
+<li><code>c</code> : continue, resume running.</li>
+<li><code>s</code> : step, go to the next statement (also inside other
+functions).</li>
+<li><code>n</code> : next, go to the next statement.</li>
+<li><code>f</code> : finish, to finish the loop or function.</li>
+<li><code>Q</code> : quit the browser.</li>
+</ul>
+<p>Inside a function with <code>ls()</code> we ca see only the local
+variables of that function, and to see the global variables is
+<code>ls(pos = 1)</code>.</p>
+<p>In a script we can use <code>verbose=</code> as an argument and as
+part of the script to print different messages. Also can be added an
+argument called <code>browse=</code> that specifies where calls to
+<code>browser()</code> might be made (but ensure by default is
+<code>FALSE</code>). If <code>verbose=</code> is <code>TRUE</code> or
+with a specific number it will print some messages while the script
+runs:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>process_file <span class="ot">&lt;-</span> <span class="cf">function</span>(fname, <span class="at">verbose =</span> <span class="dv">0</span>) {</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  <span class="cf">if</span> (verbose <span class="sc">&gt;=</span> <span class="dv">1</span>) {</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">&quot;Now operating on file&quot;</span>, fname, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>  }</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>  </span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>  <span class="co"># Rest of the code</span></span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>  <span class="co"># ...</span></span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>  </span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>  <span class="cf">if</span> (verbose <span class="sc">&gt;=</span> <span class="dv">2</span>) {</span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">&quot;Detailed diagnostics: Finished processing file&quot;</span>, fname, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a>  }</span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a>  </span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a>}</span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a><span class="co"># Function with different verbose levels</span></span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a><span class="fu">process_file</span>(<span class="st">&quot;data.csv&quot;</span>, <span class="at">verbose =</span> <span class="dv">1</span>)</span>
+<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a><span class="fu">process_file</span>(<span class="st">&quot;data.csv&quot;</span>, <span class="at">verbose =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p>Finally, <code>debug()</code> function labels a function to be
+‘browsed’ whenever it runs. This persists until <code>undebug()</code>
+remove the label; and with <code>debugonce()</code> label a function for
+just once run. Debugging produce the browser prompt, save us to include
+the explicit call to <code>browse()</code> inside a function.</p>
+</div>
+<div id="issuing-error-and-warning-messages" class="section level3" number="1.3.3">
+<h3><span class="header-section-number">1.3.3</span> Issuing Error and
+Warning Messages</h3>
+<p>Wherever the function <code>stop()</code> is it will stop the
+function and print a message. A common function of <code>stop()</code>
+is to test whether the arguments are of the expected type. The
+<code>stopifnot()</code> function acts like <code>stop()</code>, but if
+any expressions are not all <code>TRUE</code> stops and produce an error
+message indicating the first expression which was not
+<code>TRUE</code>.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.matrix</span>(x)) <span class="fu">stop</span>(<span class="st">&quot;X must be matrix&quot;</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="co"># Check which could be false:</span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">any</span>(<span class="fu">is.na</span> (b)) <span class="sc">||</span> <span class="fu">any</span>(b <span class="sc">&lt;</span> <span class="dv">0</span>)) { <span class="fu">stop</span>(<span class="st">&quot;Illegal argument b&quot;</span>) }</span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="co"># The double || OR would stop evaluating if the first any() is TRUE.</span></span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a><span class="co"># Then, if it&#39;s TRUE, we could add:</span></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="fu">stopifnot</span>(b <span class="sc">&gt;</span> <span class="dv">0</span>)</span></code></pre></div>
+<p>When it’s not necessary to stops the function, <code>warning()</code>
+function prints out text supplied by the function (often after a call to
+<code>paste()</code> assembling some diagnostic info) and the function
+attempts to continue.</p>
+<p>If more then 10 warning messages are generated, don’t be displayed,
+we can call to <code>warnings()</code> to access the messages.</p>
+<p>The <code>try()</code> function lets to try a expression and if fails
+return an object class ‘try-error’. It is useful when we are relying on
+programs and files outside R’s control.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYSA8LSBmdW5jdGlvbiAoYXJnMSkge1xuICAgIGlmIChtaXNzaW5nIChhcmcxKSkgc3RvcCAoXCJNaXNzaW5nIGFyZ3VtZW50IGluIGEhXCIpXG4gICAgcmV0dXJuIChhcmcxXjIpXG59XG5cbmIgPC0gZnVuY3Rpb24gKGlucHV0ID0gOSwgb2Zmc2V0KSB7XG4gICAgYS5yZXN1bHQgPC0gYSAob2Zmc2V0KVxuICAgIHJldHVybiAoaW5wdXQgKyBhLnJlc3VsdClcbn1cblxuYigpXG5gYGAifQ== -->
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="cf">function</span> (arg1) {</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">missing</span> (arg1)) <span class="fu">stop</span> (<span class="st">&quot;Missing argument in a!&quot;</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>    <span class="fu">return</span> (arg1<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>}</span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="cf">function</span> (<span class="at">input =</span> <span class="dv">9</span>, offset) {</span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>    a.result <span class="ot">&lt;-</span> <span class="fu">a</span> (offset)</span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>    <span class="fu">return</span> (input <span class="sc">+</span> a.result)</span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a>}</span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a><span class="fu">b</span>()</span></code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3IgaW4gYShvZmZzZXQpIDogTWlzc2luZyBhcmd1bWVudCBpbiBhIVxuIn0= -->
+<pre><code>Error in a(offset) : Missing argument in a!</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudHJhY2ViYWNrKClcbmBgYCJ9 -->
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">traceback</span>()</span></code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiMzogc3RvcChcIk1pc3NpbmcgYXJndW1lbnQgaW4gYSFcIikgYXQgIzJcbjI6IGEob2Zmc2V0KSBhdCAjMlxuMTogYigpXG4ifQ== -->
+<pre><code>3: stop(&quot;Missing argument in a!&quot;) at #2
+2: a(offset) at #2
+1: b()</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Reading from bottom to top of the <code>traceback()</code> output, we
+can see the error in a call to <code>b()</code>, which called
+<code>a()</code> at line #2 of the <code>b()</code> function, and the
+error took place at the second line of <code>a()</code>.</p>
+<p>This is the same function but in this version using
+<code>try()</code> function:</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYiA8LSBmdW5jdGlvbiAoaW5wdXQgPSA5LCBvZmZzZXQpIHtcbiAgICBhLmNoZWNrIDwtIHRyeSAoYS5yZXN1bHQgPC0gYSAob2Zmc2V0KSApXG4gICAgaWYgKGNsYXNzIChhLmNoZWNrKVsxXSA9PSBcInRyeS1lcnJvclwiKSB7XG4gICAgICAgIHdhcm5pbmcgKFwiQ2FsbCB0byBhKCkgZmFpbGVkOyBzZXR0aW5nIGEucmVzdWx0ID0gM1wiKVxuICAgICAgICBhLnJlc3VsdCA8LSAzXG4gICAgfVxuICAgIHJldHVybiAoaW5wdXQgKyBhLnJlc3VsdClcbn1cblxuYigpXG5gYGAifQ== -->
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="cf">function</span> (<span class="at">input =</span> <span class="dv">9</span>, offset) {</span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>    a.check <span class="ot">&lt;-</span> <span class="fu">try</span> (a.result <span class="ot">&lt;-</span> <span class="fu">a</span> (offset) )</span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">class</span> (a.check)[<span class="dv">1</span>] <span class="sc">==</span> <span class="st">&quot;try-error&quot;</span>) {</span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a>        <span class="fu">warning</span> (<span class="st">&quot;Call to a() failed; setting a.result = 3&quot;</span>)</span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a>        a.result <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a>    }</span>
+<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a>    <span class="fu">return</span> (input <span class="sc">+</span> a.result)</span>
+<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a>}</span>
+<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a></span>
+<span id="cb12-10"><a href="#cb12-10" tabindex="-1"></a><span class="fu">b</span>()</span></code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3IgaW4gYShvZmZzZXQpIDogTWlzc2luZyBhcmd1bWVudCBpbiBhIVxuV2FybmluZyBpbiBiKCkgOiBDYWxsIHRvIGEoKSBmYWlsZWQ7IHNldHRpbmcgYS5yZXN1bHQgPSAzXG4ifQ== -->
+<pre><code>Error in a(offset) : Missing argument in a!
+Warning in b() : Call to a() failed; setting a.result = 3</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDEyXG4ifQ== -->
+<pre><code>[1] 12</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Lots of R objects returns a vector of classes when we use
+<code>class()</code> function, that’s why we specified
+<code>class(a.check)[1]</code>.</p>
+</div>
+</div>
+<div id="interacting-with-the-os" class="section level2" number="1.4">
+<h2><span class="header-section-number">1.4</span> Interacting with the
+OS</h2>
 <!-- rnb-text-end -->
 </div>
+</div>
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIlIgZm9yIERhdGEgU2NpZW5jZSAjMiINCm91dHB1dDogDQogICAgaHRtbF9ub3RlYm9vazogDQogICAgICB0b2M6IHRydWUNCiAgICAgIHRvY19mbG9hdDogdHJ1ZQ0KICAgICAgZmlnX3dpZHRoOiAxMA0KICAgICAgZmlnX2hlaWdodDogNg0KICAgICAgaGlnaGxpZ2h0OiBweWdtZW50cw0KICAgICAgdGhlbWU6IHNhbmRzdG9uZQ0KICAgICAgbnVtYmVyX3NlY3Rpb25zOiB0cnVlDQotLS0NCg0KIyBXcml0aW5nIEZ1bmN0aW9ucyBhbmQgU2NyaXB0cw==</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIlIgZm9yIERhdGEgU2NpZW5jZSAjMiINCm91dHB1dDogDQogICAgaHRtbF9ub3RlYm9vazogDQogICAgICB0b2M6IHRydWUNCiAgICAgIHRvY19mbG9hdDogdHJ1ZQ0KICAgICAgZmlnX3dpZHRoOiAxMA0KICAgICAgZmlnX2hlaWdodDogNg0KICAgICAgaGlnaGxpZ2h0OiBweWdtZW50cw0KICAgICAgdGhlbWU6IHNhbmRzdG9uZQ0KICAgICAgbnVtYmVyX3NlY3Rpb25zOiB0cnVlDQotLS0NCg0KIyBXcml0aW5nIEZ1bmN0aW9ucyBhbmQgU2NyaXB0cw0KDQpUbyBhY2NvbXBsaXNoIHJlcGV0aXRpdmUgdGFzayBpbiBkYXRhIGNsZWFuaW5nIHdlIGFyZSB1c2UgZnVuY3Rpb25zIGFuZCBzY3JpcHRzLg0KDQojIyBGdW5jdGlvbnMNCg0KQSBmdW5jdGlvbiBzdGFydHMgd2l0aCB0aGUgcmVzZXJ2ZWQgd29yZCBgZnVuY3Rpb25gLiBDb250aW51ZSB3aXRoIGEgYSBsaXN0IG9mIGFyZ3VtZW50cyBpbnNpZGUgcGFyZW50aGVzZXMuIFRoZW4gdGhlIGJvZHkgb2YgdGhlIGZ1bmN0aW9uIGVuY2xvc2VkIGluIGJyYWNlcy4gDQoNCmBgYHtyfQ0Kc3FwbHVzIDwtIGZ1bmN0aW9uICh4LCB5ID0gMikgew0KICAgICMgeSBkZWZhdWx0IHZhbHVlIGlzIDINCiAgICAjIEFyZ3M6IHgsIG51bWVyaWM7DQogICAgIyAgICAgICB5LCBudW1lcmljOw0KICAgIGlmICh4IDwgMCkgew0KICAgICAgICB3YXJuaW5nICgiTmVnYXRpdmUgbnVtYmVyIGNhbm5vdCBiZSBvcGVyYXRlZCIpDQogICAgICAgIHJldHVybiAoTkEpDQogICAgfQ0KICAgIHJldHVybiAoc3FydCAoeCkgKyB5KQ0KfQ0KIyBUcnlpbmcgdGhlIG5ldyBmdW5jdGlvbiAnc3FwbHVzJw0Kc3FwbHVzICh4PTksIHk9MykNCmBgYA0KDQpUaGUgZWxsaXBzaXMgYCguLi4pYCBpcyBhIHNwZWNpYWwgdHlwZSBvZiBhcmd1bWVudCB3aGljaCBjYXB0dXJlcyBhbGwgb2YgdGhlIGFyZ3VtZW50cyB0aGF0IGFyZSBub3QgbWF0Y2hlZC4gSWYgdGhlIGVsbGlwc2lzIGlzIHRoZSBmaXJzdCBhcmd1bWVudCwgdGhlIHJlc3Qgb2YgYXJndW1lbnRzIGhhdmUgdG8gbWF0Y2ggYnkgbmFtZSwgd2l0aG91dCBhYmJyZXZpYXRpb24uIFRoZSBgbWlzc2luZygpYCBmdW5jdGlvbiByZXR1cm5zIGBUUlVFYCBpZiBhbiBhcmd1bWVudCBpcyBtaXNzaW5nLiBXaGVuIGl0IGlzIHVzZWQgaW5zaWRlIGEgZnVuY3Rpb24gc2hvdWxkIGJlIGxvY2F0ZWQgbmVhciB0aGUgYmVnaW5uaW5nLiBGb3IgZXhhbXBsZSwgaWYgJ2FyZycgZ2V0cyBhc3NpZ25lZCBpbiBjb2RlLCB0aGVuIGBtaXNzaW5nKGFyZylgIHdpbGwgYmUgYEZBTFNFLmANCg0KQSAqbG9jYWwgdmFyaWFibGUqIGlzIG9uZSB0aGF0IGV4aXN0cyBpbnNpZGUgdGhlIGNyZWF0ZWQgZnVuY3Rpb24sIHN0b3JlZCBpbiBhIHNwZWNpYWwgYXJlYSBvZiBtZW1vcnkgYnkgUi4gVGhlICpnbG9iYWwgdmFyaWFibGVzKiBhcmUgaW4gdGhlIHdvcmtzcGFjZS4gSXQgc2hvdWxkIGJlIGF2b2lkZWQgdG8gdXNlIHRoZSBjcmVhdGVkIHZhcmlhYmxlIG9mIHRoZSB3b3Jrc3BhY2UgaW50byBmdW5jdGlvbnMsIGJlY2F1c2UgaXQgY2FuIGNoYW5nZSwgb3RoZXJ3aXNlIHRoZSBidWlsdC1pbiB2YXJpYWJsZXMgKHBpIG9yIGxldHRlcnMpIGl0J3MgT0suIA0KDQpUaGUgKnJldHVybiB2YWx1ZSogaXMgdGhlIHJlc3VsdCBvZiB0aGUgY29tcHV0YXRpb24gZG9uZSBieSB0aGUgZnVuY3Rpb24uIEEgZnVuY3Rpb24gcmV0dXJucyB3aGF0ZXZlciBpcyBpbnNpZGUgdGhlIGZpcnN0IGNhbGwgdG8gYHJldHVybigpYDsgd2hlbiBgcmV0dXJuKClgIGlzIG1pc3NpbmcsIHRoZSBmdW5jdGlvbiByZXR1cm5zIHdoYXRldmVyIHRoZSBsYXN0IGxpbmUgaXQgZXhlY3V0ZXMgcHJvZHVjZXMuIFRoZSByZXR1cm4gY2FuIGJlIGhpZGRlbiB3aXRoIGBpbnZpc2libGUoKWAgY29tbWFuZCwgYnV0IGlmIHlvdSBhc3NpZ24gdGhlIG91dHB1dCwgdGhlIHJldHVybiB2YWx1ZSB3aWxsIGJlIHN0b3JlZC4NCg0KVG8gY3JlYXRlIGZ1bmN0aW9ucyBSIHByb3ZpZGVzIHdpdGggYGZpeCgpYCBmdW5jdGlvbiB3aGljaCBvcGVuIGFuIGVkaXRvciB0byB3cml0ZSB0aGF0IG5ldyBmdW5jdGlvbi4gSWYgdGhlIHBhc3NpbmcgZnVuY3Rpb24gbmFtZSB3aXRoIGBmaXgoKWAgYWxyZWFkeSBleGlzdHMgaXQgd2lsbCBvcGVuIHRoZSBleGlzdGluZyBmdW5jdGlvbiBmb3IgZWRpdGluZy4gV2hlbiBpdCBzYXZlcywgUiBjaGVja3MgdG8gc2VlIGlmIHRoZSBuZXcgdmVyc2lvbiBvZiB0aGUgZnVuY3Rpb24gaGFzIG5vIGVycm9ycy4gSWYgdGhlcmUgaXMgYW4gZXJyb3IgeW91IGNhbiB1c2UgYGVkaXQoKWAgZnVuY3Rpb24gKGltbWVkaWF0ZWx5IGFmdGVyIGVuY291bnRlcmluZyBhbiBlcnJvcikgd2l0aG91dCBhcmd1bWVudCB0byBvcGVyYXRlIG9uIHRoZSBtb3N0IHJlY2VudGx5IGVkaXRlZCBmdW5jdGlvbi4NCg0KVXNpbmcgdGhlIGBkdW1wKClgIGNvbW1hbmQgY3JlYXRlcyBhIGRpc2sgZmlsZSB3aXRoIHRoZSBleGFjdCB0ZXh0IG9mIHRoZSBmdW5jdGlvbi4gVGhlIGZpcnN0IGFyZ3VtZW50IGZvciBgZHVtcCgpYCBpcyBhIHZlY3RvciBvZiB0aGUgbmFtZXMgb2YgdGhlIGl0ZW1zIHRvIGJlIGR1bXBlZCwgYW5kIHRoZSBzZWNvbmQgYXJndW1lbnQgaXMgdGhlIGZpbGUgbmFtZSAoIGBkdW1wKCJmdW5jMSIsICJmdW5jMS50eHQiKWAgKS4gT25jZSBpcyBvbiBkaXNrLCBpdCBjYW4gYmUgcmVhZCB3aXRoIGBzb3VyY2UoKWAgd2hpY2ggYWxzbyBleGVjdXRlcyB0aGUgY29kZSBpbiB5b3VyIFIgc2Vzc2lvbiAoIGBzb3VyY2UoImZ1bmMxLnR4dCIpYCApLiBBbHNvLCBpZiB0aGUgZnVuY3Rpb24gYWxyZWFkeSBleGlzdHMsIGl0IHdpbGwgb3ZlcndyaXRlIHRoZSBmdW5jdGlvbi4NCg0KV2hlbiB3ZSB3YW50IHRvIHNhdmUgY29tcGxpY2F0ZWQgb2JqZWN0cywgdGhlIGZ1bmN0aW9uIGBzYXZlUkRTKClgIHdpbGwgc2F2ZSBvbiBkaXNrIGEgYmluYXJ5IGZpbGUgd2l0aCB0aGF0IG9iamVjdHMgZGF0YSBhbmQgYXR0cmlidXRlcyAoIGBzYXZlUkRGKHJvYmosICJyb2JqZmlsZSIpYCApLiBUaGUsIHdpdGggYHJlYWRSRFMoKWAgZnVuY3Rpb24gcmV0dXJucyB0aGUgb2JqZWN0IGp1c3QgYXMgaXQgd2FzIHNhdmVkLCBpdCB3b24ndCByZXBsYWNlIHRoZSBvYmplY3QsIHNpbXBseSByZXR1cm5zIGl0Lg0KDQpBbmQgZmluYWxseSwgYHNhdmUoKWAgZnVuY3Rpb24gb3BlcmF0ZXMgb24gc2V0cyBvZiBvYmplY3RzIHBhc3NpbmcgdGhlIG9iamVjdCdzIG5hbWVzIGluIHF1b3RhdGlvbiBtYXJrcy4gVGhlIGNvbXBsZW1lbnRhcnkgZnVuY3Rpb24gaXMgYGxvYWQoKWAgYW5kIHJlLWNyZWF0ZXMgdGhlIGl0ZW1zIHNwZWNpZmllZCBhdCB0aGUgdGltZSB0aGUgZmlsZSB3YXMgY3JlYXRlZCwgd2l0aCB0aGVpciBvcmlnaW5hbCBuYW1lcyAoUiB3aWxsIG92ZXItd3JpdGUgZXhpc3Rpbmcgb2JqZWN0cyB3aXRoIHRoYXQgbmFtZXMpLg0KDQojIyBTY3JpcHRzDQoNCkEgKipzY3JpcHQqKiAoY3JlYXRlZCB1bmRlciAnRmlsZS9OZXcgZmlsZS9SIFNjcmlwdCcpIGNvbnRhaW4gUiBjb21tYW5kcywgY29tbWVudHMsIG11c2luZ3MsIGludmFsaWQgY29kZSBmb3IgZml4aW5nLi4uIFVzdWFsbHksIHRoZSBzY3JpcHQgd2lsbCBiZSB2aXNpYmxlIGluIGEgc2VwYXJhdGUgd2luZG93cyBhcyBpbnRlcmFjdGl2ZSB1c2FnZS4gVGhlIGNvbW1hbmRzIGNhbiBiZSBydW4gYnkgbGluZSB3aXRoICdDb250cm9sK0VudGVyJyB3aGVyZSB0aGUgbW91c2UgaXMsIG9yIHNlbGVjdGluZyBzb21lIGxpbmVzLiANCg0KVGhlIHNjcmlwdHMgc3RvcmUgYSBsb3Qgb2YgdGhlIGNvbW1hbmRzIHRvIHVzZSBhbmQgb2Z0ZW4gYXJlIHJ1biBiaXQgYnkgYml0IGludGVyYWN0aXZlbHkuIElmIGEgbGluZSBoYXZlIGFuIGVycm9yLCBSIHdpbGwgY29udGludWUgcnVubmluZyBhbGwgdGhlIGNvbW1hbmRzLiBBbHNvIHdlIGNhbiBydW4gYSBzY3JpcHQgYWxsIGF0IG9uZSB3aXRoIHRoZSBgc291cmNlKClgIGZ1bmN0aW9uIGFuZCBvbmx5IHRoZSBjb21tYW5kcyBwcmlvciB0byB0aGUgZXJyb3IgYXJlIGV4ZWN1dGVkLiANCg0KQSAqKnNoZWxsIHNjcmlwdCoqIGlzIHVzZWZ1bCBpbiBhIHByb2R1Y3Rpb24gZW52aXJvbm1lbnQgd2hlcmUgYSBzcGVjaWZpYyB0YXNrIG5lZWRzIHRvIGJlIHBlcmZvcm1lZCBmcmVxdWVudGx5LiBJdCBpcyBpbnRlbmRlZCB0byBiZSBydW4gYS5sIGF0IG9uY2UsIG5vdCBhcyBwYXJ0IG9mIGFuIGludGVyYWN0aXZlIHNlc3Npb24uIEFsc28gY2FuIGJlIHJ1biB3aXRoIGBzb3VyY2UoKWAuIEEgc2NyaXB0IHJ1biB3aXRoIFIsIG1lYW53aGlsZSBhIHNoZWxsIHNjcmlwdCBydW4gZnJvbSBhIGNvbW1hbmQgbGluZSB3aXRob3V0IGhhdmluZyB0byBvcGVuIFIuDQoNClRoZSBwcm9ncmFtICdSc2NyaXB0JyBydW4gc2hlbGwgc2NyaXB0cyB3aGljaCB0aGUgZmlyc3QgbGluZSBzcGVjaWZ5IGAjIVJzY3JpcHRgIC4gT25jZSB0aGUgcnVuIGlzIGZpbmlzaGVkLCByZXR1cm5zIHRvIHRoZSBjb21tYW5kIGxpbmUuIE5vcm1hbGx5IGFyZSB1c2VmdWwgZm9yIHByb2R1Y2Ugb3V0cHV0IGZpbGVzLCBncmFwaGljcywgaW5mb3JtYXRpdmUgbWVzc2FnZXMuIFdpdGggdGhlIGNvbW1hbmQgYFJzY3JpcHQgLS1oZWxwYCB3aWxsIHNob3cgb3B0aW9ucyB3aGVuIHJ1bm5pbmcgc2hlbGwgc2NyaXB0cy4NCg0KSW4gYSBzY3JpcHQgYSBmdW5jdGlvbiBpcyBhbiBlbnRpcmUgdW5pdCBidXQgYSBzY3JpcHQgcnVuIGxpbmUgYnkgbGluZToNCg0KYGBgcg0KIyBGdW5jdGlvbiB0aGF0IHdpbGwgZmFpbA0KaWYgKGkgPiAxMDApDQogICAgeCA8LSB4ICsgMjAwDQplbHNlDQogICAgeCA8LSB4IC0gMjAwDQpgYGANCg0KVGhlIGZ1bmN0aW9ucyBoYXZlIHRvIGJlICdwcm90ZWN0ZWQnIHdpdGggYnJhY2UuIEhlcmUgdGhlIHNlY29uZCBsaW5lIGRvZXMgbm90IGVuZCB0aGUgZXhwcmVzc2lvbiBiZWNhdXNlIHRoZXJlIGlzIHN0aWxsIGFuIG9wZW4gYnJhY2U6DQoNCmBgYHINCmlmIChpID4gMTAwKSB7DQogICAgeCA8LSB4ICsgMjAwDQp9IGVsc2Ugew0KICAgIHggPC0geCAtIDIwMA0KfQ0KYGBgDQoNCldoYXQgdG8gZG8/IFdlbGwsIGZ1bmN0aW9ucyB1c2UgbG9jYWwgdmFyaWFibGVzIGFuZCB3aGVuIGl0J3Mgc2F2ZWQgUiBleGFtaW5lIHRoZSBmdW5jdGlvbnMgZm9yIGVycm9yczsgYWxzbyBpdCBoYXMgdG8gcnVuIGFsbCBhdCBvbmNlLiBTY3JpcHRzIGNhbiBiZSBydW4gbGluZSBieSBsaW5lIGFuZCBwYXNzZWQgYXMgdGV4dCBmaWxlczsgaG93ZXZlciB0aGV5IG9ubHkgY3JlYXRlIGdsb2JhbCB2YXJpYWJsZXMsIGFuZCB0aGVuIGNhbiBvdmVyLXdyaXRlIGV4aXRpbmcgb2JqZWN0cy4NCg0KIyMgRXJyb3IgSGFuZGxpbmcNCg0KIyMjIERlYnVnZ2luZyB3aXRoIGBjYXQoKWANCg0KSW5zZXJ0IGBjYXQoKWAgc3RhdGVtZW50cyBpbnRvIHRoZSBjb2RlIGF0IHN0cmF0ZWdpYyBsb2NhdGlvbnMgdG8gcHJpbnQgcmVzdWx0cy4gV2hlbiB5b3Ugc2VlIGFuIGVycm9yIGluc2VydGluZyBiZWZvcmUgYSBgY2F0KClgIGZ1bmN0aW9uIHRvIGNoZWNrIHRoZSBwcmV2aW91cyByZXN1bHRzIGlzIGEgZ29vZCBpZGVhLCBhbmQgYWxzbyBsYWJlbGluZyB0aGUgc3RhdGVtZW50cyB0byBrbm93IHdoZXJlIHRoZXkgYXJlIHBsYWNlZC4NCg0KSWYgeW91IGhhdmUgYSBsb29wIHZhcmlhYmxlIHlvdSBjYW4gdXNlIGBpZihpICUlIDEwMCA9PSAwKSBjYXQoIldlJ3JlIG9uIHJlcCBuICIsIGksICJcbiIpYCB3aGljaCB3aWxsIHByaW50IGEgbGluZSBldmVyeSAxMDAgaXRlcmF0aW9ucy4NCg0KIyMjIERlYnVnZ2luZyB3aXRoIGB0cmFjZWJhY2soKWAsIGBicm93c2VyKClgIGFuZCBgZGVidWcoKWANCg0KV2hlbiB3ZSBkb24ndCBrbm93IHdoZXJlIHRoZSBlcnJvciBpcyAoY2FuIGJlIG5lc3RlZCBvciB3aGF0ZXZlcikgYSBjYWxsIHRvIGB0cmFjZWJhY2soKWAgc2hvdyB0aGUgc2VxdWVuY2Ugb2YgZnVuY3Rpb24gY2FsbHMgdGhhdCBsZWQgdG8gdGhlIGVycm9yLiBGb3IgYWR2YW5jZSB1c2VycywgdGhlIGByZWNvdmVyKClgIGZ1bmN0aW9uIGxpc3RzIHRoZSBzZXQgb2YgY2FsbHMgYW5kIHN0YXJ0cyBhIGJyb3dzZXIgc2Vzc2lvbiBpbiB0aGUgb25lIHRoYXQgdGhlIHVzZXIgc2VsZWN0cy4NCg0KV2hlbiBhIGZ1bmN0aW9uIG9yIHNjcmlwdCBlbmNvdW50ZXJzIGEgY2FsbCB0byBgYnJvd3NlcigpYCwgaXQgcGF1c2VzIGFuZCBwcm9kdWNlIGEgcHJvbXB0Og0KDQpgYGByDQpCcm93c2VbMV0+IA0KYGBgDQoNClRoZSBgWzFdYCBpbmRpY2F0ZXMgdGhhdCB3YXMgY2FsbGVkIGF0IHRoZSBjb21tYW5kIGxpbmU7IGBbMl1gIGZvciBhIGZ1bmN0aW9uIGNhbGxlZCBieSBhIGZ1bmN0aW9uOyBoaWdoZXIgdmFsdWVzIGZvciBtb3JlIG5lc3RlZCBmdW5jdGlvbiBjYWxscy4gVGhlcmUgd2UgY2FuIHR5cGUgdGhlIG5hbWUgb2YgYW4gb2JqZWN0IHRvIGRpc3BsYXkgaXQsIGVudGVyIG90aGVyIGZ1bmN0aW9uIGNhbGxzLCBjcmVhdGUgbG9jYWwgdmFyaWFibGVzLi4uIFVzdWFsbHkgaXQgaXMgdXNlZCB0byBkaXNwbGF5IG9yIG1vZGlmeSB0aGUgdmFsdWVzIG9mIHZhcmlhYmxlcyBpbiB0aGUgZnVuY3Rpb24uIEFsc28gYGJyb3dzZXIoKWAgaGFzIHNwZWNpYWwgY29tbWFuZHM6DQoNCi0gICBgY2AgOiBjb250aW51ZSwgcmVzdW1lIHJ1bm5pbmcuDQotICAgYHNgIDogc3RlcCwgZ28gdG8gdGhlIG5leHQgc3RhdGVtZW50IChhbHNvIGluc2lkZSBvdGhlciBmdW5jdGlvbnMpLg0KLSAgIGBuYCA6IG5leHQsIGdvIHRvIHRoZSBuZXh0IHN0YXRlbWVudC4NCi0gICBgZmAgOiBmaW5pc2gsIHRvIGZpbmlzaCB0aGUgbG9vcCBvciBmdW5jdGlvbi4NCi0gICBgUWAgOiBxdWl0IHRoZSBicm93c2VyLg0KDQpJbnNpZGUgYSBmdW5jdGlvbiB3aXRoIGBscygpYCB3ZSBjYSBzZWUgb25seSB0aGUgbG9jYWwgdmFyaWFibGVzIG9mIHRoYXQgZnVuY3Rpb24sIGFuZCB0byBzZWUgdGhlIGdsb2JhbCB2YXJpYWJsZXMgaXMgYGxzKHBvcyA9IDEpYC4NCg0KSW4gYSBzY3JpcHQgd2UgY2FuIHVzZSBgdmVyYm9zZT1gIGFzIGFuIGFyZ3VtZW50IGFuZCBhcyBwYXJ0IG9mIHRoZSBzY3JpcHQgdG8gcHJpbnQgZGlmZmVyZW50IG1lc3NhZ2VzLiBBbHNvIGNhbiBiZSBhZGRlZCBhbiBhcmd1bWVudCBjYWxsZWQgYGJyb3dzZT1gIHRoYXQgc3BlY2lmaWVzIHdoZXJlIGNhbGxzIHRvIGBicm93c2VyKClgIG1pZ2h0IGJlIG1hZGUgKGJ1dCBlbnN1cmUgYnkgZGVmYXVsdCBpcyBgRkFMU0VgKS4gSWYgYHZlcmJvc2U9YCBpcyBgVFJVRWAgb3Igd2l0aCBhIHNwZWNpZmljIG51bWJlciBpdCB3aWxsIHByaW50IHNvbWUgbWVzc2FnZXMgd2hpbGUgdGhlIHNjcmlwdCBydW5zOg0KDQpgYGByDQpwcm9jZXNzX2ZpbGUgPC0gZnVuY3Rpb24oZm5hbWUsIHZlcmJvc2UgPSAwKSB7DQoNCiAgaWYgKHZlcmJvc2UgPj0gMSkgew0KICAgIGNhdCgiTm93IG9wZXJhdGluZyBvbiBmaWxlIiwgZm5hbWUsICJcbiIpDQogIH0NCiAgDQogICMgUmVzdCBvZiB0aGUgY29kZQ0KICAjIC4uLg0KICANCiAgaWYgKHZlcmJvc2UgPj0gMikgew0KICAgIGNhdCgiRGV0YWlsZWQgZGlhZ25vc3RpY3M6IEZpbmlzaGVkIHByb2Nlc3NpbmcgZmlsZSIsIGZuYW1lLCAiXG4iKQ0KICB9DQogIA0KfQ0KDQojIEZ1bmN0aW9uIHdpdGggZGlmZmVyZW50IHZlcmJvc2UgbGV2ZWxzDQpwcm9jZXNzX2ZpbGUoImRhdGEuY3N2IiwgdmVyYm9zZSA9IDEpDQpwcm9jZXNzX2ZpbGUoImRhdGEuY3N2IiwgdmVyYm9zZSA9IDIpDQoNCmBgYA0KDQpGaW5hbGx5LCBgZGVidWcoKWAgZnVuY3Rpb24gbGFiZWxzIGEgZnVuY3Rpb24gdG8gYmUgJ2Jyb3dzZWQnIHdoZW5ldmVyIGl0IHJ1bnMuIFRoaXMgcGVyc2lzdHMgdW50aWwgYHVuZGVidWcoKWAgcmVtb3ZlIHRoZSBsYWJlbDsgYW5kIHdpdGggYGRlYnVnb25jZSgpYCBsYWJlbCBhIGZ1bmN0aW9uIGZvciBqdXN0IG9uY2UgcnVuLiBEZWJ1Z2dpbmcgcHJvZHVjZSB0aGUgYnJvd3NlciBwcm9tcHQsIHNhdmUgdXMgdG8gaW5jbHVkZSB0aGUgZXhwbGljaXQgY2FsbCB0byBgYnJvd3NlKClgIGluc2lkZSBhIGZ1bmN0aW9uLg0KDQojIyMgSXNzdWluZyBFcnJvciBhbmQgV2FybmluZyBNZXNzYWdlcw0KDQpXaGVyZXZlciB0aGUgZnVuY3Rpb24gYHN0b3AoKWAgaXMgaXQgd2lsbCBzdG9wIHRoZSBmdW5jdGlvbiBhbmQgcHJpbnQgYSBtZXNzYWdlLiBBIGNvbW1vbiBmdW5jdGlvbiBvZiBgc3RvcCgpYCBpcyB0byB0ZXN0IHdoZXRoZXIgdGhlIGFyZ3VtZW50cyBhcmUgb2YgdGhlIGV4cGVjdGVkIHR5cGUuIFRoZSBgc3RvcGlmbm90KClgIGZ1bmN0aW9uIGFjdHMgbGlrZSBgc3RvcCgpYCwgYnV0IGlmIGFueSBleHByZXNzaW9ucyBhcmUgbm90IGFsbCBgVFJVRWAgc3RvcHMgYW5kIHByb2R1Y2UgYW4gZXJyb3IgbWVzc2FnZSBpbmRpY2F0aW5nIHRoZSBmaXJzdCBleHByZXNzaW9uIHdoaWNoIHdhcyBub3QgYFRSVUVgLg0KDQpgYGByDQppZighaXMubWF0cml4KHgpKSBzdG9wKCJYIG11c3QgYmUgbWF0cml4IikNCg0KIyBDaGVjayB3aGljaCBjb3VsZCBiZSBmYWxzZToNCmlmKGFueShpcy5uYSAoYikpIHx8IGFueShiIDwgMCkpIHsgc3RvcCgiSWxsZWdhbCBhcmd1bWVudCBiIikgfQ0KIyBUaGUgZG91YmxlIHx8IE9SIHdvdWxkIHN0b3AgZXZhbHVhdGluZyBpZiB0aGUgZmlyc3QgYW55KCkgaXMgVFJVRS4NCiMgVGhlbiwgaWYgaXQncyBUUlVFLCB3ZSBjb3VsZCBhZGQ6DQpzdG9waWZub3QoYiA+IDApDQpgYGANCg0KV2hlbiBpdCdzIG5vdCBuZWNlc3NhcnkgdG8gc3RvcHMgdGhlIGZ1bmN0aW9uLCBgd2FybmluZygpYCBmdW5jdGlvbiBwcmludHMgb3V0IHRleHQgc3VwcGxpZWQgYnkgdGhlIGZ1bmN0aW9uIChvZnRlbiBhZnRlciBhIGNhbGwgdG8gYHBhc3RlKClgIGFzc2VtYmxpbmcgc29tZSBkaWFnbm9zdGljIGluZm8pIGFuZCB0aGUgZnVuY3Rpb24gYXR0ZW1wdHMgdG8gY29udGludWUuDQoNCklmIG1vcmUgdGhlbiAxMCB3YXJuaW5nIG1lc3NhZ2VzIGFyZSBnZW5lcmF0ZWQsIGRvbid0IGJlIGRpc3BsYXllZCwgd2UgY2FuIGNhbGwgdG8gYHdhcm5pbmdzKClgIHRvIGFjY2VzcyB0aGUgbWVzc2FnZXMuDQoNClRoZSBgdHJ5KClgIGZ1bmN0aW9uIGxldHMgdG8gdHJ5IGEgZXhwcmVzc2lvbiBhbmQgaWYgZmFpbHMgcmV0dXJuIGFuIG9iamVjdCBjbGFzcyAndHJ5LWVycm9yJy4gSXQgaXMgdXNlZnVsIHdoZW4gd2UgYXJlIHJlbHlpbmcgb24gcHJvZ3JhbXMgYW5kIGZpbGVzIG91dHNpZGUgUidzIGNvbnRyb2wuDQoNCmBgYHtyfQ0KYSA8LSBmdW5jdGlvbiAoYXJnMSkgew0KICAgIGlmIChtaXNzaW5nIChhcmcxKSkgc3RvcCAoIk1pc3NpbmcgYXJndW1lbnQgaW4gYSEiKQ0KICAgIHJldHVybiAoYXJnMV4yKQ0KfQ0KDQpiIDwtIGZ1bmN0aW9uIChpbnB1dCA9IDksIG9mZnNldCkgew0KICAgIGEucmVzdWx0IDwtIGEgKG9mZnNldCkNCiAgICByZXR1cm4gKGlucHV0ICsgYS5yZXN1bHQpDQp9DQoNCmIoKQ0KYGBgDQoNCmBgYHtyfQ0KdHJhY2ViYWNrKCkNCmBgYA0KDQpSZWFkaW5nIGZyb20gYm90dG9tIHRvIHRvcCBvZiB0aGUgYHRyYWNlYmFjaygpYCBvdXRwdXQsIHdlIGNhbiBzZWUgdGhlIGVycm9yIGluIGEgY2FsbCB0byBgYigpYCwgd2hpY2ggY2FsbGVkIGBhKClgIGF0IGxpbmUgIzIgb2YgdGhlIGBiKClgIGZ1bmN0aW9uLCBhbmQgdGhlIGVycm9yIHRvb2sgcGxhY2UgYXQgdGhlIHNlY29uZCBsaW5lIG9mIGBhKClgLg0KDQpUaGlzIGlzIHRoZSBzYW1lIGZ1bmN0aW9uIGJ1dCBpbiB0aGlzIHZlcnNpb24gdXNpbmcgYHRyeSgpYCBmdW5jdGlvbjoNCg0KYGBge3J9DQpiIDwtIGZ1bmN0aW9uIChpbnB1dCA9IDksIG9mZnNldCkgew0KICAgIGEuY2hlY2sgPC0gdHJ5IChhLnJlc3VsdCA8LSBhIChvZmZzZXQpICkNCiAgICBpZiAoY2xhc3MgKGEuY2hlY2spWzFdID09ICJ0cnktZXJyb3IiKSB7DQogICAgICAgIHdhcm5pbmcgKCJDYWxsIHRvIGEoKSBmYWlsZWQ7IHNldHRpbmcgYS5yZXN1bHQgPSAzIikNCiAgICAgICAgYS5yZXN1bHQgPC0gMw0KICAgIH0NCiAgICByZXR1cm4gKGlucHV0ICsgYS5yZXN1bHQpDQp9DQoNCmIoKQ0KYGBgDQoNCkxvdHMgb2YgUiBvYmplY3RzIHJldHVybnMgYSB2ZWN0b3Igb2YgY2xhc3NlcyB3aGVuIHdlIHVzZSBgY2xhc3MoKWAgZnVuY3Rpb24sIHRoYXQncyB3aHkgd2Ugc3BlY2lmaWVkIGBjbGFzcyhhLmNoZWNrKVsxXWAuDQoNCiMjIEludGVyYWN0aW5nIHdpdGggdGhlIE9TDQoNCg0KDQoNCg0KDQoNCg0KDQoNCg0KDQoNCg0K</div>
 
 
 </div>
@@ -2921,7 +3316,7 @@ $(document).ready(function () {
 <!-- code folding -->
 <script>
 $(document).ready(function () {
-  window.initializeSourceEmbed("`01_functions_scripts.Rmd");
+  window.initializeSourceEmbed("01_functions_scripts.Rmd");
   window.initializeCodeFolding("show" === "show");
 });
 </script>
