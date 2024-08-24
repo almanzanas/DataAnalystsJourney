@@ -193,16 +193,102 @@ Lots of R objects returns a vector of classes when we use `class()` function, th
 
 ## Interacting with the OS
 
+By default R presumes that is dealing with files in the working directory. The `getwd()` command prints the working directory and with `setwd()` we can change to a new location.
 
+-   `list.files()` : list the files in the working directory (without arguments). 
+    -   `full.names=` if `TRUE` list the files in a vector of directories, returns a path name.
+    -   `recursive=` if `TRUE` find files in the working directory and subdirectories.
+    -   `pattern=` to pass a regular expression, such as "`xlsx*$`" for excel files.
+    -   `ignore.case=` if `TRUE` will ignore upper- and lower-case.
+-   `file.info()` : gives information about a file. Can be passed an absolute path for a file outside the working directory.
+-   `file.copy(), file.exists(), file.remove()`
+-   `dir.exists(), dir.create()`
 
+To list the Environment Variables we can use the function `Sys.getenv()`, as an argument we can specified a variable to extract. `R_HOME` for example gives the directory where R is installed. Also, to create or update variables is the command `Sys.setenv()` where we can pass a variable name and a value like `Sys.setenv(REPS = 12)`. This is a way to pass information from "outside" into R.
 
+## Speeding process
 
+Profiling is the process of measuring how much time and memory a function uses. The `Rprof()` function can help to identify both the steps that use time and memory. The function writes a log file, then with `summaryRprof()` we can get a report.
 
+Using a vectorized function on a vector will almost always be more efficient than looping over the individual entries. If it's possible to replace a for() or while() loop with an apply() the result will be faster, more efficient. In large data sets where there are more many rows than columns, the point is to try to avoid loop over rows because looping over columns is usually much less costly.
 
+```{r}
+# Non-Vectorized:
+f1 <- function (x, y = 2) {
+    if (x < 0) {
+        warning ("Neg(s)")
+        return (NA)
+    }
+    return (sqrt(x) + y)
+}
+f1(5)
+```
 
+```{r}
+# Vectorized
+f2 <- function (x, y = 2) {
+    out <- as.numeric (rep(NA, length(x)))
+    if (any(x < 0)) warning ("Neg(s)")
+    out[x >= 0] <- sqrt(x[x > 0]) + y
+    return (out)
+}
+f2(5)
+```
 
+In the vectorized version we create an `out` vector filled with `NA` values and then only will fill the values which are `x >= 0` . Also, we use `as.numeric()` because by default NA values are logical which shouldn't be an issue but just in case.
 
+Vectorization makes code harder and slower to write, maybe the time of develop a simple code, run, explain and maintain it, it is more 'person' efficient than write it vectorized.
 
+Compiling is other way to speed up the code. It is the translation of R code into 'byte' code. The package `compile` allow to compile our functions, one at a time with `cmpfun()` (or `compile()` for expressions); or using `compilePKGS()` to compile package by package.
+
+```{r}
+what <- function (n = 100) {
+    for (i in 1:n) {}
+}
+# timing the function 'what' n=6,000,000,000
+system.time (what (6e9) )
+# compiling and testing again: 
+library(compiler)
+what.cmp <- cmpfun(what)
+system.time (what.cmp (6e9))
+```
+
+The previous result with `system.time()` will depends on how fast the computer is. Another approach is `enableJIT()` (or 'just-in-time' compilation) which given a number to specify how the compilation should work. For example, `enableJIT(3)` performs as much compilation as possible. Once we make this call, functions are compiled before their first use and will remain compiled. To 'uncompile' a function we can edit it with `fix()`, also it is possible to convert it into text like `what.cmp <- eval(parse(text=deparse(what.cmp, control="useSource")))`.
+
+**Parallel Processing** can speed the things up using multiple cores of our computer. The package `parallel` allows control over the use of multiple cores. To know how many cores it has the function `detectCores()` will tell us. Requires three steps to use parallel: a cluster of cores with `makeCluster()` once per session; any necessary items from the global workspace need to be passed to the cluster with `clusterExport()`; and the cluster is passed to one of the functions that knows how to use it.
+
+-   `parSapply()` : acts like `sapply()` but with parallel processing.
+
+```{r}
+library(parallel)
+detectCores()
+```
+```{r}
+clust <- makeCluster(10)
+clusterExport (clust, c("what", "what.cmp"))
+system.time (
+    parSapply (clust, 1:10, function (i) what (6e9/10))
+)
+system.time (
+    parSapply(clust, 1:10, function (i) what.cmp (6e9/10))
+)
+```
+
+Function inside `parSapply()` are not compiled when `enableJIT()` is enabled, have to been compiled explicitly (or run the function first and then export it).
+
+It is a good practice to stop the cluster with `stopCluster()` when parallel processing is complete.
+
+For the last bit of information, R can interface with code in machine level, often originally written in C or Fortran. We run code like this all the time without knowing it.
+
+## To remember
+
+Be consistent with the code you write. Use comments to explain the code. The blank lines, spaces, indentation are useful to make de code readable.
+
+-   Many bugs arise from unexpected input. Check NA values with `anyNA()` or using `na.rm=TRUE` argument in some functions. 
+-   R sometimes convert one row or column to a vector, and then when we want to use that column (matrix), often the function will be expecting a matrix not a vector. 
+-   Take care to missing values propagating through computations. 
+-   Ensure that files, paths and folders exists and can be accessible, file.exists() and file.info() to see if a file is writable.
+-   Some functions expects a single result, but using `if(class(obj) == "lm")` can produce a warning because often `class()` could return a vector of classes. Then `class(obj)[1]` will work.
 
 
 
