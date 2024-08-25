@@ -13,3 +13,122 @@ output:
 
 # Getting Data into and out of R
 
+When we gather data for analysis, we have to track it's history meaning where was acquired, from what source and on what date; this is known as *data's provenance*. A place to keep this information can be in the scripts.
+
+## Tabular Data
+
+One of the most common data we use come in the form of rectangular or tabular data, which is observations in rows and measurements (variables) in columns. Lent's read tabular data files (ASCII text) into R data frames and to try some approaches when is not working.
+
+### Files with Delimiters
+
+Commonly a observation is represented by a single row which fields are separated by a delimiter such a comma, tab, semicolon, pipe, or exclamation point; and the end of each observation is marked with a end-of-line character which can vary across platforms.
+
+-   `read.table(), read.csv(), read.delim()` : returns a data frame. Each function differs on it's default settings. Arguments for read.table():
+    -   `header=` if `TRUE` will use the first row of the file as column headers.
+    -   `sep=` the separator character. The default value is `" "`.
+    -   `quote=` character to be used to surround quotes. By default is set for `"` and `'` .
+    -   `comment.char=` character which introduce a comment line
+    -   `stringAsFactors=` if `FALSE` will left the character columns as character and `TRUE` for Factor class.
+    -   `colClasses=` expect a vector with the class of each column.
+    -   `na.strings=` expect a vector with the indicators of missing value in the input data.
+-   `read.csv2()` : for European style comma. Use semi-colon as delimiter.
+-   `read.delim2()` : for European style comma.
+
+Usually, the quote argument is set to `"\""` to recognize the double quotation marks because `'` can be used as apostrophe or turned off with `""`. Also the comment argument is turned off with `""` because it is not usual found `#` in data files and sometimes in fields there are '#1' or similar characters.
+
+### Column Classes
+
+We almost always pass `stringAsFactor=FALSE` when we are reading data, maybe except when we know the data is numeric and pre-cleaned and using `colClasses`. 
+
+The `colClasses` argument allows to specify the column type for each for the columns. To get an idea what are in the columns we can pass `nrow=` argument to read a dozen of rows with read.table() and inspect the resulting data frame. It can be specified numeric, character, logical, Date, POSIXct, and also can convert classes as well (see help(read.table)). `colClasses` recycle it's elements, to start you can pass "character" and watch what is inside.
+
+### Common Problems
+
+#### Embedded Delimiters {.unnumbered}
+
+Problems can arise with simple quote mark, # characters and also a comma as part of some text. This kind of difficulties come often from spreadsheets. If the text with comma is between double quotation marks we can use `quote="\""`.
+
+#### Unknown Missing Value Indicator {.unnumbered}
+
+By default R expects missing values as NA. A spreadsheet from Excel can have `#NULL!, #N/A, #VALUE!`, this three could be included in `na.strings=` argument.
+
+#### Empy or Nearly Empy Filds {.unnumbered}
+
+Empty fields will be NA values in numeric fields. But in character fields are difficult to perceive. 
+
+One of the firsts tasks is to extract the column classes and compare that with what we see:
+
+```r 
+table ( sapply(df, function(x) class(x)) )
+```
+
+If we know that a column should be numeric (NumID) but it is not, we can tabulate the elements that R is unable to convert:
+
+```r
+table ( df$NumID[is.na(as.numeric(df$NumID))] )
+```
+
+Examining the set of missing value indicators in the data can be helpful to include that values to `na.stings` argument in another call to `read.table()`.
+
+#### Blank Lines {.unnumbered}
+
+When there are blank rows by default `read.table()` will skip it. If wee need that the lines from two different files correspond we can pass `skip.blank.lines=FALSE` argument which will set NA in numeric columns and `""` in character ones.
+
+#### Row Names {.unnumbered}
+
+By default `read.table()` will create a row names starting from 1 and up, unless the header has one fewer filed than the rows, in which case R uses the first column as row names. Row names must be unique, if in the data set the first column of row names are not unique we can pass `row.names=NULL` to create an integer type row names. To specify a column to be the row names (or a vector) we can use `row.names=` argument.
+
+### When `read.table()` go wrong
+
+If we check the file 'data/addresses.csv' we can see is a comma delimited file with headers, then we can specified some arguments:
+
+```{r}
+read.table ("../data/addresses.csv", header = TRUE, sep = ",", quote = "",
+            comment.char = "", stringsAsFactors = FALSE)
+```
+
+We can check the first line to be sure that are headers:
+
+```{r}
+read.table ("../data/addresses.csv", header = F, sep = ",", quote = "",
+            comment.char = "", stringsAsFactors = FALSE, nrows = 1)
+```
+
+-   `count.fields()` : returns the fields per row.
+
+```{r}
+count.fields ("../data/addresses.csv", sep = ",", quote = "", comment.char = "")
+```
+
+OK, something is wrong in the third and fifth row, let's see what it is:
+
+```{r}
+read.table ("../data/addresses.csv", header = F, sep = ",", quote = "",
+            comment.char = "", stringsAsFactors = FALSE, 
+            nrows = 1, skip = 2)
+```
+
+Now we could conclude that in this 3rd row there are embedded commas in V3 corresponding to Address column.
+
+We can force when creating the data frame using the largest number of columns possible by passing `fill=TRUE` argument. The rows with the last column filled tell us that there are problems in the input data:
+
+```{r}
+(
+add <- read.table ("../data/addresses.csv", header = T, sep = ",", quote = "",
+                   comment.char = "", stringsAsFactors = FALSE, fill = T)
+)
+```
+
+The IDs have become row names because there are a less field in headers. In the case the ID was duplicated we have to pass `row.names=NULL` argument. 
+
+
+
+
+
+
+
+
+
+
+
+

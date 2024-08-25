@@ -2660,6 +2660,116 @@ ul.task-list{list-style: none;}
 
 
 
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+.sourceCode .row {
+width: 100%;
+}
+.sourceCode {
+overflow-x: auto;
+}
+.code-folding-btn {
+margin-right: -30px;
+}
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
 
 
 <style type="text/css">
@@ -2869,10 +2979,213 @@ border-radius: 0px;
 <div id="getting-data-into-and-out-of-r" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> Getting Data into and
 out of R</h1>
+<p>When we gather data for analysis, we have to track it’s history
+meaning where was acquired, from what source and on what date; this is
+known as <em>data’s provenance</em>. A place to keep this information
+can be in the scripts.</p>
+<div id="tabular-data" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> Tabular Data</h2>
+<p>One of the most common data we use come in the form of rectangular or
+tabular data, which is observations in rows and measurements (variables)
+in columns. Lent’s read tabular data files (ASCII text) into R data
+frames and to try some approaches when is not working.</p>
+<div id="files-with-delimiters" class="section level3" number="1.1.1">
+<h3><span class="header-section-number">1.1.1</span> Files with
+Delimiters</h3>
+<p>Commonly a observation is represented by a single row which fields
+are separated by a delimiter such a comma, tab, semicolon, pipe, or
+exclamation point; and the end of each observation is marked with a
+end-of-line character which can vary across platforms.</p>
+<ul>
+<li><code>read.table(), read.csv(), read.delim()</code> : returns a data
+frame. Each function differs on it’s default settings. Arguments for
+read.table():
+<ul>
+<li><code>header=</code> if <code>TRUE</code> will use the first row of
+the file as column headers.</li>
+<li><code>sep=</code> the separator character. The default value is
+<code>&quot; &quot;</code>.</li>
+<li><code>quote=</code> character to be used to surround quotes. By
+default is set for <code>&quot;</code> and <code>&#39;</code> .</li>
+<li><code>comment.char=</code> character which introduce a comment
+line</li>
+<li><code>stringAsFactors=</code> if <code>FALSE</code> will left the
+character columns as character and <code>TRUE</code> for Factor
+class.</li>
+<li><code>colClasses=</code> expect a vector with the class of each
+column.</li>
+<li><code>na.strings=</code> expect a vector with the indicators of
+missing value in the input data.</li>
+</ul></li>
+<li><code>read.csv2()</code> : for European style comma. Use semi-colon
+as delimiter.</li>
+<li><code>read.delim2()</code> : for European style comma.</li>
+</ul>
+<p>Usually, the quote argument is set to <code>&quot;\&quot;&quot;</code> to recognize
+the double quotation marks because <code>&#39;</code> can be used as
+apostrophe or turned off with <code>&quot;&quot;</code>. Also the comment argument
+is turned off with <code>&quot;&quot;</code> because it is not usual found
+<code>#</code> in data files and sometimes in fields there are ‘#1’ or
+similar characters.</p>
+</div>
+<div id="column-classes" class="section level3" number="1.1.2">
+<h3><span class="header-section-number">1.1.2</span> Column Classes</h3>
+<p>We almost always pass <code>stringAsFactor=FALSE</code> when we are
+reading data, maybe except when we know the data is numeric and
+pre-cleaned and using <code>colClasses</code>.</p>
+<p>The <code>colClasses</code> argument allows to specify the column
+type for each for the columns. To get an idea what are in the columns we
+can pass <code>nrow=</code> argument to read a dozen of rows with
+read.table() and inspect the resulting data frame. It can be specified
+numeric, character, logical, Date, POSIXct, and also can convert classes
+as well (see help(read.table)). <code>colClasses</code> recycle it’s
+elements, to start you can pass “character” and watch what is
+inside.</p>
+</div>
+<div id="common-problems" class="section level3" number="1.1.3">
+<h3><span class="header-section-number">1.1.3</span> Common
+Problems</h3>
+<div id="embedded-delimiters" class="section level4 unnumbered">
+<h4 class="unnumbered">Embedded Delimiters</h4>
+<p>Problems can arise with simple quote mark, # characters and also a
+comma as part of some text. This kind of difficulties come often from
+spreadsheets. If the text with comma is between double quotation marks
+we can use <code>quote=&quot;\&quot;&quot;</code>.</p>
+</div>
+<div id="unknown-missing-value-indicator" class="section level4 unnumbered">
+<h4 class="unnumbered">Unknown Missing Value Indicator</h4>
+<p>By default R expects missing values as NA. A spreadsheet from Excel
+can have <code>#NULL!, #N/A, #VALUE!</code>, this three could be
+included in <code>na.strings=</code> argument.</p>
+</div>
+<div id="empy-or-nearly-empy-filds" class="section level4 unnumbered">
+<h4 class="unnumbered">Empy or Nearly Empy Filds</h4>
+<p>Empty fields will be NA values in numeric fields. But in character
+fields are difficult to perceive.</p>
+<p>One of the firsts tasks is to extract the column classes and compare
+that with what we see:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">table</span> ( <span class="fu">sapply</span>(df, <span class="cf">function</span>(x) <span class="fu">class</span>(x)) )</span></code></pre></div>
+<p>If we know that a column should be numeric (NumID) but it is not, we
+can tabulate the elements that R is unable to convert:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">table</span> ( df<span class="sc">$</span>NumID[<span class="fu">is.na</span>(<span class="fu">as.numeric</span>(df<span class="sc">$</span>NumID))] )</span></code></pre></div>
+<p>Examining the set of missing value indicators in the data can be
+helpful to include that values to <code>na.stings</code> argument in
+another call to <code>read.table()</code>.</p>
+</div>
+<div id="blank-lines" class="section level4 unnumbered">
+<h4 class="unnumbered">Blank Lines</h4>
+<p>When there are blank rows by default <code>read.table()</code> will
+skip it. If wee need that the lines from two different files correspond
+we can pass <code>skip.blank.lines=FALSE</code> argument which will set
+NA in numeric columns and <code>&quot;&quot;</code> in character ones.</p>
+</div>
+<div id="row-names" class="section level4 unnumbered">
+<h4 class="unnumbered">Row Names</h4>
+<p>By default <code>read.table()</code> will create a row names starting
+from 1 and up, unless the header has one fewer filed than the rows, in
+which case R uses the first column as row names. Row names must be
+unique, if in the data set the first column of row names are not unique
+we can pass <code>row.names=NULL</code> to create an integer type row
+names. To specify a column to be the row names (or a vector) we can use
+<code>row.names=</code> argument.</p>
+</div>
+</div>
+<div id="when-read.table-go-wrong" class="section level3" number="1.1.4">
+<h3><span class="header-section-number">1.1.4</span> When
+<code>read.table()</code> go wrong</h3>
+<p>If we check the file ‘data/addresses.csv’ we can see is a comma
+delimited file with headers, then we can specified some arguments:</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucmVhZC50YWJsZSAoXCIuLi9kYXRhL2FkZHJlc3Nlcy5jc3ZcIiwgaGVhZGVyID0gVFJVRSwgc2VwID0gXCIsXCIsIHF1b3RlID0gXCJcIixcbiAgICAgICAgICAgIGNvbW1lbnQuY2hhciA9IFwiXCIsIHN0cmluZ3NBc0ZhY3RvcnMgPSBGQUxTRSlcbmBgYCJ9 -->
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">read.table</span> (<span class="st">&quot;../data/addresses.csv&quot;</span>, <span class="at">header =</span> <span class="cn">TRUE</span>, <span class="at">sep =</span> <span class="st">&quot;,&quot;</span>, <span class="at">quote =</span> <span class="st">&quot;&quot;</span>,</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>            <span class="at">comment.char =</span> <span class="st">&quot;&quot;</span>, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3IgaW4gc2NhbihmaWxlID0gZmlsZSwgd2hhdCA9IHdoYXQsIHNlcCA9IHNlcCwgcXVvdGUgPSBxdW90ZSwgZGVjID0gZGVjLCAgOiBcbiAgbGluZSAxIGRpZCBub3QgaGF2ZSA2IGVsZW1lbnRzXG4ifQ== -->
+<pre><code>Error in scan(file = file, what = what, sep = sep, quote = quote, dec = dec,  : 
+  line 1 did not have 6 elements</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>We can check the first line to be sure that are headers:</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucmVhZC50YWJsZSAoXCIuLi9kYXRhL2FkZHJlc3Nlcy5jc3ZcIiwgaGVhZGVyID0gRiwgc2VwID0gXCIsXCIsIHF1b3RlID0gXCJcIixcbiAgICAgICAgICAgIGNvbW1lbnQuY2hhciA9IFwiXCIsIHN0cmluZ3NBc0ZhY3RvcnMgPSBGQUxTRSwgbnJvd3MgPSAxKVxuYGBgIn0= -->
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">read.table</span> (<span class="st">&quot;../data/addresses.csv&quot;</span>, <span class="at">header =</span> F, <span class="at">sep =</span> <span class="st">&quot;,&quot;</span>, <span class="at">quote =</span> <span class="st">&quot;&quot;</span>,</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>            <span class="at">comment.char =</span> <span class="st">&quot;&quot;</span>, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>, <span class="at">nrows =</span> <span class="dv">1</span>)</span></code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImRhdGEuZnJhbWUiXSwibnJvdyI6MSwibmNvbCI6NSwic3VtbWFyeSI6W119LCJyZGYiOiJINHNJQUFBQUFBQUFCbVZReTA3RE1CRGNKSFpLSS9HUStJNUVLZ1dKSzZKQ1FrSWNlS2xYRTVzU0VlekkyZkw0K1lLZHhoWmREcGJIczU3WjJiMWJMT2ZGc2dDQURCaExJT01PQW45OHVDclBBVmpxSGdrd21Qcjd5MzA2OWxWM2p2NFUwdXNGWWZadVJJKzM0bDBSZm5JaHBWVjlUMmgyMmVBMzRmZzlDbFFrQXRmT002aDVhUDgwaStna29ubEVweEdkRWJ1cE5aOVZzTndmQ3NQWjdWbTM0bC9pUWdvVTFZdmRqcmdoa29ucHNESGFpVksvcjV5SUUwdUl3N1gyS1dSWnY2NzFXemtqNWF6VEs5OXpEQWk3WVNQbTJ4VHB6eWpQUjNtdTlLclJLb3pUaW1mVkJtZXBQa1o0NEhZeHJLTHFiS014ek9uWXZrS0RJa2lLMnJTQkdTYUh6Uzl2a1FNc1JBSUFBQT09In0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["V1"],"name":[1],"type":["chr"],"align":["left"]},{"label":["V2"],"name":[2],"type":["chr"],"align":["left"]},{"label":["V3"],"name":[3],"type":["chr"],"align":["left"]},{"label":["V4"],"name":[4],"type":["chr"],"align":["left"]},{"label":["V5"],"name":[5],"type":["chr"],"align":["left"]}],"data":[{"1":"ID","2":"LastName","3":"Address","4":"City","5":"State"}],"options":{"columns":{"min":{},"max":[10],"total":[5]},"rows":{"min":[10],"max":[10],"total":[1]},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<ul>
+<li><code>count.fields()</code> : returns the fields per row.</li>
+</ul>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY291bnQuZmllbGRzIChcIi4uL2RhdGEvYWRkcmVzc2VzLmNzdlwiLCBzZXAgPSBcIixcIiwgcXVvdGUgPSBcIlwiLCBjb21tZW50LmNoYXIgPSBcIlwiKVxuYGBgIn0= -->
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">count.fields</span> (<span class="st">&quot;../data/addresses.csv&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;,&quot;</span>, <span class="at">quote =</span> <span class="st">&quot;&quot;</span>, <span class="at">comment.char =</span> <span class="st">&quot;&quot;</span>)</span></code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDUgNSA2IDUgNiA1XG4ifQ== -->
+<pre><code>[1] 5 5 6 5 6 5</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>OK, something is wrong in the third and fifth row, let’s see what it
+is:</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucmVhZC50YWJsZSAoXCIuLi9kYXRhL2FkZHJlc3Nlcy5jc3ZcIiwgaGVhZGVyID0gRiwgc2VwID0gXCIsXCIsIHF1b3RlID0gXCJcIixcbiAgICAgICAgICAgIGNvbW1lbnQuY2hhciA9IFwiXCIsIHN0cmluZ3NBc0ZhY3RvcnMgPSBGQUxTRSwgXG4gICAgICAgICAgICBucm93cyA9IDEsIHNraXAgPSAyKVxuYGBgIn0= -->
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">read.table</span> (<span class="st">&quot;../data/addresses.csv&quot;</span>, <span class="at">header =</span> F, <span class="at">sep =</span> <span class="st">&quot;,&quot;</span>, <span class="at">quote =</span> <span class="st">&quot;&quot;</span>,</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>            <span class="at">comment.char =</span> <span class="st">&quot;&quot;</span>, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>            <span class="at">nrows =</span> <span class="dv">1</span>, <span class="at">skip =</span> <span class="dv">2</span>)</span></code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImRhdGEuZnJhbWUiXSwibnJvdyI6MSwibmNvbCI6Niwic3VtbWFyeSI6W119LCJyZGYiOiJINHNJQUFBQUFBQUFCbDFRMjA3RE1BeDFieGtydDBuOFFIK2dGYVVEOFRvSmpTZjJnQUJ0ajZFTm8xcEpxamJiK1BxQlc1cG8rQ0hLOGJHUGZlem5oMlVXTGtNQThNRDNIZkFDaEJDOHZzempld0RmeGNBQkg4YmQvNDFGVndnWXZ2TStBWENLYjNKVXhKNTRYa3BPMkxQcGRScWxyWTVtTzVHUTNFazBxM1dVWm8rVVg0aDl0RkxOaHZEdVlrV01CWkovaVhZb1k2YnNMYlhveHFMTW9xbEZ0eGJka2NialJ1MFQwOXhzN05EcGVjWGJscGdNQzY1NTh0R2dGcU1Ea1l4VXJVc2xVZVNhZXg2TG5ZWVFsMXZadVNqaS9ITXJOM0ZLMGw0dDE5M013U0Q4TjJzeCszUGgvcEJMTVNIWHBSUm1uWXEvaThwMExzUnVnQmQ0aS80VVNkMlVVcHM5a1cwVHJUUTNrakJYbFdINnplSHdDNHBVSG94a0FnQUEifQ== -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["V1"],"name":[1],"type":["int"],"align":["right"]},{"label":["V2"],"name":[2],"type":["chr"],"align":["left"]},{"label":["V3"],"name":[3],"type":["chr"],"align":["left"]},{"label":["V4"],"name":[4],"type":["chr"],"align":["left"]},{"label":["V5"],"name":[5],"type":["chr"],"align":["left"]},{"label":["V6"],"name":[6],"type":["chr"],"align":["left"]}],"data":[{"1":"11","2":"Macina","3":"401 1st Ave.","4":"Apt 13G","5":"New York","6":"NY"}],"options":{"columns":{"min":{},"max":[10],"total":[6]},"rows":{"min":[10],"max":[10],"total":[1]},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Now we could conclude that in this 3rd row there are embedded commas
+in V3 corresponding to Address column.</p>
+<p>We can force when creating the data frame using the largest number of
+columns possible by passing <code>fill=TRUE</code> argument. The rows
+with the last column filled tell us that there are problems in the input
+data:</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuKFxuYWRkIDwtIHJlYWQudGFibGUgKFwiLi4vZGF0YS9hZGRyZXNzZXMuY3N2XCIsIGhlYWRlciA9IFQsIHNlcCA9IFwiLFwiLCBxdW90ZSA9IFwiXCIsXG4gICAgICAgICAgICAgICAgICAgY29tbWVudC5jaGFyID0gXCJcIiwgc3RyaW5nc0FzRmFjdG9ycyA9IEZBTFNFLCBmaWxsID0gVClcbilcbmBgYCJ9 -->
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>(</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>add <span class="ot">&lt;-</span> <span class="fu">read.table</span> (<span class="st">&quot;../data/addresses.csv&quot;</span>, <span class="at">header =</span> T, <span class="at">sep =</span> <span class="st">&quot;,&quot;</span>, <span class="at">quote =</span> <span class="st">&quot;&quot;</span>,</span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>                   <span class="at">comment.char =</span> <span class="st">&quot;&quot;</span>, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>, <span class="at">fill =</span> T)</span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>)</span></code></pre></div>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImRhdGEuZnJhbWUiXSwibnJvdyI6NSwibmNvbCI6NSwic3VtbWFyeSI6W119LCJyZGYiOiJINHNJQUFBQUFBQUFCbTFUVVcvYU1CQTJKS0VsVzlkTit3T1c5ckFuSWd5c1k0OVI2VHFrUVRkZ1Zmdm9KZ2V4b0hia0dHai9mRGVINXJMVjJvUGx1Kzk4MzMwK24yZWptMzU0RXhKQ1BPTDdEZUlGMWlUQnI4WFh6cEFRdjJtZEJ2Rkp1OXdmN0tIM1pkU3V0NGY5T2RDKyt2aE5yRlpDRmhYUW12QkVTSTdlVEVFS3V2S081d2J5RE9xengrTWlFMnUrNXc3cDY4R1FYbW91RFoybFVZMTFHV1dGb2ZFT0VIdnptZEdmVzdpRDVGLzBsUFg2QXpxL2Z6UVowTGxCK04yWDRSbTlTb0RMYXdGN090S1JVelVjUVVFblNraW85ZEU0TjVUMUx5di8xVVZFRnhtWXBkSnBCWG4wdzZmS1BQbGhiNzRVaVpXdWR1Q1FOOGN4a2s1dDlWdWwxeGk1WGxUVzBRaU1Wc0pnNER4MlNBaEdwcmN1TWhuWHlNdVhDeVMvdHhkeTFZeFF6WGRlbUtrOWdocmlOTlZRWUFmOGMyRWVrV2x1dUFHSHZxM1ZQdnBmQ2EvYlpiWEphck0zNktISkJtZC9VZWJLVGphOFFFNEV3NVFiSGkxMUtaZVFKeWZsU09WR0tEdGNwRmxPYXN0SmJtZ0hPTjNLVW5qYVNiS3RYSGVZRS9aeXVTcHJIcURuZFZMdHdVdTdWTkg4WGFXM2NQSkIybCtCYlEwMi9BNDJ5SnpDRGlmWXR1L1F2U2pYUXVMTGh4WXRJcU1NeDVRd1VSdEVEamNuVDM4QS9UNnZhTDREQUFBPSJ9 -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["ID"],"name":[1],"type":["chr"],"align":["left"]},{"label":["LastName"],"name":[2],"type":["chr"],"align":["left"]},{"label":["Address"],"name":[3],"type":["chr"],"align":["left"]},{"label":["City"],"name":[4],"type":["chr"],"align":["left"]},{"label":["State"],"name":[5],"type":["chr"],"align":["left"]}],"data":[{"1":"O'Higgins","2":"48 Grant Rd.","3":"Des Moines","4":"IA","5":"","_rn_":"001"},{"1":"Macina","2":"401 1st Ave.","3":"Apt 13G","4":"New York","5":"NY","_rn_":"011"},{"1":"Roeder","2":"71 Quebec Ave.","3":"E. Thetford","4":"VT","5":"","_rn_":"242"},{"1":"Stephens","2":"1234 Smythe St.","3":"#5","4":"Detroit","5":"MI","_rn_":"146"},{"1":"Ishikawa","2":"986 OceanView Dr.","3":"Pacific Grove","4":"CA","5":"","_rn_":"241"}],"options":{"columns":{"min":{},"max":[10],"total":[5]},"rows":{"min":[10],"max":[10],"total":[5]},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>The IDs have become row names because there are a less field in
+headers. In the case the ID was duplicated we have to pass
+<code>row.names=NULL</code> argument.</p>
 <!-- rnb-text-end -->
 </div>
+</div>
+</div>
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIlIgZm9yIERhdGEgU2NpZW5jZSAjMiINCm91dHB1dDogDQogICAgaHRtbF9ub3RlYm9vazogDQogICAgICB0b2M6IHRydWUNCiAgICAgIHRvY19mbG9hdDogdHJ1ZQ0KICAgICAgZmlnX3dpZHRoOiAxMA0KICAgICAgZmlnX2hlaWdodDogNg0KICAgICAgaGlnaGxpZ2h0OiBweWdtZW50cw0KICAgICAgdGhlbWU6IHNhbmRzdG9uZQ0KICAgICAgbnVtYmVyX3NlY3Rpb25zOiB0cnVlDQotLS0NCg0KIyBHZXR0aW5nIERhdGEgaW50byBhbmQgb3V0IG9mIFINCg0K</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIlIgZm9yIERhdGEgU2NpZW5jZSAjMiINCm91dHB1dDogDQogICAgaHRtbF9ub3RlYm9vazogDQogICAgICB0b2M6IHRydWUNCiAgICAgIHRvY19mbG9hdDogdHJ1ZQ0KICAgICAgZmlnX3dpZHRoOiAxMA0KICAgICAgZmlnX2hlaWdodDogNg0KICAgICAgaGlnaGxpZ2h0OiBweWdtZW50cw0KICAgICAgdGhlbWU6IHNhbmRzdG9uZQ0KICAgICAgbnVtYmVyX3NlY3Rpb25zOiB0cnVlDQotLS0NCg0KIyBHZXR0aW5nIERhdGEgaW50byBhbmQgb3V0IG9mIFINCg0KV2hlbiB3ZSBnYXRoZXIgZGF0YSBmb3IgYW5hbHlzaXMsIHdlIGhhdmUgdG8gdHJhY2sgaXQncyBoaXN0b3J5IG1lYW5pbmcgd2hlcmUgd2FzIGFjcXVpcmVkLCBmcm9tIHdoYXQgc291cmNlIGFuZCBvbiB3aGF0IGRhdGU7IHRoaXMgaXMga25vd24gYXMgKmRhdGEncyBwcm92ZW5hbmNlKi4gQSBwbGFjZSB0byBrZWVwIHRoaXMgaW5mb3JtYXRpb24gY2FuIGJlIGluIHRoZSBzY3JpcHRzLg0KDQojIyBUYWJ1bGFyIERhdGENCg0KT25lIG9mIHRoZSBtb3N0IGNvbW1vbiBkYXRhIHdlIHVzZSBjb21lIGluIHRoZSBmb3JtIG9mIHJlY3Rhbmd1bGFyIG9yIHRhYnVsYXIgZGF0YSwgd2hpY2ggaXMgb2JzZXJ2YXRpb25zIGluIHJvd3MgYW5kIG1lYXN1cmVtZW50cyAodmFyaWFibGVzKSBpbiBjb2x1bW5zLiBMZW50J3MgcmVhZCB0YWJ1bGFyIGRhdGEgZmlsZXMgKEFTQ0lJIHRleHQpIGludG8gUiBkYXRhIGZyYW1lcyBhbmQgdG8gdHJ5IHNvbWUgYXBwcm9hY2hlcyB3aGVuIGlzIG5vdCB3b3JraW5nLg0KDQojIyMgRmlsZXMgd2l0aCBEZWxpbWl0ZXJzDQoNCkNvbW1vbmx5IGEgb2JzZXJ2YXRpb24gaXMgcmVwcmVzZW50ZWQgYnkgYSBzaW5nbGUgcm93IHdoaWNoIGZpZWxkcyBhcmUgc2VwYXJhdGVkIGJ5IGEgZGVsaW1pdGVyIHN1Y2ggYSBjb21tYSwgdGFiLCBzZW1pY29sb24sIHBpcGUsIG9yIGV4Y2xhbWF0aW9uIHBvaW50OyBhbmQgdGhlIGVuZCBvZiBlYWNoIG9ic2VydmF0aW9uIGlzIG1hcmtlZCB3aXRoIGEgZW5kLW9mLWxpbmUgY2hhcmFjdGVyIHdoaWNoIGNhbiB2YXJ5IGFjcm9zcyBwbGF0Zm9ybXMuDQoNCi0gICBgcmVhZC50YWJsZSgpLCByZWFkLmNzdigpLCByZWFkLmRlbGltKClgIDogcmV0dXJucyBhIGRhdGEgZnJhbWUuIEVhY2ggZnVuY3Rpb24gZGlmZmVycyBvbiBpdCdzIGRlZmF1bHQgc2V0dGluZ3MuIEFyZ3VtZW50cyBmb3IgcmVhZC50YWJsZSgpOg0KICAgIC0gICBgaGVhZGVyPWAgaWYgYFRSVUVgIHdpbGwgdXNlIHRoZSBmaXJzdCByb3cgb2YgdGhlIGZpbGUgYXMgY29sdW1uIGhlYWRlcnMuDQogICAgLSAgIGBzZXA9YCB0aGUgc2VwYXJhdG9yIGNoYXJhY3Rlci4gVGhlIGRlZmF1bHQgdmFsdWUgaXMgYCIgImAuDQogICAgLSAgIGBxdW90ZT1gIGNoYXJhY3RlciB0byBiZSB1c2VkIHRvIHN1cnJvdW5kIHF1b3Rlcy4gQnkgZGVmYXVsdCBpcyBzZXQgZm9yIGAiYCBhbmQgYCdgIC4NCiAgICAtICAgYGNvbW1lbnQuY2hhcj1gIGNoYXJhY3RlciB3aGljaCBpbnRyb2R1Y2UgYSBjb21tZW50IGxpbmUNCiAgICAtICAgYHN0cmluZ0FzRmFjdG9ycz1gIGlmIGBGQUxTRWAgd2lsbCBsZWZ0IHRoZSBjaGFyYWN0ZXIgY29sdW1ucyBhcyBjaGFyYWN0ZXIgYW5kIGBUUlVFYCBmb3IgRmFjdG9yIGNsYXNzLg0KICAgIC0gICBgY29sQ2xhc3Nlcz1gIGV4cGVjdCBhIHZlY3RvciB3aXRoIHRoZSBjbGFzcyBvZiBlYWNoIGNvbHVtbi4NCiAgICAtICAgYG5hLnN0cmluZ3M9YCBleHBlY3QgYSB2ZWN0b3Igd2l0aCB0aGUgaW5kaWNhdG9ycyBvZiBtaXNzaW5nIHZhbHVlIGluIHRoZSBpbnB1dCBkYXRhLg0KLSAgIGByZWFkLmNzdjIoKWAgOiBmb3IgRXVyb3BlYW4gc3R5bGUgY29tbWEuIFVzZSBzZW1pLWNvbG9uIGFzIGRlbGltaXRlci4NCi0gICBgcmVhZC5kZWxpbTIoKWAgOiBmb3IgRXVyb3BlYW4gc3R5bGUgY29tbWEuDQoNClVzdWFsbHksIHRoZSBxdW90ZSBhcmd1bWVudCBpcyBzZXQgdG8gYCJcIiJgIHRvIHJlY29nbml6ZSB0aGUgZG91YmxlIHF1b3RhdGlvbiBtYXJrcyBiZWNhdXNlIGAnYCBjYW4gYmUgdXNlZCBhcyBhcG9zdHJvcGhlIG9yIHR1cm5lZCBvZmYgd2l0aCBgIiJgLiBBbHNvIHRoZSBjb21tZW50IGFyZ3VtZW50IGlzIHR1cm5lZCBvZmYgd2l0aCBgIiJgIGJlY2F1c2UgaXQgaXMgbm90IHVzdWFsIGZvdW5kIGAjYCBpbiBkYXRhIGZpbGVzIGFuZCBzb21ldGltZXMgaW4gZmllbGRzIHRoZXJlIGFyZSAnIzEnIG9yIHNpbWlsYXIgY2hhcmFjdGVycy4NCg0KIyMjIENvbHVtbiBDbGFzc2VzDQoNCldlIGFsbW9zdCBhbHdheXMgcGFzcyBgc3RyaW5nQXNGYWN0b3I9RkFMU0VgIHdoZW4gd2UgYXJlIHJlYWRpbmcgZGF0YSwgbWF5YmUgZXhjZXB0IHdoZW4gd2Uga25vdyB0aGUgZGF0YSBpcyBudW1lcmljIGFuZCBwcmUtY2xlYW5lZCBhbmQgdXNpbmcgYGNvbENsYXNzZXNgLiANCg0KVGhlIGBjb2xDbGFzc2VzYCBhcmd1bWVudCBhbGxvd3MgdG8gc3BlY2lmeSB0aGUgY29sdW1uIHR5cGUgZm9yIGVhY2ggZm9yIHRoZSBjb2x1bW5zLiBUbyBnZXQgYW4gaWRlYSB3aGF0IGFyZSBpbiB0aGUgY29sdW1ucyB3ZSBjYW4gcGFzcyBgbnJvdz1gIGFyZ3VtZW50IHRvIHJlYWQgYSBkb3plbiBvZiByb3dzIHdpdGggcmVhZC50YWJsZSgpIGFuZCBpbnNwZWN0IHRoZSByZXN1bHRpbmcgZGF0YSBmcmFtZS4gSXQgY2FuIGJlIHNwZWNpZmllZCBudW1lcmljLCBjaGFyYWN0ZXIsIGxvZ2ljYWwsIERhdGUsIFBPU0lYY3QsIGFuZCBhbHNvIGNhbiBjb252ZXJ0IGNsYXNzZXMgYXMgd2VsbCAoc2VlIGhlbHAocmVhZC50YWJsZSkpLiBgY29sQ2xhc3Nlc2AgcmVjeWNsZSBpdCdzIGVsZW1lbnRzLCB0byBzdGFydCB5b3UgY2FuIHBhc3MgImNoYXJhY3RlciIgYW5kIHdhdGNoIHdoYXQgaXMgaW5zaWRlLg0KDQojIyMgQ29tbW9uIFByb2JsZW1zDQoNCiMjIyMgRW1iZWRkZWQgRGVsaW1pdGVycyB7LnVubnVtYmVyZWR9DQoNClByb2JsZW1zIGNhbiBhcmlzZSB3aXRoIHNpbXBsZSBxdW90ZSBtYXJrLCAjIGNoYXJhY3RlcnMgYW5kIGFsc28gYSBjb21tYSBhcyBwYXJ0IG9mIHNvbWUgdGV4dC4gVGhpcyBraW5kIG9mIGRpZmZpY3VsdGllcyBjb21lIG9mdGVuIGZyb20gc3ByZWFkc2hlZXRzLiBJZiB0aGUgdGV4dCB3aXRoIGNvbW1hIGlzIGJldHdlZW4gZG91YmxlIHF1b3RhdGlvbiBtYXJrcyB3ZSBjYW4gdXNlIGBxdW90ZT0iXCIiYC4NCg0KIyMjIyBVbmtub3duIE1pc3NpbmcgVmFsdWUgSW5kaWNhdG9yIHsudW5udW1iZXJlZH0NCg0KQnkgZGVmYXVsdCBSIGV4cGVjdHMgbWlzc2luZyB2YWx1ZXMgYXMgTkEuIEEgc3ByZWFkc2hlZXQgZnJvbSBFeGNlbCBjYW4gaGF2ZSBgI05VTEwhLCAjTi9BLCAjVkFMVUUhYCwgdGhpcyB0aHJlZSBjb3VsZCBiZSBpbmNsdWRlZCBpbiBgbmEuc3RyaW5ncz1gIGFyZ3VtZW50Lg0KDQojIyMjIEVtcHkgb3IgTmVhcmx5IEVtcHkgRmlsZHMgey51bm51bWJlcmVkfQ0KDQpFbXB0eSBmaWVsZHMgd2lsbCBiZSBOQSB2YWx1ZXMgaW4gbnVtZXJpYyBmaWVsZHMuIEJ1dCBpbiBjaGFyYWN0ZXIgZmllbGRzIGFyZSBkaWZmaWN1bHQgdG8gcGVyY2VpdmUuIA0KDQpPbmUgb2YgdGhlIGZpcnN0cyB0YXNrcyBpcyB0byBleHRyYWN0IHRoZSBjb2x1bW4gY2xhc3NlcyBhbmQgY29tcGFyZSB0aGF0IHdpdGggd2hhdCB3ZSBzZWU6DQoNCmBgYHIgDQp0YWJsZSAoIHNhcHBseShkZiwgZnVuY3Rpb24oeCkgY2xhc3MoeCkpICkNCmBgYA0KDQpJZiB3ZSBrbm93IHRoYXQgYSBjb2x1bW4gc2hvdWxkIGJlIG51bWVyaWMgKE51bUlEKSBidXQgaXQgaXMgbm90LCB3ZSBjYW4gdGFidWxhdGUgdGhlIGVsZW1lbnRzIHRoYXQgUiBpcyB1bmFibGUgdG8gY29udmVydDoNCg0KYGBgcg0KdGFibGUgKCBkZiROdW1JRFtpcy5uYShhcy5udW1lcmljKGRmJE51bUlEKSldICkNCmBgYA0KDQpFeGFtaW5pbmcgdGhlIHNldCBvZiBtaXNzaW5nIHZhbHVlIGluZGljYXRvcnMgaW4gdGhlIGRhdGEgY2FuIGJlIGhlbHBmdWwgdG8gaW5jbHVkZSB0aGF0IHZhbHVlcyB0byBgbmEuc3RpbmdzYCBhcmd1bWVudCBpbiBhbm90aGVyIGNhbGwgdG8gYHJlYWQudGFibGUoKWAuDQoNCiMjIyMgQmxhbmsgTGluZXMgey51bm51bWJlcmVkfQ0KDQpXaGVuIHRoZXJlIGFyZSBibGFuayByb3dzIGJ5IGRlZmF1bHQgYHJlYWQudGFibGUoKWAgd2lsbCBza2lwIGl0LiBJZiB3ZWUgbmVlZCB0aGF0IHRoZSBsaW5lcyBmcm9tIHR3byBkaWZmZXJlbnQgZmlsZXMgY29ycmVzcG9uZCB3ZSBjYW4gcGFzcyBgc2tpcC5ibGFuay5saW5lcz1GQUxTRWAgYXJndW1lbnQgd2hpY2ggd2lsbCBzZXQgTkEgaW4gbnVtZXJpYyBjb2x1bW5zIGFuZCBgIiJgIGluIGNoYXJhY3RlciBvbmVzLg0KDQojIyMjIFJvdyBOYW1lcyB7LnVubnVtYmVyZWR9DQoNCkJ5IGRlZmF1bHQgYHJlYWQudGFibGUoKWAgd2lsbCBjcmVhdGUgYSByb3cgbmFtZXMgc3RhcnRpbmcgZnJvbSAxIGFuZCB1cCwgdW5sZXNzIHRoZSBoZWFkZXIgaGFzIG9uZSBmZXdlciBmaWxlZCB0aGFuIHRoZSByb3dzLCBpbiB3aGljaCBjYXNlIFIgdXNlcyB0aGUgZmlyc3QgY29sdW1uIGFzIHJvdyBuYW1lcy4gUm93IG5hbWVzIG11c3QgYmUgdW5pcXVlLCBpZiBpbiB0aGUgZGF0YSBzZXQgdGhlIGZpcnN0IGNvbHVtbiBvZiByb3cgbmFtZXMgYXJlIG5vdCB1bmlxdWUgd2UgY2FuIHBhc3MgYHJvdy5uYW1lcz1OVUxMYCB0byBjcmVhdGUgYW4gaW50ZWdlciB0eXBlIHJvdyBuYW1lcy4gVG8gc3BlY2lmeSBhIGNvbHVtbiB0byBiZSB0aGUgcm93IG5hbWVzIChvciBhIHZlY3Rvcikgd2UgY2FuIHVzZSBgcm93Lm5hbWVzPWAgYXJndW1lbnQuDQoNCiMjIyBXaGVuIGByZWFkLnRhYmxlKClgIGdvIHdyb25nDQoNCklmIHdlIGNoZWNrIHRoZSBmaWxlICdkYXRhL2FkZHJlc3Nlcy5jc3YnIHdlIGNhbiBzZWUgaXMgYSBjb21tYSBkZWxpbWl0ZWQgZmlsZSB3aXRoIGhlYWRlcnMsIHRoZW4gd2UgY2FuIHNwZWNpZmllZCBzb21lIGFyZ3VtZW50czoNCg0KYGBge3J9DQpyZWFkLnRhYmxlICgiLi4vZGF0YS9hZGRyZXNzZXMuY3N2IiwgaGVhZGVyID0gVFJVRSwgc2VwID0gIiwiLCBxdW90ZSA9ICIiLA0KICAgICAgICAgICAgY29tbWVudC5jaGFyID0gIiIsIHN0cmluZ3NBc0ZhY3RvcnMgPSBGQUxTRSkNCmBgYA0KDQpXZSBjYW4gY2hlY2sgdGhlIGZpcnN0IGxpbmUgdG8gYmUgc3VyZSB0aGF0IGFyZSBoZWFkZXJzOg0KDQpgYGB7cn0NCnJlYWQudGFibGUgKCIuLi9kYXRhL2FkZHJlc3Nlcy5jc3YiLCBoZWFkZXIgPSBGLCBzZXAgPSAiLCIsIHF1b3RlID0gIiIsDQogICAgICAgICAgICBjb21tZW50LmNoYXIgPSAiIiwgc3RyaW5nc0FzRmFjdG9ycyA9IEZBTFNFLCBucm93cyA9IDEpDQpgYGANCg0KLSAgIGBjb3VudC5maWVsZHMoKWAgOiByZXR1cm5zIHRoZSBmaWVsZHMgcGVyIHJvdy4NCg0KYGBge3J9DQpjb3VudC5maWVsZHMgKCIuLi9kYXRhL2FkZHJlc3Nlcy5jc3YiLCBzZXAgPSAiLCIsIHF1b3RlID0gIiIsIGNvbW1lbnQuY2hhciA9ICIiKQ0KYGBgDQoNCk9LLCBzb21ldGhpbmcgaXMgd3JvbmcgaW4gdGhlIHRoaXJkIGFuZCBmaWZ0aCByb3csIGxldCdzIHNlZSB3aGF0IGl0IGlzOg0KDQpgYGB7cn0NCnJlYWQudGFibGUgKCIuLi9kYXRhL2FkZHJlc3Nlcy5jc3YiLCBoZWFkZXIgPSBGLCBzZXAgPSAiLCIsIHF1b3RlID0gIiIsDQogICAgICAgICAgICBjb21tZW50LmNoYXIgPSAiIiwgc3RyaW5nc0FzRmFjdG9ycyA9IEZBTFNFLCANCiAgICAgICAgICAgIG5yb3dzID0gMSwgc2tpcCA9IDIpDQpgYGANCg0KTm93IHdlIGNvdWxkIGNvbmNsdWRlIHRoYXQgaW4gdGhpcyAzcmQgcm93IHRoZXJlIGFyZSBlbWJlZGRlZCBjb21tYXMgaW4gVjMgY29ycmVzcG9uZGluZyB0byBBZGRyZXNzIGNvbHVtbi4NCg0KV2UgY2FuIGZvcmNlIHdoZW4gY3JlYXRpbmcgdGhlIGRhdGEgZnJhbWUgdXNpbmcgdGhlIGxhcmdlc3QgbnVtYmVyIG9mIGNvbHVtbnMgcG9zc2libGUgYnkgcGFzc2luZyBgZmlsbD1UUlVFYCBhcmd1bWVudC4gVGhlIHJvd3Mgd2l0aCB0aGUgbGFzdCBjb2x1bW4gZmlsbGVkIHRlbGwgdXMgdGhhdCB0aGVyZSBhcmUgcHJvYmxlbXMgaW4gdGhlIGlucHV0IGRhdGE6DQoNCmBgYHtyfQ0KKA0KYWRkIDwtIHJlYWQudGFibGUgKCIuLi9kYXRhL2FkZHJlc3Nlcy5jc3YiLCBoZWFkZXIgPSBULCBzZXAgPSAiLCIsIHF1b3RlID0gIiIsDQogICAgICAgICAgICAgICAgICAgY29tbWVudC5jaGFyID0gIiIsIHN0cmluZ3NBc0ZhY3RvcnMgPSBGQUxTRSwgZmlsbCA9IFQpDQopDQpgYGANCg0KVGhlIElEcyBoYXZlIGJlY29tZSByb3cgbmFtZXMgYmVjYXVzZSB0aGVyZSBhcmUgYSBsZXNzIGZpZWxkIGluIGhlYWRlcnMuIEluIHRoZSBjYXNlIHRoZSBJRCB3YXMgZHVwbGljYXRlZCB3ZSBoYXZlIHRvIHBhc3MgYHJvdy5uYW1lcz1OVUxMYCBhcmd1bWVudC4gDQoNCg0KDQoNCg0KDQoNCg0KDQoNCg0KDQo=</div>
 
 
 </div>
