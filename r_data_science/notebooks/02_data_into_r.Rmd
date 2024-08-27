@@ -121,6 +121,139 @@ add <- read.table ("../data/addresses.csv", header = T, sep = ",", quote = "",
 
 The IDs have become row names because there are a less field in headers. In the case the ID was duplicated we have to pass `row.names=NULL` argument. 
 
+To continue, we are going to identify the bad formatted rows, then we're going to `paste()` the columns 2 and 3 from that rows which had embedded comma, and to finish changing the positions of columns 4-5 to 3-4.
+
+```{r}
+# Vector with logical values:
+fixc <- add$State != ""
+# Paste column 2 and 3 from that rows
+add[fixc, 2] <- paste (add[fixc, 2], add[fixc, 3])
+# Changing the order
+add[fixc, 3:4] <- add[fixc, 4:5]
+add
+```
+
+Our last step will be to delete the last column after saving the column names. And remove the variables that we won't need any more.
+
+```{r}
+# Saving column names and deleting State column
+mycols <- colnames (add)
+add$State <- NULL
+# ID column will take the values of the previus rownames, then assing colnames
+add <- data.frame (ID = rownames (add), add)
+colnames (add) <- mycols
+# Replace old rownames:
+rownames (add) <- NULL
+# Removing objects:
+rm (fixc, mycols)
+add
+```
+
+#### Using Scan {.unnumbered}
+
+Given the previous data set, let's explore the content of that file with `scan()`, a general-purpose data input tool.
+
+-   `sep="\"` : to read entire lines
+-   `what=character()` or `what=""` : by default scan() expect numbers, so we specify that it will encounter characters.
+
+```{r}
+(
+add.scan <- scan ("../data/addresses.csv", what = character(), sep = "\n",
+                  quote = "", comment.char = "")
+)
+```
+
+We can fix it replacing the third comma:
+
+```{r}
+# locating all the commas:
+commas <- gregexpr (",", add.scan)
+# Extracting long rows:
+comma.5 <- lengths (commas) == 5
+# Locating the third comma:
+comma.gone <- sapply (commas[comma.5], function(x) x[3])
+# Replacing comma for semi-colon:
+substring (add.scan[comma.5], comma.gone, comma.gone) <- ";"
+add.scan
+```
+
+The next step will be `read.table()` from text, also we can save our progress with `write.table()` in case we will use it again o for other users.
+
+```{r}
+read.table (text = add.scan, header = TRUE, sep = ",", quote = "",
+            comment = "", stringsAsFactors = FALSE,
+            colClasses = c(ID = "character") )
+```
+
+### Writing Delimited Files
+
+To perform this task we use `write.table(), write.csv(), write.csv2()` and it's analogs. Also with `write.table()` can be passed a matrix. Saving a file with `write.table()` generally it be passed `sep=` argument specifying the delimiter, `quote=FALSE` to not save the quotes in character fields but sometimes it is necessary for numbers with leading zeros or embedded commas. Rarely we want to save the row names, then with row.names=FALSE we omit them.
+
+#### Fixed width Files {.unnumbered}
+
+A fixed-width file have a specific number of character for each field, for example, ID have 4 characters, name 15, account 12... For this files we use `read.fwf()` that has many of the same arguments as `read.table()`, and the most important is `widths=` which expect an integer vector with the lengths of the fields.
+
+### End-of-Line Characters:
+
+Windows has `\r` and `\n`. OS X and Linux only `\n`. Depending the platform and application we should be aware, but R is flexible with `read.table()` and `scan()` functions which permits some flexibility.
+
+## Non-Tabular Data
+
+Sometimes files are too big to fit into the main memory, then we will need some techniques to work with that files. If we need a subset of records, we can filter the data set without reading it all into memory. On the other hand, there are files not suitable for `read.table()` like JSON and XML, or binary data.
+
+-   `file()` and relatives : return a connection object that stores all the information that R needs. 
+    -   `open=` whether the file is to be read, written or append to ("r", "w", "a"). It can be passed with '+' to read and write, and adding t or b for text or binary modes. `open="a+b"` opens a binary file for reading and appending.
+-   `close()` : to close a connection. Is a good practice to close the connection when we are finish with it.
+
+The function `readLines()` opens the file, reads as many lines we want and closes the file. The argument `n=` mean number of lines and `n=-1` for all lines. We can use `readLines()` over a connection to consecutively read lines from that connected file because will remain open. The analogous function is `writeLines()` and `writeChar()` which adds a null character after it's end-of-line character but using `eos=NULL` argument the string is written without terminator.
+
+```{r}
+readLines ("../data/addresses.csv", n = 1)
+con.add <- file ("../data/addresses.csv", open = "r")
+readLines (con.add, n = 2)
+readLines (con.add, n = 2)
+close (con.add)
+```
+
+When a file is open R maintains a 'pointer' that describes the location, one for read and one for write. With `seek()` function we can get the current location of the file, and passing where= argument we can choose a position which is useful to jump to a prespecified position. But help tell us that `seek()` on windows is discouraged. Finally, `flush()` function can be used after a file output to ensure the write on disk operation.
+
+### Different encodings
+
+For most of the previous functions (read.table or scan) we can pass `fileEncoding=` argument to specify the encoding in the file we are going to work with, and `encoding=` argument specifies the encoding of the R object that contains the data.
+
+To write on file we have to be certain what encoding have and pass to `file()` the `encoding=` argument and read using `readLines()` and again `enconding="UTF-8"`. In the same way to write we use file to open a connection selecting the encoding and passing `useBytes=TRUE` argument which prevent R to convert encoded strings back to the native encoding before writing.
+
+### Null Character and Binary Data
+
+In hexadecimal are represented as `00` or `0x00` by R, that's not R's NULL value. By default with `scan()` and `read.table()` will stop reading a NULL character and it will continue with the next field. The argument `skipNul=TRUE` allows to skip over NULL which is a safe choice for delimited data. For intended NULL in text we have to read the file as binary.
+
+-   `readBin()` : to read binary data. Requires the number of bytes to read because it won't recognize the end-of-line characters. It will return a vector with class `raw`.
+
+Once read the file, we can write it back with `writeBin()` or convert it into data.
+
+-   `rawToChar()` : when we know that the raw data represents text, unless there are embedded nulls.
+
+With a raw vector we can look for NULLs and replace it with space or other character that we want:
+
+```r
+vec[vec == 0x00] <- as.raw(0x20)
+```
+
+If all the previous steps has gone well, after write the data back or converted to text we can use `read.fwf()` or `readLines()`.
+
+## Reading data from Relational Databases
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
