@@ -243,10 +243,106 @@ If all the previous steps has gone well, after write the data back or converted 
 
 ## Reading data from Relational Databases
 
+It is not necessary to load all the data into R, if the data tables are small, it doesn't matter but with large amount of data it is better using the database as much as possible. We will need the package `RODBC` to be installed into R.
 
+To use `odbcConnect()` we need to have installed ODBC drivers from Microsoft, and then open de application and configure a new DSN which will be the first argument. This DSN contain the database, language and additional configurations. It will create a handle to be used with other commands. The alternative is `odbcDiverConnect()` which provide us more flexibility; the first argument is a connection string with ODBC configuration.
 
+```{r}
+connection <- odbcConnect("SQL2022", uid="rstats", pwd="P@ssw0rd")
+adv.tab <- sqlTables(connection, tableType = "TABLE")
+adv.tab[4:8,]
+```
+```{r}
+sqlColumns(connection, "Employee")[3:10,4:ncol(sqlColumns(connection, "Employee"))]
+```
 
+Once we are done with the connection (handle) it is recommended to close it with `close(connection)` or `odbcClose(connection)`
 
+### SQL Commands
+
+We are going to interact with the database using ODBC functions such as `sqlQuery()` passing a character string.
+
+```{r}
+emp <- sqlQuery (connection, "
+                 SELECT * FROM HumanResources.Employee
+                 ")
+s10 <- sample(nrow(emp), 10)
+emp[s10,]
+```
+
+```{r}
+emp.mal <- sqlQuery (connection, "
+                    SELECT BusinessEntityID, LoginID, VacationHours, SickLeaveHours
+                    FROM HumanResources.Employee
+                    WHERE Gender = 'M'
+                    ", stringsAsFactors = FALSE)
+s10 <- sample(nrow(emp.mal), 10)
+emp.mal[s10,]
+```
+
+The `sqlQuery()` function supports simple arithmetic operations such as count, max or min, combine columns arithmetically, logarithms, aggregate data into groups...
+
+#### Joining Tables {.unnumbered}
+
+Join in SQL is like `merge()` function in R. It is to match up two tables according to the value of a column in each one.
+
+```{r}
+emp.sales <- sqlQuery (connection, "
+                    SELECT *
+                    FROM Sales.SalesPerson
+                    LEFT JOIN HumanResources.Employee 
+                    ON Sales.SalesPerson.BusinessEntityID = HumanResources.Employee.BusinessEntityID
+                    ", stringsAsFactors = FALSE)
+# s10 <- sample(nrow(emp.sales), 10)
+emp.sales
+```
+
+#### Results in Pieces {.unnumbered}
+
+When we call to `sqlQuery()` performs two tasks, first it sends the query and then fetch the results. If we are going to work with very large tables we can do this tasks separately. 
+
+-   `sqlFetch()` : get the first batch with a given number of rows. Subsequent calls should be made to `sqlFetchMore()` with `max=` argument.
+
+Also, calling `sqlQuery()` passing `max=` for complicated queries, we can follow it with `sqlGetResults()` and `rows_at_time=` argument with an integer between 1 and 1024 (number of rows to fetch at a time).
+
+```{r}
+sqlFetch(connection, "Sales.Customer", max = 10)
+```
+```{r}
+sqlFetchMore(connection, max = 10)
+```
+
+#### SQLite {.unnumbered}
+
+SQLite is a 'serverless' database which data is stored in one large file well suited to smaller applications. The `RSQLite` package connects R to SQLite databases. Some useful function are:
+
+-   `dbConnect()` : passing as first argument `SQLite()` and the second `dbname=` argument is the name of the file containing the data. Returns a handle for other functions.
+-   `dbListTables()` : list the tables. The first argument can be the handle.
+-   `dbListFields()` : return the fields (columns) in a table.
+-   `dbGetQuery()` : analogous to `sqlQuery()`, executes a query and returns the data.
+-   `dbSendQuery()` and `dbFetch()` : create a query and receive the data. `dbSendQuery()` does not returns data, it prepares the database to return data with `dbFetch()`.
+
+## Large Numbers of Input Files
+
+As Data Scientists will have to perform tasks in directories and files which sometimes there are thousands of them. For example, unzipping files and using its content.
+
+-   list.files() : list files matching a pattern (regular expression).
+-   unzip() : to unzip zipped files.
+-   Other file. family functions such as file.copy(), file.remove(), file.rename()...
+
+The datasets used for this example are from: https://github.com/wesm/pydata-book/tree/3rd-edition/datasets/babynames
+
+To continue we are going to unzip the babynames files from 1950s to 2000s and load the comma separated data. First we need to know what are their names and the names of the files inside each file.
+
+```{r}
+# listing files corresponding with babynames data
+list.files(path = "../" , 
+           pattern = "^baby*",
+           recursive = TRUE, full.names = F)
+```
+```{r}
+unzip("../data/babynames/babynames-1950.zip", list = TRUE)
+```
 
 
 
