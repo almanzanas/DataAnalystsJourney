@@ -326,9 +326,9 @@ SQLite is a 'serverless' database which data is stored in one large file well su
 
 As Data Scientists will have to perform tasks in directories and files which sometimes there are thousands of them. For example, unzipping files and using its content.
 
--   list.files() : list files matching a pattern (regular expression).
--   unzip() : to unzip zipped files.
--   Other file. family functions such as file.copy(), file.remove(), file.rename()...
+-   `list.files()` : list files matching a pattern (regular expression).
+-   `unzip()` : to unzip zipped files.
+-   Other file. family functions such as `file.copy(), file.remove(), file.rename()`...
 
 The datasets used for this example are from: https://github.com/wesm/pydata-book/tree/3rd-edition/datasets/babynames
 
@@ -337,27 +337,75 @@ To continue we are going to unzip the babynames files from 1950s to 2000s and lo
 ```{r}
 # listing files corresponding with babynames data
 list.files(path = "../" , 
-           pattern = "^baby*",
+           pattern = "^babynames.*\\.zip$",
            recursive = TRUE, full.names = F)
 ```
 ```{r}
+# Exploring one .zip file
 unzip("../data/babynames/babynames-1950.zip", list = TRUE)
 ```
 
+```{r}
+# Listing .zip files
+zipfiles <- list.files(path = "../" , 
+                       pattern = "^babynames.*\\.zip$",
+                       recursive = TRUE, full.names = T)
 
+# Unzip every file
+for (f in 1:length(zipfiles)) {
+    unzip (zipfiles[f])
+}
 
+# Listing .txt files 
+txtfiles <- list.files(path = "../",
+                       pattern = "^yob.*\\.txt$",
+                       recursive = TRUE, full.names = TRUE)
+# Extracting names and years
+txtnames <- sub ("../notebooks/", "", txtfiles)
+yr <- substring (txtnames, 4, 7)
 
+# creating a data frame with every file using year as a column
+result <- NULL
+for (i in 1:length (txtfiles) ) {
+    dat <- data.frame (Year = yr[i], read.csv (txtfiles[i], 
+                                               header = FALSE, 
+                                               stringsAsFactor=FALSE))
+    result <- rbind (result, dat)
+}
 
+s10 <- sample (nrow(result), 10)
+result[s10,]
+```
 
+```{r}
+colnames(result) <- c("Year", "Name", "Sex", "Count")
+# cleaning exported files
+rem <- file.remove(txtfiles)
+remove(rem)
+result[s10,]
+```
 
+## Other Formats
 
+The **clipboard** can be used for moving text between programs. R sees the clipboard as a file named "clipboard" which can be used with `read.table("clipboard")` or `write.table(df, "clipboard")` and then paste it into a spreadsheet. For MAC and Linux there are different approaches.
 
+From **spreadsheets** like Microsoft Excel with format .xls or .xlsx we can use `read.xls()` or `read.xlsx()` functions from `gdata` package. The spreadsheets have to be rectangular as a data frame must be. 
 
+Also we can acquire a **web** page with `getURI()` function of the `RCurl` package which will return a character vector of length 1. For HTML tables `readHTMLTable()` function from `XML` package will be our usual tool. 
 
+Working with **XML** using functions provided by `XML` package we can use `xmlTreeParse()` for read in a file and returns a tree-like object of class `XMLDocument`. This object acts like an R list where we can use its names to extract fields. The `xmlValue()` function converts the list element into text.
+Other approach is to use `xmlParse()` function and then `xpathSApply()` to search with RE or basic search resulting a list of object of class `xmlNode.`
 
+For **JSON** can be used `rjson`, `RJSONIO` and `jsonlite` packages which read and write JSON objects. If we have a file containing a whole set of JSON messages, one per line we can use `scan(..., sep="\n", what="")` and apply a conversion `fromJSON()` to each message.
 
+To finish, to extract data using a **REST API** can be used `RCurl` and `httr` packages. For other statistical packages such as SAS, SPSS or Minitab the recommended package is `foreign.`
 
+## R Data
 
-
-
+-   `save()` : the output is a file with the objects stored in.
+-   `load()` : restore all the objects stored on disk by `save()` (can overwrite objects)
+-   `saveRSD()` : take an object and process a disk file with its data and attributes.
+-   `readRDS()` : returns the object just like was saved.
+-   `save.image()` : to save objects into the workspace, and by default creates a `.RData` file.
+-   `attach()` : to add an R data file to the search path (where R look for objects)
 
