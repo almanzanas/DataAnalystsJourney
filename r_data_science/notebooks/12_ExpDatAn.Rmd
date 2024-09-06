@@ -1,0 +1,28 @@
+---
+title: "Exploratory Data Analysis"
+output: 
+    html_notebook: 
+      toc: true
+      toc_float: true
+      fig_width: 10
+      fig_height: 6
+      highlight: pygments
+      theme: sandstone
+      number_sections: true
+---
+
+
+
+#### Libraries
+
+```{r}
+library(tidyverse)
+library(skimr)
+library(statsr)
+library(GGally)
+library(corrplot)
+```
+
+Dataset: https://github.com/fivethirtyeight/data/tree/master/college-majors 
+
+
