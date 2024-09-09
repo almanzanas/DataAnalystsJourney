@@ -11,8 +11,6 @@ output:
       number_sections: true
 ---
 
-
-
 #### Libraries {.unnumbered}
 
 ```{r}
@@ -23,7 +21,31 @@ library(GGally, quietly = TRUE)
 library(corrplot, quietly = TRUE)
 ```
 
-Dataset: https://github.com/fivethirtyeight/data/tree/master/college-majors 
+Dataset: <https://github.com/fivethirtyeight/data/tree/master/college-majors>
+
+| Header                 | Description                                                                |
+|-------------------|-----------------------------------------------------|
+| `Rank`                 | Rank by median earnings                                                    |
+| `Major_code`           | Major code, FO1DP in ACS PUMS                                              |
+| `Major`                | Major description                                                          |
+| `Major_category`       | Category of major from Carnevale et al                                     |
+| `Total`                | Total number of people with major                                          |
+| `Sample_size`          | Sample size (unweighted) of full-time, year-round ONLY (used for earnings) |
+| `Men`                  | Male graduates                                                             |
+| `Women`                | Female graduates                                                           |
+| `ShareWomen`           | Women as share of total                                                    |
+| `Employed`             | Number employed (ESR == 1 or 2)                                            |
+| `Full_time`            | Employed 35 hours or more                                                  |
+| `Part_time`            | Employed less than 35 hours                                                |
+| `Full_time_year_round` | Employed at least 50 weeks (WKW == 1) and at least 35 hours (WKHP \>= 35)  |
+| `Unemployed`           | Number unemployed (ESR == 3)                                               |
+| `Unemployment_rate`    | Unemployed / (Unemployed + Employed)                                       |
+| `Median`               | Median earnings of full-time, year-round workers                           |
+| `P25th`                | 25th percentile of earnings                                                |
+| `P75th`                | 75th percentile of earnings                                                |
+| `College_jobs`         | Number with job requiring a college degree                                 |
+| `Non_college_jobs`     | Number with job not requiring a college degree                             |
+| `Low_wage_jobs`        | Number in low-wage service jobs                                            |
 
 The intent of this section is to go over a practical project, following the steps: loading the dataset, understanding the data, treating missing values, exploring and visualizing, and the analysis report.
 
@@ -126,7 +148,6 @@ Here we are going to create some questions to lead the exploration.
 
 It is to look one variable at a time. Let's graph some histograms of the numeric variables with a *for* loop.
 
-
 ```{r}
 for (var in colnames(select_if(df.clean, is.numeric)) ) {
     g = ggplot(df.clean) + 
@@ -137,8 +158,8 @@ for (var in colnames(select_if(df.clean, is.numeric)) ) {
     plot(g)
 }
 ```
-    
-And to be able to see outliers the boxplot will be our aproach. 
+
+And to be able to see outliers the boxplot will be our aproach.
 
 ```{r}
 for ( var in colnames( select_if(df.clean, is.numeric) ) ) {
@@ -186,7 +207,7 @@ norm.stats
 
 ## Multivariate Analysis
 
->In a project, the idea is to explore how the explanatory variables (X) affect the response variable (y).
+> In a project, the idea is to explore how the explanatory variables (X) affect the response variable (y).
 
 Here we want to know how the variables affect to 'unemployment_rate'. For this task could be useful the scatter-plot to see the pattern created when two variables are compared. And the correlation coefficient which tell us how much relation they have.
 
@@ -207,6 +228,181 @@ corrs <- round( cor(df.clean[, -c(1, 2, 3, 7)]), 3)
 corrplot (corrs, method = "number", type = "lower", 
           tl.cex = 0.8, number.cex = 0.6)
 ```
+
+Looking into 'Unemployment_rate' the correlations are so lightly, in this case a linear regression would not be the best approach.
+
+When two explanatory variables have high correlations means both variables can explain the same variance in the target variable, creating redundancy and making it more difficult to determine the effect of each individual explanatory feature. Then, it must be eliminated before modeling.
+
+## Exploring
+
+When we want to explore more deeply the dataset we can start doing questions and looking for answers:
+
+-   What are the top 10 majors with the lower unemployment rate?
+-   And with the higher unemployment rate?
+-   What are the majors with more specialized jobs (requiring college)?
+-   What are the best median-value-paying jobs?
+-   Do the majors with more share of women enrolled have a higher or lower unemployed rate?
+-   Do the majors with more share of women have higher rate of part time workers?
+-   Do the majors with a greater share of women enrolled have a similar salary median?
+
+#### What are the top 10 majors with the lower unemployment rate? {.unnumbered}
+
+```{r}
+# Selecting top 10
+top10.hig.emp <- df.clean %>%
+  select(Major, Unemployment_rate) %>%
+  arrange( desc(Unemployment_rate) ) %>%
+  head(10)
+
+# Selecting top 10
+top10.low.emp <- df.clean %>%
+  select(Major, Unemployment_rate) %>%
+  arrange( Unemployment_rate ) %>%
+  head(10)
+top10.low.emp
+```
+
+```{r}
+# plot top 10 higher Unemployment rate
+ggplot(top10.hig.emp) +
+  geom_col( aes(x = Unemployment_rate,
+                y = reorder( Major, +Unemployment_rate) ),
+            color = "darkblue", fill = "lightblue" ) +
+  labs( y = "Major" ) +
+  geom_text( aes( x = Unemployment_rate,
+                  y = Major, label = round(Unemployment_rate, 3) ),
+             size = 2, hjust = 1.2) +
+  ggtitle("Unemployment rate by Major")
+```
+
+```{r}
+# plot top 10 lower Unemployment rate
+ggplot(top10.low.emp) +
+  geom_col( aes(x = Unemployment_rate,
+                y = reorder( Major, -Unemployment_rate) ),
+            color = "darkblue", fill = "lightblue" ) +
+  labs( y = "Major" ) +
+  geom_text( aes( x = Unemployment_rate,
+                  y = Major, label = round(Unemployment_rate, 3) ),
+             size = 2, hjust = 1.2) +
+  ggtitle("Unemployment rate by Major")
+```
+
+The first graph of the top 10 unemployment rate looks fine but the second one not at all. Let's try the same but using the proportion of total employees for ordering the data within unemployment rate.
+
+```{r}
+top10.hig.prop <- df.clean %>%
+  mutate (prop = Total / sum(Total) ) %>%
+  select (Major, Unemployment_rate, prop) %>%
+  arrange(desc(prop), desc(Unemployment_rate)) %>%
+  head(10)
+
+# plot top 10 higher Unemployment rate by proportion
+ggplot(top10.hig.prop) +
+  geom_col( aes(x = Unemployment_rate,
+                y = reorder( Major, +Unemployment_rate) ),
+            color = "darkblue", fill = "lightblue" ) +
+  labs( y = "Major" ) +
+  geom_text( aes( x = Unemployment_rate,
+                  y = Major, label = round(Unemployment_rate, 3) ),
+             size = 2, hjust = 1.2) +
+  ggtitle("Unemployment rate by Major")
+```
+
+```{r}
+top10.low.prop <- df.clean %>%
+  mutate (prop = Total / sum(Total) ) %>%
+  select (Major, Unemployment_rate, prop) %>%
+  arrange(desc(prop), Unemployment_rate) %>%
+  head(10)
+
+# plot top 10 lower Unemployment rate by proportion
+ggplot(top10.low.prop) +
+  geom_col( aes(x = Unemployment_rate,
+                y = reorder( Major, -Unemployment_rate) ),
+            color = "darkblue", fill = "lightblue" ) +
+  labs( y = "Major" ) +
+  geom_text( aes( x = Unemployment_rate,
+                  y = Major, label = round(Unemployment_rate, 3) ),
+             size = 2, hjust = 1.2) +
+  ggtitle("Unemployment rate by Major")
+```
+
+It would not be necessary the second visualization, It have the same values because it is ordered by proportion. It show the most popular majors ordered by employment rate, and nursing with the best rate.
+
+#### More specialized jobs {.unnumbered}
+
+Just like the last time, we are going to need new columns such as proportions of college jobs:
+
+```{r}
+df.clean <- df.clean %>%
+  mutate ( College_jobs_pct = College_jobs / (College_jobs + Non_college_jobs),
+           Employees_pct = Total / sum(Total) )
+```
+
+```{r}
+df.clean %>%
+  select(Major_category, Major, College_jobs_pct) %>%
+  group_by(Major_category) %>%
+  summarize(mean_college_jobs_pct = mean(College_jobs_pct)) %>%
+  arrange(desc(mean_college_jobs_pct))
+```
+
+#### Best median-value-paying jobs {.unnumbered}
+
+First we have to add a variable for median salaries grouped by major category, and then use that to generate a boxplot visualization for comparison.
+
+```{r}
+df.clean <- df.clean %>%
+  group_by(Major_category) %>%
+  mutate( Salary_mdn = median(Median) )
+
+ggplot(data = df.clean) +
+  geom_boxplot( aes( x = reorder(Major_category, Salary_mdn),
+                     y = Median),
+                fill = "lightblue", color = "darkblue") +
+  labs( x = "Major_category" ) +
+  ggtitle ("Median by Major Category") +
+  theme( axis.text.x = element_text( angle = 45, hjust = 1.2 ) ) +
+  expand_limits( x = c(0, NA), y = c(0, NA) ) +
+  scale_y_continuous( labels = scales::comma )
+```
+
+We can observe that Engineering, Maths, Business, Physics are the top paying jobs. 
+
+Other approaching is to do multiple comparison (post-hoc) of the median.
+
+```{r}
+library(rstatix, quietly = TRUE)
+
+pairwise.wilcox.test(df.clean$Median, df.clean$Major_category, p.adjust.method = "holm") %>% suppressWarnings()
+```
+
+On the last output we look for p < 0.05 meaning there are differences between the medians of that groups. With the boxplot we can see which are greater visually but with these comparisons we can actually know which is greater than another statistically.
+
+#### Relatioship between Majors with more share of women and unemployed rate {.unnumbered}
+
+This task should be do it with correlations, and then we can plot to see its graphic representations.
+
+```{r}
+#cor(df.clean$ShareWomen, df.clean$Unemployment_rate, method = "pearson")
+
+cor(df.clean$ShareWomen, df.clean$Unemployment_rate,
+    method = "spearman")
+```
+
+The spearman correlation is non-parametric and it is suitable for when the relationship of two variables are non-linear, or do not follow the norm distribution.
+
+```{r}
+ggplot( data = df.clean ) +
+  geom_point( aes( x = ShareWomen, y = Unemployment_rate ),
+              color = "darkblue") +
+  ggtitle ("Share of women vs. Unemployment rate") +
+  labs ( subtitle = "There is no linear relationship, the graphic is spread", color = "darkgray", size = 8) +
+  theme( plot.subtitle = element_text( color = "darkgray", 
+                                               size = 10) )
+```
+
 
 
 
