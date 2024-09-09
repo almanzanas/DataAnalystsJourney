@@ -13,16 +13,224 @@ output:
 
 
 
-#### Libraries
+#### Libraries {.unnumbered}
 
 ```{r}
-library(tidyverse)
-library(skimr)
-library(statsr)
-library(GGally)
-library(corrplot)
+library(tidyverse, quietly = TRUE)
+library(skimr, quietly = TRUE)
+library(statsr, quietly = TRUE)
+library(GGally, quietly = TRUE)
+library(corrplot, quietly = TRUE)
 ```
 
 Dataset: https://github.com/fivethirtyeight/data/tree/master/college-majors 
+
+The intent of this section is to go over a practical project, following the steps: loading the dataset, understanding the data, treating missing values, exploring and visualizing, and the analysis report.
+
+# Loading the dataset
+
+To continue we need the libraries mentioned before:
+
+-   `tidyverse` : eight libraries included, to work with data
+-   `skimr` : descriptive statistics
+-   `statsr` : statistical tools and data sampling
+-   `GGally` : for pair plots
+-   `corrplot` : correlation plots
+
+```{r}
+# Reading a csv from a web
+url <- "https://raw.githubusercontent.com/fivethirtyeight/data/master/college-majors/recent-grads.csv"
+
+df <- read_csv(url)
+
+df.original <- df
+```
+
+We'll keep a copy of the original data frame just in case we need to recover some columns or for comparison reasons.
+
+# Understanding the data
+
+Let's check the firsts observations:
+
+```{r}
+df %>%
+    head()
+```
+
+We can see that the data is **rectangular**. At first we do not see any problems with language encoding (strange symbols). And the CSV was read correctly because the columns are fine delimited.
+
+-   glimpse(): similar to str(), returns the columns, types and some values.
+
+```{r}
+glimpse(df)
+```
+
+Looking the previous output we can see two character columns (Mayor, Mayor_category), this columns will be factor but also 'Major_code' which is an identification. We can keep all three as character to avoid problems with data handling, or we could work with factors taking care about this.
+
+```{r}
+cols.factor <- c("Major", "Major_code", "Major_category")
+
+df <- df %>%
+    mutate_at(cols.factor, factor)
+```
+
+Before to start with descriptive statistics let's disable scientific notations and stablishing 4 decimals.
+
+```{r}
+options(scipen=999, digits=4)
+```
+
+-   skim(): returns a summary table for the given dataframe
+
+Lets store the skim table in an object and calculate manually the coefficient of variation for the variables:
+
+```{r}
+stats <- skim(df)
+stats$numeric.sd / stats$numeric.mean
+# The returned NA values are the character/factor variables
+```
+
+-   CV close to 0: there is a little variability in the data which is around the mean.
+-   CV between 0 and 1: moderate variability. Closer to 1 the greater dispersion.
+-   CV close to 2: high variability suggesting highly dispersion. The mean may not be a reliable representation.
+
+```{r}
+# Descriptive statistics
+
+skim(df)
+```
+
+We can see the is a missing value in four variables, we need to know if it is the same observation. Also, there are more women than men and more people employed than unemployed. The jobs requiring a college degree are balanced with the jobs which no require a degree. Looking the Coefficient of Variation, almost every variable have a high value, greater than 1, which suggest high dispersion; and a very few variables have 0.3 or less which suggest the data is around the mean on this variables.
+
+# Treating missing data
+
+The missing values also have meaning, could be a human mistake or an omitted response of the user.
+
+```{r}
+df[which(is.na(df$Total)),]
+```
+
+Since there is only one observation we can drop it because represent less than 1%. It is recommended to use other treatment if missing values are greater than 5% of the observations.
+
+```{r}
+df.clean <- df %>% drop_na()
+
+dim(df.clean)
+```
+
+# Exploring and visualizing the data
+
+Here we are going to create some questions to lead the exploration.
+
+## Univariate Analysis
+
+It is to look one variable at a time. Let's graph some histograms of the numeric variables with a *for* loop.
+
+
+```{r}
+for (var in colnames(select_if(df.clean, is.numeric)) ) {
+    g = ggplot(df.clean) + 
+        geom_histogram( aes( unlist(df.clean[, var]) ), bins=20,
+                        fill = "darkblue", color = "lightblue", alpha = 0.5) +
+        labs( title = paste("Histogram of", var),
+              x = var)
+    plot(g)
+}
+```
+    
+And to be able to see outliers the boxplot will be our aproach. 
+
+```{r}
+for ( var in colnames( select_if(df.clean, is.numeric) ) ) {
+    g = ggplot(df.clean) +
+        geom_boxplot( aes( y = unlist(df.clean[, var]) ),
+                      fill = "lightblue", color = "blue") +
+        labs(title = paste("Boxplot of", var),
+             y = var)
+    plot(g)
+}
+
+```
+
+We can add a QQ plot as a visual indication of normality.
+
+```{r}
+for (var in colnames( select_if(df.clean, is.numeric)) ) {
+    g = ggplot(df.clean, aes( sample = unlist( df.clean[, var])) ) +
+        stat_qq() +
+        stat_qq_line() +
+        labs( title = paste("QQ-plot of", var) )
+    plot(g)
+}
+```
+
+At this point we can see that the distributions are right skewed with many outliers. To finish, we can use statistic tests to be sure if a variable distribution is normal.
+
+```{r}
+norm.stats <- data.frame()
+for (var in colnames( select_if( df.clean, is.numeric) ) ) {
+    ks <- ks.test( unlist( df.clean[, var] ), y = pnorm) 
+    sh <- shapiro.test( unlist( df.clean[, var]) )
+    vals <- data.frame(
+        ks_test = sprintf("%6.5f" ,c(ks$p.value)),
+        shapiro_test = sprintf("%6.5f", c(sh$p.value) ),
+        row.names = var
+    )
+    norm.stats <- bind_rows(norm.stats, vals)
+}
+remove(ks)
+remove(sh)
+remove(vals)
+norm.stats
+```
+
+## Multivariate Analysis
+
+>In a project, the idea is to explore how the explanatory variables (X) affect the response variable (y).
+
+Here we want to know how the variables affect to 'unemployment_rate'. For this task could be useful the scatter-plot to see the pattern created when two variables are compared. And the correlation coefficient which tell us how much relation they have.
+
+-   `ggpairs()`: from `GGally` returns a matrix with scatterplot and correlations.
+
+```{r}
+df.clean %>%
+    select(Men, Women, Part_time, Unemployment_rate, 
+           Non_college_jobs, Low_wage_jobs) %>%
+    ggpairs() 
+
+```
+
+There are only select some variables, it have been discarded the character ones and cherry-pick variables with some correlation. The full correlation matrix could not be seen.
+
+```{r}
+corrs <- round( cor(df.clean[, -c(1, 2, 3, 7)]), 3)
+corrplot (corrs, method = "number", type = "lower", 
+          tl.cex = 0.8, number.cex = 0.6)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
