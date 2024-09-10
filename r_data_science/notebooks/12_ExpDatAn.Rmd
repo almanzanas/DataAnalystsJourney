@@ -373,8 +373,6 @@ We can observe that Engineering, Maths, Business, Physics are the top paying job
 Other approaching is to do multiple comparison (post-hoc) of the median.
 
 ```{r}
-library(rstatix, quietly = TRUE)
-
 pairwise.wilcox.test(df.clean$Median, df.clean$Major_category, p.adjust.method = "holm") %>% suppressWarnings()
 ```
 
@@ -403,7 +401,116 @@ ggplot( data = df.clean ) +
                                                size = 10) )
 ```
 
+#### Do the majors with more share of women have higher rate of part time workers? {.unnumbered}
 
+Just like the last question, we can see the relationship of this two variables with a correlation.
+
+```{r}
+cor(df.clean$ShareWomen, df.clean$Part_time, method = "spearman")
+```
+
+It can be seen a medium-slight positive correlation between both Share of woman enrolled and workers with part time contract. This is how looks like the correlation:
+
+```{r}
+ggplot(data = df.clean) +
+    geom_point( aes( x = ShareWomen, y = Part_time),
+                color = "darkblue") +
+    labs( title = "Share of Women vs. Part-Time jobs",
+          subtitle = "The relationship between the variables is slightly weak [0.33],\n siggesting that when the share of women is higher also there are more part-jobs") +
+    theme( plot.subtitle = element_text( color = "darkgray", size = 8) )
+```
+
+#### Majors with a greater share of women and salary median {.unnumbered}
+
+```{r}
+cor(df.clean$ShareWomen, df.clean$Median)
+cor(df.clean$ShareWomen, df.clean$Low_wage_jobs)
+```
+
+The first correlation show when the greater is the share of women enrolled, the less are the Median salary; and in the second correlation, almost without strength if the share of women is high there are a slight relationship (almost none) with more low wage jobs.
+
+```{r}
+ggplot(data = df.clean) +
+    geom_point( aes( x = ShareWomen, y = Low_wage_jobs, 
+                     color = "Low Wage Jobs"),
+                alpha = 1, shape = "o", size = 2) +
+    geom_point( aes( x = ShareWomen, y = Median, 
+                     color = "Median Salary"), alpha = 0.5) +
+    labs(title = "Share of women vs. low wage, and vs. Median Salary",
+         y = "", color = "Share of Women vs.:") +
+    scale_color_manual(values = c("Low Wage Jobs" = "darkblue", 
+                                  "Median Salary" = "darkred") ) +
+    theme(legend.title = element_text())
+
+```
+
+The next step could be to test if the median of lower share of women is greater or not than higher share of women. To verify this we can run hypothesis tests. First we are going to add a column with two categories, one for higher share and other for lower share of women. Then we have to be sure which test we can use, for that we have to check the normality and if its fine, the homoscedasticity.
+
+```{r}
+df.clean <- df.clean %>% 
+    mutate( ShareWomen_cat = ifelse(ShareWomen > 0.5, "higher", "lower") )
+
+df.higher.w <- df.clean %>%
+    filter( ShareWomen_cat == "higher") %>%
+    select( Major, Major_category, ShareWomen, 
+            ShareWomen_cat, Low_wage_jobs, Median)
+
+df.lower.w <- df.clean %>%
+    filter( ShareWomen_cat == "lower") %>%
+    select( Major, Major_category, ShareWomen, 
+            ShareWomen_cat, Low_wage_jobs, Median)
+```
+
+```{r}
+ks.test( df.higher.w$Low_wage_jobs, "pnorm") %>% suppressWarnings()
+ks.test( df.lower.w$Low_wage_jobs, "pnorm" ) %>% suppressWarnings()
+ks.test( df.higher.w$Median, "pnorm" ) %>% suppressWarnings()
+ks.test( df.lower.w$Median, "pnorm" ) %>% suppressWarnings()
+```
+
+In the las output we show that every test was lower than 0.05 thus there are no normality on these groups. Let's check homoscedasticity:
+
+```{r}
+with(df.clean, car::leveneTest(Median, ShareWomen_cat) )  %>% suppressWarnings()
+with(df.clean, car::leveneTest(Low_wage_jobs, ShareWomen_cat) )  %>% suppressWarnings()
+```
+
+The first result for Median on ShareWomen_cat levels have p < 0.05 then we reject the Null Hypothesis; nevertheless, the second result for Low_wage_jobs on ShareWomen_cat levels the p is 0.17, then we maintain the Null Hypothesis of Homogeneity of Variances.
+
+Now we know that for compare Median we will need a robust test, but with Low_wage_jobs we might use t-test because the sample is greater than 50 and that will not affect so much the results.
+
+```{r}
+wilcox.test(df.higher.w$Median, df.lower.w$Median)
+cat("Median of Higher Share Woman: ", median(df.higher.w$Median),
+    "\nMedian of Lower Share Woman: ", median(df.lower.w$Median), "\n" )
+t.test(df.higher.w$Low_wage_jobs, df.lower.w$Low_wage_jobs)
+```
+
+For Median there are differences between the median of the groups, but for Low Wage seem like there are not differences between the mean of the groups with this sample.
+
+Let's try another approach. Now using rep_sample_n() we are going to take 100 samples of 1000 observations allowing repetitions, and then taking the mean.
+
+```{r}
+df.higher.samp <- df.higher.w %>%
+    rep_sample_n( size = 1000, reps = 200, replace = TRUE ) %>%
+    summarize( mu_Median = mean(Median), 
+               mu_Low_wage = mean(Low_wage_jobs) )
+
+df.lower.samp <- df.lower.w %>%
+    rep_sample_n( size = 1000, reps = 200, replace = TRUE ) %>%
+    summarize( mu_Median = mean(Median), 
+               mu_Low_wage = mean(Low_wage_jobs) )
+```
+```{r}
+shapiro.test(df.lower.samp$mu_Median)
+shapiro.test(df.higher.samp$mu_Median)
+shapiro.test(df.lower.samp$mu_Low_wage)
+shapiro.test(df.higher.samp$mu_Low_wage)
+```
+```{r}
+t.test(df.higher.samp$mu_Median, df.lower.samp$mu_Median)
+t.test(df.higher.samp$mu_Low_wage, df.lower.samp$mu_Low_wage)
+```
 
 
 

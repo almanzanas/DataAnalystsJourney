@@ -1,5 +1,6 @@
 **/.pbi/localSettings.json
 **/.pbi/cache.abf
 .Rproj.user
-.RData
 .Rhistory
+.RData
+.Ruserdata
