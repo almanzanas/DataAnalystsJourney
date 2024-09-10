@@ -13,7 +13,7 @@ output:
 
 #### Libraries {.unnumbered}
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 library(tidyverse, quietly = TRUE)
 library(skimr, quietly = TRUE)
 library(statsr, quietly = TRUE)
@@ -24,7 +24,7 @@ library(corrplot, quietly = TRUE)
 Dataset: <https://github.com/fivethirtyeight/data/tree/master/college-majors>
 
 | Header                 | Description                                                                |
-|-------------------|-----------------------------------------------------|
+|--------------------|----------------------------------------------------|
 | `Rank`                 | Rank by median earnings                                                    |
 | `Major_code`           | Major code, FO1DP in ACS PUMS                                              |
 | `Major`                | Major description                                                          |
@@ -102,7 +102,7 @@ Before to start with descriptive statistics let's disable scientific notations a
 options(scipen=999, digits=4)
 ```
 
--   skim(): returns a summary table for the given dataframe
+-   `skim()`: returns a summary table for the given dataframe
 
 Lets store the skim table in an object and calculate manually the coefficient of variation for the variables:
 
@@ -368,7 +368,7 @@ ggplot(data = df.clean) +
   scale_y_continuous( labels = scales::comma )
 ```
 
-We can observe that Engineering, Maths, Business, Physics are the top paying jobs. 
+We can observe that Engineering, Maths, Business, Physics are the top paying jobs.
 
 Other approaching is to do multiple comparison (post-hoc) of the median.
 
@@ -376,7 +376,7 @@ Other approaching is to do multiple comparison (post-hoc) of the median.
 pairwise.wilcox.test(df.clean$Median, df.clean$Major_category, p.adjust.method = "holm") %>% suppressWarnings()
 ```
 
-On the last output we look for p < 0.05 meaning there are differences between the medians of that groups. With the boxplot we can see which are greater visually but with these comparisons we can actually know which is greater than another statistically.
+On the last output we look for p \< 0.05 meaning there are differences between the medians of that groups. With the boxplot we can see which are greater visually but with these comparisons we can actually know which is greater than another statistically.
 
 #### Relatioship between Majors with more share of women and unemployed rate {.unnumbered}
 
@@ -475,7 +475,7 @@ with(df.clean, car::leveneTest(Median, ShareWomen_cat) )  %>% suppressWarnings()
 with(df.clean, car::leveneTest(Low_wage_jobs, ShareWomen_cat) )  %>% suppressWarnings()
 ```
 
-The first result for Median on ShareWomen_cat levels have p < 0.05 then we reject the Null Hypothesis; nevertheless, the second result for Low_wage_jobs on ShareWomen_cat levels the p is 0.17, then we maintain the Null Hypothesis of Homogeneity of Variances.
+The first result for Median on ShareWomen_cat levels have p \< 0.05 then we reject the Null Hypothesis; nevertheless, the second result for Low_wage_jobs on ShareWomen_cat levels the p is 0.17, then we maintain the Null Hypothesis of Homogeneity of Variances.
 
 Now we know that for compare Median we will need a robust test, but with Low_wage_jobs we might use t-test because the sample is greater than 50 and that will not affect so much the results.
 
@@ -501,25 +501,104 @@ df.lower.samp <- df.lower.w %>%
     summarize( mu_Median = mean(Median), 
                mu_Low_wage = mean(Low_wage_jobs) )
 ```
+
 ```{r}
 shapiro.test(df.lower.samp$mu_Median)
 shapiro.test(df.higher.samp$mu_Median)
 shapiro.test(df.lower.samp$mu_Low_wage)
 shapiro.test(df.higher.samp$mu_Low_wage)
 ```
+
 ```{r}
 t.test(df.higher.samp$mu_Median, df.lower.samp$mu_Median)
 t.test(df.higher.samp$mu_Low_wage, df.lower.samp$mu_Low_wage)
 ```
 
+Both p-value are close to zero, thus we can reject the null hypothesis of t-test. Then we can say the groups mean are different with this sample.
+
+> We can infer with 95% confidence that the majors with 50% or more of those enrolled being women have, on average, more low-wage jobs and less median salary.
+
+```{r}
+df.salary.w <- df.clean %>%
+  group_by(ShareWomen_cat) %>%
+  summarize(Salary_mean = mean(Median) )
+```
+
+```{r}
+ggplot( data = df.clean ) +
+  geom_boxplot( aes( x = ShareWomen_cat, y = Median), 
+                fill = "lightblue", color = "darkblue" ) +
+  labs( title = "Average Salary When 
+        ShareWomen is lower/higher than 50%",
+        subtitle = "The average salary for majors with more women enrolled \n
+        is lower than the majors with less women, reinforcing the perception \n 
+        that women are getting lower salaries.",
+        x = "50% Share of Women",
+        y = "Mean Salary" ) +
+  geom_text( data = df.salary.w, aes( x = ShareWomen_cat,
+                                      y = Salary_mean,
+                                      label = round(Salary_mean)),
+             size = 2.2, vjust = 1, color = "black" ) +
+  theme(plot.subtitle = element_text( color = "darkgray", size = 9 ) )
+  
+```
+
+To close this Exploratory Data Analysis we just need to compose the Analysis report.
+
+# Analysis Report
+
+This Data Science project is about the EDA, composed of data wrangling and exploration to answer business questions and extract insights to support the decision-making process. When we write a Analysis Report we have to highlight the findings:
+
+------------------------------------------------------------------------
+
+Dataset: College Majors (<https://github.com/fivethirtyeight/data/tree/master/college-majors>)
+
+Dimensions: 173 observations, 21 variables
+
+Data dictionary:
+
+| Header                 | Type        | Description                                                                |
+|-----------------|----------------|----------------------------------------|
+| `Rank`                 | Ordinal     | Rank by median earnings                                                    |
+| `Major_code`           | Categorical | Major code, FO1DP in ACS PUMS                                              |
+| `Major`                | Categorical | Major description                                                          |
+| `Major_category`       | Categorical | Category of major from Carnevale et al                                     |
+| `Total`                | Numeric     | Total number of people with major                                          |
+| `Sample_size`          | Numeric     | Sample size (unweighted) of full-time, year-round ONLY (used for earnings) |
+| `Men`                  | Numeric     | Male graduates                                                             |
+| `Women`                | Numeric     | Female graduates                                                           |
+| `ShareWomen`           | Numeric     | Women as share of total                                                    |
+| `Employed`             | Numeric     | Number employed (ESR == 1 or 2)                                            |
+| `Full_time`            | Numeric     | Employed 35 hours or more                                                  |
+| `Part_time`            | Numeric     | Employed less than 35 hours                                                |
+| `Full_time_year_round` | Numeric     | Employed at least 50 weeks (WKW == 1) and at least 35 hours (WKHP \>= 35)  |
+| `Unemployed`           | Numeric     | Number unemployed (ESR == 3)                                               |
+| `Unemployment_rate`    | Numeric     | Unemployed / (Unemployed + Employed)                                       |
+| `Median`               | Numeric     | Median earnings of full-time, year-round workers                           |
+| `P25th`                | Numeric     | 25th percentile of earnings                                                |
+| `P75th`                | Numeric     | 75th percentile of earnings                                                |
+| `College_jobs`         | Numeric     | Number with job requiring a college degree                                 |
+| `Non_college_jobs`     | Numeric     | Number with job not requiring a college degree                             |
+| `Low_wage_jobs`        | Numeric     | Number in low-wage service jobs                                            |
+
+Missing Data: There is one observation with missing data on Men, Women, ShareWomen and Total variables. The Major with this missing observation is FOOD SCIENCE (code: 1104).
+
+## Report {.unnumbered}
+
+EDA of a complete dataset, the missing values are less than 1% which was excluded to preserve the original data only without adding calculated numbers.
+
+The descriptive statistics show high variances due to the presence of outliers. The women in college represents the 52%. The unemployment rate is around 6% presenting high variance.
+
+Are jobs more specialized which require a degree such as Education, Maths, Engineering. The engineering is the top-paying category followed by Computer and Maths, Physical Science, and Business. Nevertheless, there are no statistical differences between categories on salary median except comparing Engineering which is statistically higher.
+
+Comparing gender it can be shown that majors with more women enrolled have more low wage jobs and also majors with more share of women seems to have lower salaries. Moreover, the unemployment rate are lower in majors with more share of women.
+
+## Next steps {.unnumbered}
 
 
 
 
-
-
-
-
+---
 
 
 
