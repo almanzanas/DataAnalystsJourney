@@ -1,0 +1,219 @@
+---
+title: "Exploratory Data Analysis"
+output: 
+    html_notebook: 
+      toc: true
+      toc_float: true
+      fig_width: 10
+      fig_height: 6
+      highlight: pygments
+      theme: sandstone
+      number_sections: true
+---
+
+# Introduction to `ggplot2`
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+library(datasets)
+library(patchwork)
+data("mtcars")
+```
+
+## The grammar of graphics
+
+-   Data: the dataset to use
+-   Geometry: the type of graphic to be plotted. 
+-   Aesthetics: Are what are to be seen in a plot. x axis, y axis, color, fill, shape, opacity, width and line type.
+-   Statistics: graphics where there is a need to indicate the number of bins, regression type...
+-   Coordinates: Cartesian or Polar coordinates. The x and y Cartesian coordinates by default will be used.
+-   Facets: to plot multiple graphics for different groups.
+-   Themes: are the preset configurations such as background color, grid, fonts... 
+
+## Basic syntax of ggplot2
+
+The basic syntax follows the order:
+
+1.  What is the dataset to be used?
+2.  What kind of graphic will be plotted?
+3.  What goes on the X axis and Y axis?
+4.  What is the graphic title?
+
+```r
+ggplot(data = df) +     # data set to use
+    geom_point(         # type of grapth to plot 
+    mapping = aes( x = X, y = Y) ) +        # Aesthetics
+    ggtitle("Title")    # Title
+```
+
+## Plot types
+
+### Histograms
+
+-   `geom_histogram()`
+
+```{r}
+ggplot(mtcars) +
+    geom_histogram(
+        mapping = aes( x = mpg ), 
+        bins = 20,
+        color = "lightblue",
+        fill = "darkblue",
+        alpha = 0.6
+    ) +
+    ggtitle( "Whistogram of Miles per Gallon" )
+```
+
+### Boxplot
+
+-   `geom_boxplot()`
+
+For univariate plots it required only one axis. For multivariate the categories could be on X.
+
+```{r}
+ggplot( data = mtcars ) +
+    geom_boxplot( aes( y = mpg ), fill = "lightblue", color = "darkblue" ) +
+    ggtitle( "Boxplot of miles per gallon")
+```
+
+```{r}
+ggplot( mtcars ) +
+    geom_boxplot( aes( x = factor(am),
+                       y = mpg ), fill = "lightblue" ) +
+    labs( x = "Transmission",
+          title = "Comparison betweeen automatic and manual transmission on MPG",
+          subtitle = "The median of manual cars (1) is higher" )
+```
+
+### Scatterplot
+
+-   `geom_point()`
+
+Useful for see relationships between variables and correlations.
+
+```{r}
+ggplot( data = mtcars ) +
+    geom_point( aes( x = wt, y = mpg ),
+                color = "darkblue",
+                size = 4,
+                shape = 15, # squares
+                alpha = 0.7 ) +
+    labs ( x = "Weight of the cars",
+           y = "Milles per Gallon",
+           title = "How the weight affects MPG in cars?",
+           subtitle = "As the weight increases, the car will maje less MPG")
+```
+
+### Barplots
+
+-   `geom_bar()`
+-   `stat_summary()`: alternative to geom_bar(), given the aesthetics, function and geometry to use.
+-   `geom_col()`: requires x and y axes. It will return the bars with the summed y-axis by category.
+
+Useful for categorical variables to show counts or values.
+
+```{r}
+ggplot( mtcars ) +
+    geom_bar( aes( x = factor(am),
+                   fill = factor(am) ) ) +      
+                 # Fill in 'aes' using the same factor means color per category
+    labs( x = "Automatic(0) | Manual(1)" ) +
+    ggtitle( "Count of observations by transmission type" )
+```
+
+```{r}
+ggplot( mtcars ) +
+    geom_bar( aes( x = factor(am), 
+                   y = mpg,
+                   fill = factor(am) ),
+              stat = "summary", fun = "mean" ) # To use the mean on 'y' axis
+```
+```{r}
+ggplot( mtcars ) +
+    stat_summary( aes( x = factor(am),
+                       y = mpg,
+                       fill = factor(am) ), 
+                  fun = "mean",
+                  geom = "bar" )
+    # Alternative to the previous graphic
+```
+```{r}
+ggplot( mtcars ) +
+    geom_col( aes( x = factor(am),
+                   y = mpg,
+                   fill = factor(am) ) ) +
+    labs( x = "Automatic(0) | Manual(1)" )
+```
+
+```{r}
+ggplot( mtcars ) +
+    geom_bar( aes( x = factor(cyl), fill = factor(vs) ),
+              position = "stack" )
+ggplot( mtcars ) +
+    geom_bar( aes( x = factor(cyl), fill = factor(vs) ),
+              position = "dodge" )
+ggplot( mtcars ) +
+    geom_bar( aes( x = factor(cyl), fill = factor(vs) ),
+              position = "fill" )
+
+```
+
+### Line plots
+
+-   `geom_line()`
+
+Useful to show progression over time.
+
+```{r}
+df.line <- data.frame(
+    month = seq(1, 12, 1),
+    sales = rlnorm(12),
+    sales2 = rgamma(12, 1)
+)
+df.line[1:5,]
+```
+
+```{r}
+ggplot( df.line ) +
+    geom_line( aes( x = month,
+                    y = sales,
+                    group = 1),
+               linewidth = 1,
+               color = "darkblue" ) +
+    ggtitle( "Car sales throughout the months")
+```
+```{r}
+ggplot( df.line ) +
+    geom_line( aes( x = month,
+                    y = sales,
+                    group = 1,
+                    color = "Sales year 1"), # the label for this line
+               linewidth = 1,
+               linetype = 2) +
+    geom_line( aes( x = month,
+                    y = sales2,
+                    group = 1,
+                    color = "Sales year 2"),
+               linewidth = 1,
+               linetype = 1) +
+    ggtitle( "Car sales throughout the monts" ) +
+    labs( subtitle = "Two year comparison",
+          color = "Sales Year") # The title for the legend
+```
+
+### Smooth geometry
+
+-   `geom_smooth()`
+
+
+
+
+
+
+
+
+
+
+
+
+

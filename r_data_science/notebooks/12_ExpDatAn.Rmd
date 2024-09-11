@@ -81,7 +81,7 @@ df %>%
 
 We can see that the data is **rectangular**. At first we do not see any problems with language encoding (strange symbols). And the CSV was read correctly because the columns are fine delimited.
 
--   glimpse(): similar to str(), returns the columns, types and some values.
+-   `glimpse()`: similar to `str()`, returns the columns, types and some values.
 
 ```{r}
 glimpse(df)
@@ -96,13 +96,13 @@ df <- df %>%
     mutate_at(cols.factor, factor)
 ```
 
-Before to start with descriptive statistics let's disable scientific notations and stablishing 4 decimals.
+Before to start with descriptive statistics let's disable scientific notations and establishing 4 decimals.
 
 ```{r}
 options(scipen=999, digits=4)
 ```
 
--   `skim()`: returns a summary table for the given dataframe
+-   `skim()`: returns a summary table for the given data frame
 
 Lets store the skim table in an object and calculate manually the coefficient of variation for the variables:
 
@@ -595,12 +595,11 @@ Comparing gender it can be shown that majors with more women enrolled have more 
 
 ## Next steps {.unnumbered}
 
-
-
+If further analysis are required which needs modeling, for linear regression attention has to be paid to multicollinear variables which can affect its reliability.
 
 ---
 
-
+The last text was an example of Analysis report, it could be filled with more content if its necessary. But this is the idea.
 
 
 
