@@ -1,0 +1,154 @@
+---
+title: "Modeling"
+output: 
+    html_notebook: 
+      toc: true
+      toc_float: true
+      fig_width: 10
+      fig_height: 6
+      highlight: pygments
+      theme: sandstone
+      number_sections: true
+---
+
+# Building a Model
+
+#### Dataset {.unnumbered}
+
+Hopkins, M., Reeber, E., Forman, G., & Suermondt, J. (1999). Spambase [Dataset]. UCI Machine Learning Repository. <https://doi.org/10.24432/C53G6X> .
+
+#### Libraries {.unnumbered}
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+library(patchwork)
+library(skimr)
+library(randomForest)
+library(caret)
+library(ROCR)
+```
+
+## Machine Learning concepts
+
+Modeling data involves finding patterns that can help us explain a response (most probable outcome). One of the most important things is that the input data is clean and representative of the reality we are trying to model.
+
+-   **Classification models**: Used for categorical output. We transform the input data into patterns that will be separated into groups. Thus, each observation will be classified into a group, according to its patterns.
+    -   KNN, decision tree, random forest, logistic regression, and support vector machine.
+-   **Regression models**: Used for numerical output. It will find patterns in number and return a continuous output. As summary, it will captures the relationship between the input variables and calculate an estimate of the output.
+    -   Linear regression, polynomial regression, and regression tree.
+
+Algorithm types:
+
+-   **Supervised**: algorithm which receives data containing variables that can explain an outcome, the content and the answers to learn. Once it learn the patterns, with new data it will generalize the solution. Can be used classification and regression models.
+-   **Unsupervised**: algorithm which do not receive labeled variable, instead read the dataset looking for patterns that can help explain the data. Clustering models use this algorithm.
+-   **Reinforcement**: algorithm which learn by trial and error. It will perform an actions and check how its going. Positive is rewarded, negative is penalized. It tries to reduce the penalties to the minimum possible. Useful for video games.
+
+## Understanding the project
+
+>When starting a project, we need a purpose which is the goal we want to reach at the end.
+
+### The dataset
+
+```{r}
+url.names <- "https://archive.ics.uci.edu/ml/machine-learning-databases/spambase/spambase.names"
+names <- read_table(url.names, col_names = FALSE)
+names <- names %>% filter(X2 == "continuous.") select(X1)
+names <- names %>% mutate(X1 = gsub(pattern = "\\:", replacement = "", x = X1) )
+```
+```{r message=FALSE, warning=FALSE}
+url.data <- "https://archive.ics.uci.edu/ml/machine-learning-databases/spambase/spambase.data" 
+
+url.names <- "https://archive.ics.uci.edu/ml/machine-learning-databases/spambase/spambase.names"
+
+names <- read_table(url.names, col_names = FALSE)
+names <- names %>% filter(X2 == "continuous.") %>% select(X1)
+names <- names %>% mutate(X1 = gsub(pattern = "\\:", replacement = "", x = X1) )
+
+df <- read_csv(url.data, 
+               col_names = c(names[["X1"]], "spam_cat"), 
+               trim_ws = TRUE)
+
+glimpse(df)
+```
+
+There are 58 column, the last column 'spam_cat' is the target, which is a label classification of spam (1) or not spam (0).
+
+```{r}
+dim(df)
+```
+
+Each variable represents specific words associated with spam and their percentage present in the message.
+
+### The project
+
+Objective: Create a spam detector using AI models. Create a tool that can get any text as input and estimates the probability of that message being classified as spam or not.
+
+
+Case: Company which send a lot of commercial email wants to reduce their emails to be spam. The dataset provided by the company contain some words with percentages and if were classified as spam or not.
+
+### The algorithm
+
+This is a classification problem, then It has to be used a model which classifies. Random Forest will be it.
+
+## Preparing data for modeling
+
+We know our objective, then we have to wrangle the data to get there.
+
+-   `tidyverse`: data wrangling and visualization.
+-   `skimr`: create descriptive statistics summary.
+-   `patchwork`: to put graphics side by side.
+-   `randomForest`: to create the model.
+-   `caret`: to create the confusion matrix.
+-   `ROCR`: to plot ROC curve.
+
+```{r}
+dim(df)   # Dataset previously loaded
+```
+```{r}
+glimpse(df)
+```
+
+Variables representing frequencies will maintain the double class, capital* variable will be set to Integer and spam_cat to factor.
+
+```{r}
+vars.int <- c("capital_run_length_average", 
+              "capital_run_length_longest", 
+              "capital_run_length_total")
+df <- df %>%
+  mutate_at("spam_cat", as.factor) %>%
+  mutate_at(vars.int, as.integer)
+
+anyNA(df)
+```
+
+There are no missing values NA, then we can proceed with descriptive statistics using skim().
+
+```{r}
+options( scipen = 999, digits = 4 )
+
+skim(df)
+```
+
+-   Most of the p50 and p75 values are close to 0, meanwhile the mean is higher. Suggests a high right tail on the data.
+-   There are 1813 spam emails (39.4%)
+-   High Standard deviation suggests outliers and spread data.
+
+## Exploring the data with visuals
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
