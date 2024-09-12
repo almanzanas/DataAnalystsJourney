@@ -574,6 +574,14 @@ This resulting dataset is what we need to create a word cloud.
 
 ## Creating word clouds
 
+```{r}
+wordcloud2(data = word.freq, color = "random-dark", size = 1)
+```
+
+## Useful links
+
+-   Text mining: https://www.tidytextmining.com/tidytext.html 
+-   PowerBI visuals with R: https://learn.microsoft.com/en-us/power-bi/create-reports/desktop-r-visuals
 
 
 
