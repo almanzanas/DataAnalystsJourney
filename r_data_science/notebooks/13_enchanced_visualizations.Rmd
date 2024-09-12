@@ -384,11 +384,195 @@ basic.plot +
 
 ## 3D Plots
 
+The classic 2d plot will be the best option, however a 3D graphic could create a good impression to the audience. Sometimes a 3D graph can be useful, with surface graphics which represents the surface of a place. Also when two variables are very close to each other and the separation may happen in other dimension.
 
+-   `plot_ly()`: from `plotly` library.
 
+```{r}
+# Surface 3D plot
+surface <- matrix( as.integer( sort( abs( runif(160, 90, 180) ) ) ),
+                   nrow = 80, ncol = 20 )
 
+plot_ly(z = ~ surface) %>% add_surface()
+```
 
+```{r}
+# 2D and 3D comparison
 
+var1 = rnorm(20, mean = 25, sd = 5 )
+var2 = var1 + rgamma(20,1)
+
+df.2d3d <- data.frame( var1 = var1,
+                       var2 = var2,
+                       var3 = 1:20,
+                       var4 = rep( c("A", "B"), each = 10) )
+
+## plot 2d
+
+ggplot(df.2d3d) +
+    geom_point( aes( x = var1, y = var2, color = var4 ) )
+
+```
+```{r}
+# Plot 3d
+
+plot_ly( df.2d3d, x = ~var1, y = ~var2, z = ~var3,
+         color = ~var4, colors = c("turquoise", "coral") ) %>%
+    add_markers()   # To add the points
+```
+
+Just that, these are the two type of 3D graphs recommended, otherwise the third dimension could add more complexity to the interpretation of the data specially with comparisons. Then, 3D graphs are not good when precision is required.
+
+## Adding interactivity to graphics
+
+Combining `ggplot2` graphs with `plotly` it will add some interaction with the visualization.
+
+Using one of the plots used before, this is how looks like adding interactivity:
+
+-   `ggplotly()`: passing the `ggplot()` code will add interaction.
+
+```{r}
+ggplotly(
+    
+    ggplot( df.diam ) +
+  geom_point( aes( x = carat, y = price, 
+                   color = factor(cut), alpha = 0.5) )
+  
+)
+```
+
+Now, hovering the points we obtain the corresponding values.
+
+PD: this last visualization with `ggplotly()` consumes a lot of computer's resources.
+
+## Useful links
+
+-   Maps with ggplot2: https://ggplot2-book.org/maps.html
+-   plotly R: https://plotly.com/r/
+-   Time series: https://r-graph-gallery.com/279-plotting-time-series-with-ggplot2.html
+
+# Other Data Visualization Options
+
+```{r}
+library(tidyverse)
+library(wordcloud2)
+library(officer)
+library(tidytext)
+```
+
+## Plotting graphics in Microsoft Power BI
+
+Sometimes we will need a custom visualization for Power BI, then we can plot a ggplot2 graphic in Power BI which it will give us more flexibility.
+
+```{r}
+var1 = rnorm(200, mean = 25, sd = 5)
+var2 = var1 + rnorm(200, mean = 25, sd = 15)
+
+df.pwbi <- data.frame( var1 = var1,
+                       var2 = var2,
+                       var3 = 1:200,
+                       var4 = rep( c("A", "B", "C", "D"), each = 50) )
+
+write_csv(df.pwbi, "../data/r2pwrbi.csv")
+```
+
+Once we have the dataset imported to Power BI, when we click on the 'R' button on the visualizations side panel will show a pop-up to *Enable script visuals*.
+
+It will appear a box on the dashboard, there we drop variables which we want to work. To do an histogram we drop only one. Once we do that, on the bottom field the 'R script editor' will be enabled.
+
+-   Power BI will use 'dataset' variable name to hold the data.frame object with all the variables we drop on the plotting area.
+-   It will remove duplicates entries.
+-   The code it shown is commented for our information but is executed in background.
+
+Let's try an histogram, for that I will use this code:
+
+```{r}
+#dataset <- df.pwbi
+library(ggplot2)
+
+ggplot(dataset) +
+    geom_histogram( aes(var1), bins = 10, 
+                    color = "azure", fill = "darkblue") +
+    labs( title = "Histogram of Variable 1",
+          subtitle = "Random variable visualization on Power BI") +
+    theme_minimal()
+```
+
+Once is written, just click 'Run script' and if its compatible, it will be shown.
+
+# Preparing Data for plotting
+
+Since there are many kind of graphics and its variables, the data scientist have to munge the data to fit a specific format to plot in.
+
+A word cloud is a graphical representation of the most frequent words in a text and now we will learn how to prepare a text to be potted as a word cloud. First it'll be necessary to transform the text which has no rows or columns of data. Then the `wordcloud2` library expect a data.frame with the words and frequency.
+
+```{r}
+library(tidyverse)
+library(wordcloud2)
+library(officer)
+library(tidytext)
+```
+
+The library officer allow us to read .docx with read_docx() and then docx_summary() returns a data.frame object of that.
+
+```{r}
+doc.text <- read_docx("../data/Chapter10_for_wordcloud.docx")
+content <- docx_summary(doc.text)
+head(content)
+```
+
+Our interest is 'text' variable to extract all the text of the chapter. We're going to drop the white fields after convert them in NA. Then we could convert this new 'text' objecto into a tibble because the tiny libraries work better with that type of object.
+
+```{r}
+text <- content %>% 
+    select(text)
+
+text <- na_if(text[["text"]], "")
+
+text <- tibble(text)
+
+text <- text %>% drop_na()
+```
+
+Tokenize the text is common in the natural language processing (NLP) area. The objective is break down the text into a minimal unit that carries a meaning.
+
+-   `unnest_tokens()` will tokenize the text, passing `output=` argument with `word` in it. The input= argument will be the tibble with text. Returns a single column tibble.
+
+The transformations that will perform are very common in text mining.
+
+```{r}
+text.tokens <- text %>%
+    unnest_tokens( output = word, input = text )
+text.tokens %>% head()
+```
+
+Now we need to clean the text, removing numbers and punctuation.
+
+```{r}
+text.tk.clean <- text.tokens %>%
+    filter( str_detect(word, "\\D") )
+
+text.tk.clean <- text.tk.clean %>%
+    filter( !str_detect(word, "[:punct:]"))
+```
+
+Next step is to remove *stop words* which do not carry any meaning for the text (conjunctions, prepositions, pronouns). We can load an object with the stop words `data(stop_words)` and perform an `anti_join()` to avoid this words. The last thig to do is to add a frequency column.
+
+```{r}
+data(stop_words)
+
+text.tk.clean <- text.tk.clean %>%
+    anti_join(stop_words)
+
+word.freq <- text.tk.clean %>%
+    count(word, sort = TRUE)
+
+head(word.freq, 10)
+```
+
+This resulting dataset is what we need to create a word cloud.
+
+## Creating word clouds
 
 
 
