@@ -49,24 +49,18 @@ Algorithm types:
 
 ### The dataset
 
-```{r}
-url.names <- "https://archive.ics.uci.edu/ml/machine-learning-databases/spambase/spambase.names"
-names <- read_table(url.names, col_names = FALSE)
-names <- names %>% filter(X2 == "continuous.") select(X1)
-names <- names %>% mutate(X1 = gsub(pattern = "\\:", replacement = "", x = X1) )
-```
 ```{r message=FALSE, warning=FALSE}
 url.data <- "https://archive.ics.uci.edu/ml/machine-learning-databases/spambase/spambase.data" 
 
 url.names <- "https://archive.ics.uci.edu/ml/machine-learning-databases/spambase/spambase.names"
 
-names <- read_table(url.names, col_names = FALSE)
+names <- read_table(url.names, col_names = FALSE) %>% suppressWarnings()
 names <- names %>% filter(X2 == "continuous.") %>% select(X1)
 names <- names %>% mutate(X1 = gsub(pattern = "\\:", replacement = "", x = X1) )
 
 df <- read_csv(url.data, 
                col_names = c(names[["X1"]], "spam_cat"), 
-               trim_ws = TRUE)
+               trim_ws = TRUE) %>% suppressWarnings()
 
 glimpse(df)
 ```
@@ -124,6 +118,7 @@ anyNA(df)
 There are no missing values NA, then we can proceed with descriptive statistics using skim().
 
 ```{r}
+# Disable scientific notion
 options( scipen = 999, digits = 4 )
 
 skim(df)
@@ -136,8 +131,264 @@ skim(df)
 ## Exploring the data with visuals
 
 
+```{r}
+for (var in colnames(select_if(df[,1:47], is.numeric) ) ) {
+    hist( unlist( df[,var]), col = "blue",
+          main = paste("Histogram of", var),
+          xlab = var)
+}
+```
+
+To use ggplot2 we need that dataset in tidy format, to do that we must convert this wide format to long format with the columns *spam* for 'spam_cat', *word* for every column name, and *freq* for the values.
+
+```{r}
+df.long <- df %>%
+    pivot_longer( cols = 1:57, names_to = "words", values_to = "pct")
+head(df.long, 9)
+```
+
+Now its ready for plotting with ggplot2, then we can create boxplots. Boxplot are useful to see the outliers that can distort our classifier (Random Forest), also which words appear more frequently which impact the classification. We can filter only the 'word_' from words column and `spam==1`.
+
+```{r fig.height=14, fig.width=7}
+df.long %>%
+    filter( str_detect(words, "word_") & spam_cat == 1) %>%
+    ggplot() +
+        geom_boxplot( aes( y = reorder(words, pct), x = pct, fill = spam_cat ) ) +
+        labs( title = "Percentages of words and their association with spam emails",
+              subtitle = "The frequency of appearance of some words in emails is more associated with spam",
+              x = "Percentage",
+              y = "Word" ) +
+        theme_classic() +
+        theme( plot.subtitle = element_text( color = "darkgray", size = 10 ),
+               legend.position = "none")
+```
+
+After the 24th record all the boxplots have their medians too close to zero, so they do not impact the spam classification too much. Then we know that the top 23 words can have more impact so we have to compare spam and not spam in this words to see how they impact the entire data.
+
+```{r}
+temp <- df.long %>% 
+    filter( str_detect(words, "word_") & spam_cat == 1) %>%
+    group_by(words) %>% 
+    summarise( pct_sum = sum(pct) ) %>%
+    arrange( desc(pct_sum) )
+
+top.words <- c(temp$words[1:23], "spam_cat")
+remove(temp)
+```
+
+In this next code we generate a boxplot comparing spam and not spam only on the selected top words. It can be seen as a focus to see more easily the differences.
+
+```{r}
+df.top <- df %>%
+    select( all_of(top.words) ) %>%
+    mutate( top_words_pct = rowSums( across( where(is.numeric) ) ) )
+
+g1 <- ggplot(df.top) + 
+    geom_boxplot( aes( y = factor(spam_cat), x = top_words_pct),
+                  fill = c("turquoise", "coral") ) +
+    labs( title = "How the presence of words associated with spam emails 
+          impacts the classification (TOP23)",
+          subtitle = "The spam emails(1) have a ghigher percentage of those words.") +
+    theme_classic()
+```
+
+In the same way with this second boxplot we compare spam and not spam but with all the words.
+
+```{r}
+df.2 <- df %>%
+    mutate(word_pct = rowSums( across( where(is.numeric) ) ) )
+
+g2 <- ggplot(df.2) +
+    geom_boxplot( aes( y = factor(spam_cat), x = word_pct ),
+                  fill = c("turquoise", "coral") ) +
+    labs( title = "How spam associated words impacts the classification",
+          subtitle = "The spam emails(1) have a ghigher percentage of those words.") +
+    theme_classic()
+```
+
+```{r fig.width=10}
+# Patchwork library, putting the objects into a parenthesis with a pipe
+
+(g1 | g2)
+```
+
+It can be seen a large median of those words dissociated with spam emails. To be sure that difference is statistically significant we can perform Kolmogorov-Smirnov test which compare distributions, or U-Mann Whitney which compare medians.
+
+```{r}
+pos.spam <- df.top[df.top["spam_cat"] == 1,][["top_words_pct"]]
+neg.spam <- df.top[df.top["spam_cat"] == 0,][["top_words_pct"]]
+
+ks.test(pos.spam, neg.spam)
+wilx <- wilcox.test(pos.spam, neg.spam)
+wilx
+# Size effect formula by Wendt
+rbis <- sum(-1, (2 * wilx$statistic) / (length(pos.spam) * length(neg.spam)) )
+cat("U Mann Whitney effect size r = ", rbis)
+
+```
+
+Both test show p < 0.05 thus both groups have different distribution and median according to KS-test and U Mann Whitney test respectively. Also, the size effect Biserial-Rank correlation of U Mann-Whitney is big meaning there are a significance difference between the groups. The spam group values tend to be considerably bigger than no-spam group. Then, the variable spam have a high impact in the difference of the groups.
+
+Since we know the words impact now we can test the characters in a similar way:
+
+```{r}
+df.long %>%
+    filter( str_detect(words, "char_") & spam_cat == 1) %>%
+    ggplot() +
+        geom_boxplot( aes( y = reorder(words, pct), x = pct, fill = spam_cat ) ) +
+        labs( title = "Percentages of special characters and their association with spam emails",
+              subtitle = "The frequency of appearance of some characters in emails is more associated with spam",
+              x = "Percentage",
+              y = "Character" ) +
+        theme_classic() +
+        theme( plot.subtitle = element_text( color = "darkgray", size = 10 ),
+               legend.position = "none")
+```
+
+```{r}
+df.char <- df %>%
+    select_if(str_detect(colnames(df), pattern = "char_|^spam_cat")) %>%
+    mutate( char_pct = rowSums( across( where(is.numeric) ) ) )
+
+g3 <- ggplot(df.char) + 
+    geom_boxplot( aes( y = factor(spam_cat), x = char_pct),
+                  fill = c("turquoise", "coral") ) +
+    labs( title = "How the presence of characters associated with spam emails 
+          impacts the classification",
+          subtitle = "The spam emails(1) have a ghigher percentage of those characters.") +
+    theme_classic()
+
+g3
+```
+
+```{r}
+df.char.zero <- df.char %>% filter(spam_cat == 0)
+df.char.one <- df.char %>% filter(spam_cat == 1)
+
+for (var in colnames(df.char.zero[,1:6])) {
+    wilx <- wilcox.test(df.char.zero[[var]], df.char.one[[var]])
+    rbis <- abs(sum(-1, (2 * wilx$statistic) / (length(pos.spam) * length(neg.spam)) ))
+    cat("\nMann-Whitney U between spam and not spam on:", var, 
+        "\np-value:", sprintf("%6.4f", wilx$p.value),
+        "\nr:", rbis)
+}
+```
+
+```{r fig.height=6, fig.width=8}
+g4 <- df.char.zero %>% 
+    pivot_longer(cols = 1:6, names_to = "chars", values_to = "pct") %>%
+    ggplot() +
+    geom_boxplot( aes( y = chars, x = pct) ) +
+    labs( y = "Characters in not spam emails",
+          x = "") +
+    theme_classic()
+
+g5 <- df.char.one %>% 
+    pivot_longer(cols = 1:6, names_to = "chars", values_to = "pct") %>%
+    ggplot() +
+    geom_boxplot( aes( y = chars, x = pct) ) +
+    labs( x = "Frequencies",
+          y = "Characters in spam emails") +
+    theme_classic()
+
+(g4 / g5)
+```
 
 
+At this point we know that the number of symbols, and words are statistically different for each group in our classification.
+
+## Selecting the best variables
+
+When we checked the variables with boxplots and test comparisons we show how them impact the classifications the most. We should use those variables that have the highest difference between both groups so that it's easier for the algorithm to find a clearer separations between the two groups. The conclusion we show is that 23 words maximize the difference as well as uppercase and the presence of too many symbols.
+
+We are prepare to create a dataset for modeling. Taking the original dataframe, binding top_words_pct, the target variable, the character and uppercase variables:
+
+```{r}
+df.model <- df %>%
+    bind_cols( top_words_pct = df.top$top_words_pct ) %>%
+    select( spam_cat, top_words_pct, 
+            `char_freq_!`, `char_freq_(`, `char_freq_$`,
+            capital_run_length_total, capital_run_length_longest ) %>%
+    mutate(spam_cat = ifelse(spam_cat == 1, "is_spam", "no_spam")) %>%
+    mutate_at(vars(spam_cat), as.factor)
+
+
+colnames(df.model)[3:5] <- c("char_freq_exclam", "char_freq_paren", "char_freq_dollar")
+slice_sample(df.model, n = 9)
+```
+
+## Modeling
+
+### Training
+
+In the last code we just replace 1 with 'is_spam' and 0 with 'no_spam'. This is necessary for random forest in this case to classify.
+
+```r
+# Alternative code to replace values:
+df.model <- df.model %>%
+    mutate( spam_cat = recode(spam_cat, '1'="is_spam", '0'="no_spam") )
+```
+
+-   train: subset used to present the model with the patterns and the labels associated with it so that it can study how to classify each observation according to the patterns that occur.
+-   test: subset where new data is presented to the trained model so that we can measure how accurate it is or how much it has learned.
+
+The dataset have aprox 60-40 as not-spam and spam respectively. In this case, we won't apply any category balancing technique, this imbalance will not affect the result.
+
+**In R there is no function for splitting the dataset into train and test**
+
+We are going to use 80% for training and 20% for testing.
+
+```{r}
+n.rows <- nrow(df.model)
+idx <- sample(1:n.rows, size = 0.8 * n.rows)
+
+train.80 <- df.model[idx,]
+test.20 <- df.model[-idx,]
+```
+
+Now we can check if the proportions are similar to the original dataset:
+
+```{r}
+writeLines("Original set:")
+prop.table( table(df$spam_cat) )
+writeLines("==================")
+writeLines("Train set:")
+prop.table( table(train.80$spam_cat) )
+writeLines("==================")
+writeLines("Test set:")
+prop.table( table(test.20$spam_cat) )
+```
+
+-   `randomForest()` It must be passed the target variable with `~ .` meaning the target will be explained by the rest of the data represented with '`.`'
+    -   `data=` the data set to use, will be the training set.
+    -   `importance=` if TRUE it will calculate the importance of the variables.
+    -   `ntree=` the number of decision trees to create with this model.
+    
+```{r}
+model.rf <- randomForest( spam_cat ~ ., data = train.80,
+                          importance = TRUE,
+                          ntree = 250)
+```
+```{r}
+plot(model.rf)
+```
+
+This plot shows the performance of the model. After the 50th tree, the error stabilizes.
+
+-   `varImpPlot()`: to plot the feature's importance or which variables are more importance to the model.
+
+```{r fig.width=8}
+varImpPlot(model.rf)
+```
+
+This plot shows the importance of each variable.
+
+-   Mean Decrease Accuracy: it calculates how much the model's accuracy decreases when the values of a particular feature are randomly shuffled. A higher value indicates that a feature is more important for the model's accuracy. Then the model relies heavily on that features to make accurate predictions.
+-   Mean Decrease Gini: A higher value indicates that a feature is more important for the model's ability to separate the classes. Features with high MeanDecreaseGini values are those that are useful for creating decision boundaries in the model.
+
+For the library `randomForest` the default for classification models is the Gini index.
+
+### Testing and evaluating the model
 
 
 
