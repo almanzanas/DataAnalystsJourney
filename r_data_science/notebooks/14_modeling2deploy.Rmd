@@ -390,6 +390,164 @@ For the library `randomForest` the default for classification models is the Gini
 
 ### Testing and evaluating the model
 
+The most used metrics to evaluate a classification model are *accuracy, confusion matrix, and ROC curve*. 
+-   `predict()`: to generate a prediction given as arguments the model and the test set. The object assigned can be used to extract information.
+
+-   `confusionMatrix()`: given a prediction and the target column from the test set shows the information of that prediction.
+
+```{r}
+# Prediction:
+model.preds <- predict(model.rf, test.20)
+
+confusionMatrix(model.preds, test.20$spam_cat, positive = "no_spam")
+```
+
+The confusion matrix show how were the prediction. For 'is_spam' predicted value are 315 'is_spam' as reference, then this 315 are True Positive. The next value is for the predicted 'is_spam' and 'no_spam' as reference with 38 matches, corresponding False Positive known as Type 1 Error. The next two values are False Negative (Type 2 Error) and True Negative with 52 and 516 matches respectively.
+
+The accuracy is 0.9 aprox, then out of the 100 predictions, there will be around 10 errors with a confidence interval about 12 to 8 errors.
+
+-   **Accuracy**: How many of the total number of classifications the model predicted correctly. Is an overall sense of the model's performance.
+-   **Sensitivity** and **Specificity**: provide insights into the model's performance on the positive and negative classes, respectively. In many cases, depending on the problem, one metric or the other will be more important. (e.g. Medicine, the true positive rate might be more critical then we'll look sensitivity.)
+-   **Kappa**: by accounting for chance agreement helps us to understand the model's performance. A high kappa indicates a strong agreement between the predicted and actual labels.
+-   **Balanced Accuracy**: useful when the labels are unbalanced. It provides a balanced measure of the model's performance.
+
+The relatively high accuracy (0.902) and a strong kappa value (0.795), it suggests that the model is performing well overall. The sensitivity (0.858) and specificity (0.931) values indicate that the model detect both positive and negative instances quite well.
+
+Now it's time to look at ROC curve to check the performance based on the rate of true positive and false positives (Sensitivity and Specificity).
+
+-   `prediction()` given the data frame with probability predictions with the positive class ('no_spam' according to confusionMatrix) and the real labels which is the test set selecting the target.
+-   `performance()` given the object with `prediction()` and the labels for the axes which are 'tpr' and 'fpr' for true positive rate and false positive rate.
+-   `abline()` for the visualization will draw a diagonal that separates the graphic 50/50
+
+```{r}
+model.df.preds <- data.frame( predict(model.rf, test.20, type='prob') )
+
+model.roc <- prediction(model.df.preds$no_spam, test.20$spam_cat)
+
+roc <- performance(model.roc, 'tpr', 'fpr')
+auc <- performance(model.roc, "auc")
+plot(roc, colorize = T, lwd = 2,
+     main = "ROC curve. 'no_spam' as positive class.",
+     sub = paste( "AUC =", auc@y.values[[1]]) )
+abline(0.0, 1.0)
+```
+
+At the bottom we can see the Area Under the Receiver Operating Characteristic Curve (AUC-ROC). If `AUC=1` represents a perfect classifier meanwhile `AUC=0.5` is a random classifier. In this case is a pretty good classier, this value indicates the performance of the classifier.
+
+### Predicting
+
+After evaluating, it's time to test the model. 
+
+The input to predict must to be in the very same format as the data frame used in the Random Forest. Then, if we did any transformations this have to be repeated before we can input the new data.
+
+To do that, we can create a custom function with the steps of preparation and modeling that we took until create 'df.model'. To that custom function we pass whatever we want to predict depending the objective (spam in this case, then we pass a mail) and the function will perform every step to model the data.
+
+The next function called `prepare_input()` is from this book's code, which takes a string of text and the spam_words vector as input. Then, it reads the text and it will count the selected columns we modeled before, such as !, $, (), uppercase letters, the longest sequence of uppercase, and words in the spam list. Finally, returning a data frame for input in the model we create.
+
+```{r echo=FALSE}
+# Creating a function to prepare any text for input in the model
+prepare_input <- function (text, spam_words){
+  "This function takes a string text as input, counts the quantities of !, $, (), uppercase letters, longest sequence of uppercase, words in the spam list.
+  * Input: string
+  * Returns: data frame for input in the RF model"
+  
+  # Counts of the punctuation
+  exclamation <- str_count(text, pattern="[!]")
+  parenthesis <-  str_count(text, pattern="[()]")
+  dollar_sign <-  str_count(text, pattern="[$]")
+  
+  # Counts of UPPERCASE
+  total_uppercase <- str_count(text, "[A-Z]")
+  
+  # Remove punctuation for total words count
+  text_no_puncuation <- str_remove_all(text, pattern="[:punct:]|[$]*")
+  
+  #longest_uppercase
+  all_words <- str_split(text_no_puncuation, " ")
+  all_words <- all_words[[1]]
+  
+  # Create a vector with all the uppercase counts
+  char_counts <- c()
+  for (word in all_words) {
+    if (word == toupper(word)) {
+      char_counts <- c(char_counts, nchar(word))
+    } #enf if
+  }#end for
+  
+  # Get only the longest uppercase word size
+  if (max(char_counts) < 0) {
+    longest_upper <- 0} else {longest_upper <- max(char_counts)}
+  
+  
+  # Count how many spam words are in the text
+  # Create a counter of spam words
+  top_w <- 0
+  # For each word
+  for (word in all_words) {
+    # if word is in the spam list, count +1
+    if (tolower(word) %in% spam_words) {
+      top_w <- top_w + 1
+    } #enf if
+  }#end for
+  
+  # Determine length of the text
+  text_length <- length(all_words)
+  
+  # Create a data frame with all counts in percentages (divided by the text length)
+  input <- data.frame(top_words_pct= 100*top_w / text_length,
+                      char_freq_exclam= 100*exclamation / text_length,
+                      char_freq_paren= 100*parenthesis / text_length,
+                      char_freq_dollar= 100*dollar_sign / text_length,
+                      capital_run_length_total= total_uppercase,
+                      capital_run_length_longest= longest_upper )
+  
+return(input)
+} #end function
+
+```
+
+The next objects will be the emails to check and the spam_words to use:
+
+```{r}
+
+text1 <- 'SALE!! SALE!! SALE!! SUPER SALEEEE!! This is one of the best sales of the year! More than #3000# products with discounts up to $500 off!! Visit our page and Save $$$ now! Order your product NOW (here) and get one for free !'
+
+text2 <- 'DEAR MR. JOHN, You will find enclosed the file we talked about during your meeting earlier today. The attachment received here is also available in our web site at this address: www.DUMMYSITE.com. Sale.'
+
+spam.words <- c('you', 'your', 'will', 'free', 'our', 'all', 'mail', 'email', 'business', 'remove', '000', 'font', 'money', 'internet', 'credit', 'over', 'order', '3d', 'address', 'make', 'people', 're', 'receive', 'sale')
+```
+
+It is time to predict: 
+
+```{r}
+input <- prepare_input(text1, spam.words)
+
+data.frame( predict(model.rf, input, type = "prob") )
+```
+```{r}
+input <- prepare_input(text2, spam.words)
+
+data.frame( predict(model.rf, input, type = "prob") )
+```
+
+We can see in this case that spam email (text1) is with 70% probability spam, although text2 which is no spam the model tell us is with 0.51% no spam. Looking the text2 there are some uppercase letters which can fool the model a little bit.
+
+The next step is save this model and be ready for deployment. To save the model we can use `saveRDS()` function and input the model's name and the name of the output filename. Later with Shiny application we can deploy the model to do it's job (receiving emails from a user or whatever).
+
+```{r}
+saveRDS(model.rf, "../scripts/model_rf_spam.rds")
+```
+
+## Useful Links
+
+-   Mode deep in Supervised and Unsupervised learning, with evaluation measures: https://www.geeksforgeeks.org/supervised-unsupervised-learning/
+
+
+
+# Build an Application with Shiny
+
+
+
 
 
 
