@@ -1,0 +1,77 @@
+---
+title: "Data Science for Business"
+author: "Alvaro Manzanas"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+url: "https://cognitiveclass.ai/learn/data-science-business"
+output:
+  github_document:
+    md_extensions: +autolink_bare_uris+tex_math_single_backslash
+    fig_width: 12
+    fig_height: 8
+    df_print: kable
+    number_sections: true
+    toc: true
+    toc_depth: 3
+  rmdformats::html_clean:
+    code_folding: hide
+    self_contained: true
+    number_sections: true
+    thumbnails: false
+    lightbox: true
+    highlight: breezedark
+subtitle: "Analysis Procedure"
+csl: apa.csl
+pkgdown:
+  as_is: true
+editor_options:
+  markdown:
+    wrap: 79
+---
+
+# IBM ML0103EN. Digital Analytics & Regression
+
+## Introduction
+
+-   What is the goal of the solution?
+-   Why do we need to do this?
+-   What data is available?
+-   What constraints exist?
+-   What is an acceptable solution?
+-   What is success in this context?
+-   How do we measure success?
+
+Business objectives drive data science initiatives. 
+
+> When solving business problem with data, be curious!
+
+1.  Objective, problem, decision. Think of the business problemas as a statement to accept or reject an hypothesis. e.g., *The product name should be option A because GoogleTrends showed more data searches*. That will be the hypothesis to work.
+
+2.  Context. Working in a new project with a team, take in as much information from the team as possible. But careful, accept nothing as fact that you cannot reaonably independently verify, because team members information may come with biases.
+
+3.  What are the options. Mentionen in the Hypothesis, we can Option A, and Option B.
+
+4.  What have we not yet considered. Are there any other options that the initials two? There are more data in GoogleTrends which we can analyse? Which option relects more accurately the audience.
+
+5.  What are the constraints. Like Budget, time, reliability of the data, legal and ethical constraints...
+
+6.  What data de we have. If already we have data to work with.
+
+7.  What data de we need to get. Extract, mine or collect data to this purpose.
+
+## Importing GoogleTrends data in R
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

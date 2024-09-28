@@ -1,0 +1,283 @@
+---
+title: "Using R with Databases"
+author: "Alvaro Manzanas"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  github_document:
+    md_extensions: +autolink_bare_uris+tex_math_single_backslash
+    fig_width: 12
+    fig_height: 8
+    df_print: kable
+    number_sections: true
+    toc: true
+    toc_depth: 3
+  rmdformats::html_clean:
+    code_folding: hide
+    self_contained: true
+    number_sections: true
+    thumbnails: false
+    lightbox: true
+    highlight: breezedark
+subtitle: "Analysis Procedure"
+csl: apa.csl
+pkgdown:
+  as_is: true
+editor_options:
+  markdown:
+    wrap: 79
+---
+# R and Relational Databases
+
+The package `sqldf` is useful for data management. Allow us to apply SQL 'SELECT' statements to data frames.
+
+## Data Types comparison
+
+| R | Description | RDBMS | Description |
+|----------------|------------------------|----------------|------------------------|
+| int | 32 bits | SMALLINT | 2 bytes |
+|  |  | INTEGER | 4 bytes |
+|  |  | BIGINT | 8 bytes |
+| double | 53 bit precision | DECIMAL NUMBERIC | exact precision (31 digits) |
+|  |  | REAL | 32 bit approximation |
+|  |  | DOUBLE FLOAT | 64 bit approximation |
+|  |  | DECFLOAT | Exact Precision (16 or 34 digits), hardware assist |
+| comlex | component numbers | N/A | N/A |
+
+
+
+| R | Description | RDBMS | Description |
+|----------------|------------------------|----------------|------------------------|
+|character|character vector|CHARACTER|fixed length|
+|       |       |VARCHAR|varying length|
+|       |       |CLOB|large (usually >4K & >2GB)|
+|logical|true/false condition|BOOLEAN|true or false condition|
+|Date|R Object|date|       |
+|       |       |time|       |
+|       |       |timestamp|       |
+|factor|categorical data|N/A|(usually character)|
+|raw|binary data|BLOB|binary data|
+
+
+# Connecting to Databases with R
+
+## Connectivity options
+
+ODBC: RODBC
+DBI Based: 
+-   Database specific: RMySQL, RPostgreSQL, ROracle, RSQLite, etc.
+-   JDBC: RJDBC
+
+RODBC requires ODBC Driver Manager, can be used with many different database servers.
+RJDBC requires Java (JRE).
+
+### Connecting with RJDBC
+
+The requirement is working Java and a JDBC driver.
+
+```r
+library(RJDBC)
+
+# Load and create a driver object
+drv <- JDBC("com.ibm.db2.jcc.DBZDriver", "db2jcct4.jar", identifier.quote = "'")
+
+# Create a connection
+conn <- dbConnect( drv, "jdbc:db2://184.172.106.180:50000/SAMPLEDB", 
+                  "userid", "password")
+
+query <- paste("select * from AUGUST_23")
+# Send query to the database server
+rs <- dbSendQuery( conn, query )
+
+# Retrieve rows (fetch = 32k rows)
+df <- fetch( rs, -1 )
+
+# exploring data frame
+max(df$income, na.rm=TRUE)
+
+# Disconnect from the database server
+dfDisconnect(conn)
+```
+
+RJDBC permits argument substitution in queries. You can have an object with a particular data and use that object to send a query.
+
+```r
+mfr <- "BMW"
+query <- paste("select * from AUGUST_2023 where MFR_NAME ?)
+
+rs <- dbSendQueryCconn( query, mfr )
+```
+
+### Connecting with ODBC
+
+Requires ODBC Driver Manager and a driver to use. Each database must be configured using the Data Source Admin Tool (ODBC Data Sources) using a DSN which is a detailed reference to a database.
+
+For linux: https://www.unixodbc.org/
+
+```{r}
+install.packages("RODBC")
+library(RODBC)
+
+dsns <- odbcDataSources()
+names(dsns)
+print(dsns["SQL2022"]) # SQL Server
+```
+
+Connection using DSN:
+
+```{r}
+userid <- "rstats"
+password <- "P@ssw0rd"
+dsn <- "SQL2022"
+
+con1 <- odbcConnect(dsn = dsn, uid = userid, pwd = password)
+
+# Checking if a connection was successful (TRUE or FALSE)
+( db.connect <- (!is.null(con1) && con1 >= 0) )
+```
+
+Attribute recommendations:
+
+```{r}
+# In the connection we can add 'case' and 'rows_at_time'
+# con1 <- odbcConnect(dsn = dsn, uid = userid, pwd = password,
+#                     case = "toupper", rows_at_time = 1000 )
+
+attributes(con1)$case <- "toupper" # To use uppercase table references
+attributes(con1)$rows_at_time <- 1000 # To improve query performance
+attributes(con1)
+```
+
+### Metadata Discovery
+
+```{r}
+( con1.info <- odbcGetInfo(con1) )
+
+```
+
+```{r}
+( sql.info <- sqlTypeInfo(con1) )[1:9,]
+```
+
+Exploring Tables
+
+```{r}
+(tab.frame <- sqlTables( con1, schema = "HumanResources" ) )[1:9,]
+unique( tab.frame$TABLE_TYPE )
+```
+
+Exploring Column Details
+
+```{r}
+col.detail <- sqlColumns(con1, sqtable = "HumanResources.Employee")
+print(col.detail[,4:7], row.names = FALSE)
+```
+
+Sending a Query to retrieve data with `sqlQuery(connection, query)`:
+
+```{r}
+df.sick <- sqlQuery(con1, "SELECT * from HumanResources.Employee where SickLeaveHours > 60")
+
+df.sick[1:9,]
+```
+
+# Database Design and Analyzing Data
+
+## Getting Data into the Databse
+
+For a few thousands of rows we can use IMPORT command. If we have hundred of thousands or millions we have to use LOAD.
+
+```sql
+IMPORT FROM DATA.CSV
+    MESSAGE MSG_DATA.TXT
+    REPLACE INTO DATA_TABLE
+
+LOAD FROM DATA.CSV
+    OF DEL
+    REPLACE INTO DATA_TABLE
+```
+
+## Querying Jobs
+
+### Full Table SELECT using `sqlFetch()`
+
+```{r}
+schema.name <- "HumanResources"
+tab.name <- "Employee"
+tab.fullname <- paste(schema.name, ".", tab.name, sep="", collapse="")
+
+empdf <- sqlFetch(con1, tab.fullname, stringsAsFactors = FALSE)
+str(empdf[-4])
+```
+
+ROBDC use Data Mapping when catch or send data from or into a database table. It will change data type to be 'coherent' with R and vice versa. In the last output we can see 'HireDate' as character when have to be Date.
+
+```{r}
+empdf$BirthDate <- as.Date(empdf$BirthDate, format = "%Y-%m-%d")
+empdf$HireDate <- as.Date(empdf$HireDate, format = "%Y-%m-%d")
+
+# New column AGE
+empdf$Age <- as.Date(Sys.time()) - empdf$BirthDate
+empdf$Age <- as.integer( round(empdf$Age / 365.25) )
+
+# Simple Plot
+with( empdf, plot( Age, SickLeaveHours, main = "Sick hours and Age") )
+```
+
+```{r}
+with( empdf, cor(Age, SickLeaveHours) )
+```
+
+## Analyzing the Data
+
+It is better to avoid data shipping if possible. Use SQL functions to collect the necessary data and use stored procedures when possible. Using `sqlQuery()` or `sqlFetch()` functions to create data frame. Then complete the analysis tasks using R.
+
+# Modifying Data and Using Stored Procedures
+
+## Creating Tables
+
+Using `sqlSave()` we can store data into database from a data frame. It will have the same name as the object, or it can be used `tablename=` variable. The variable `rowname=` if TRUE will add a column
+
+`getSqlTypeInfo()` shows the mapping conversion to different databases.
+
+```{r}
+getSqlTypeInfo()
+```
+
+### Updating Data in tables
+
+-   `sqlUpdate()` to update modification to corresponding table
+    -   `connection, data frame object, "schema.table", fast=TRUE,` 
+    -   `index=` to ensure each row is updated properly. name of index column to use
+
+# In-Database Analytics
+
+Usually we download the data into the analytic application and work on it. With in-database analytics we process the data and analytics with the database itself. This envolves "pushing down" the application logic.
+
+The database needs to have push dawn compatibility to work with R.
+
+These in-database Analytics provided the ability to work with very large datasets because we have not to download into R to perform the analysis. And provide performance and parallel processing. Also we avoid data movement. Since we run the analysis on the database, that provide security and governance of the data, following company policies. The last important thing is that we can work with recent data since it's no require to analyse a copy of the data.
+
+The library `ibmdbR` to perform In-Databse Analytics with IBM-DB2 Cloud.
+
+Microsoft have it's own. SQL Server Machine Learning Services. Allow to run python and R scripts into SQL Server. Also there are a version for Azure. More info here: https://learn.microsoft.com/en-us/sql/machine-learning/sql-server-machine-learning-services?view=sql-server-ver16 
+
+Installation for SQL Server 2022: https://learn.microsoft.com/en-us/sql/machine-learning/install/sql-machine-learning-services-windows-install-sql-2022?view=sql-server-ver16 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
